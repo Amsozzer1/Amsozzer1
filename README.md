@@ -17,27 +17,7 @@
   Associates of Engineering Science in Computer Science with High Honors  
   GPA: 3.81/4.00
 
-## 💼 Relevant Experience
 
-- **Research Assistant, Engineering Program**  
-  Wilbur Wright College, Chicago, IL  
-  Nov 2022 – May 2023  
-  Engaged in research to create an app facilitating organic mentorship experiences among students, analyzed initial testing data, and played a pivotal role in planning and implementing the second round of testing.
-
-- **Tutor, Engineering Program and Summer Bridge**  
-  Wilbur Wright College, Chicago, IL  
-  Jun 2022 – May 2023  
-  Provided crucial academic support in math, chemistry, and computer science to engineering students, impacting decision-making processes and offering guidance through challenging situations.
-
-- **Mentor, STEAM Ambassador for High School Students**  
-  Northwestern University, Evanston, IL  
-  May 2021 – Aug 2021  
-  Offered mentorship and support to high school students, focusing on coping mechanisms for difficult issues and maintaining confidentiality in sensitive situations.
-
-- **Education Program Director**  
-  Society of Asian Scientists and Engineers  
-  Sep 2022 - May 2023  
-  Analyzed and supported the academic well-being of organization members, organizing tutoring events to bolster their success.
 
 ## 🌟 Project Highlights
 
@@ -54,4 +34,6 @@
 - **Related Coursework**: Data Structures and Software Principles in C++, Introduction to OOP Java
 
 ---
+
+
 
