@@ -1,6 +1,3 @@
-### Hi there 👋
-
-
 # Welcome to Ahmed M Sozzer's GitHub!
 
 ---
