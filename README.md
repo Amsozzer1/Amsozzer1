@@ -5,7 +5,7 @@
 
 ---
 
-👋 Hello there! I'm **Ahmed M Sozzer**, a dedicated **Computer Science student at UIUC 🎓**. I'm deeply passionate about programming and constantly on the lookout for new challenges to tackle. Here on my GitHub, you'll find a portfolio that showcases my journey, projects, and the milestones I've achieved in my quest to make a significant impact in the tech world. If you want to know more about me please visit [my website](https://amsozzer-amsozzer1-6b4b496ed867d3282cafc9f5e3dbb1224451bf08dc06.gitlab.io/)
+👋 Hello there! I'm **Ahmed M Sozzer**, a dedicated **Computer Science student at UIUC 🎓**. I'm deeply passionate about programming and constantly on the lookout for new challenges to tackle. Here on my GitHub, you'll find a portfolio that showcases my journey, projects, and the milestones I've achieved in my quest to make a significant impact in the tech world. If you want to know more about me please visit [here].(https://amsozzer-amsozzer1-6b4b496ed867d3282cafc9f5e3dbb1224451bf08dc06.gitlab.io/)
 
 ## 🎓 Education
 
