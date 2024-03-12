@@ -24,17 +24,23 @@ This educational path is not just a sequence of courses and exams; it's a journe
 
 ## 🌟 Project Highlights
 
-- **Weather Application (Java)**: Developed a Java program to fetch and display weather information for user-input cities, enhancing user experience with integrated CSV parsing and a range of displayed weather details.
+- **PiGesture Assistant**: An inventive project harnessing the power of machine learning to create a gesture-controlled assistant. Utilizing Python and AI libraries, this tool offers an intuitive way to interact with technology through natural movements.
 
-- **Password Vault**: A Java-based application with a secure, Swing-based GUI for managing passwords, featuring a robust password protection mechanism and user-friendly functionalities.
+- **Shell**: A custom-designed shell environment that streamlines command execution and enhances user interaction with the operating system. Built with modern development principles in mind, it's a testament to efficient programming and user-centric design.
 
-- **Employee Data Entry App**: Created a Java application for efficient management of employee records, utilizing Java Swing and MySQL for seamless database operations.
+- **NavBus**: A navigation solution tailored for the bus transport system, integrating real-time data and user-friendly interfaces to simplify public transit. Developed using advanced mapping techniques, it's a step towards smarter urban mobility.
 
-## 🛠 Technical Skills
+## 💡 Technical Skills
 
-- **Languages**: C++, Java, JavaScript, Python III
-- **Applications**: Visual Studio Code, JetBrains, PyCharm, MS Word, Excel
-- **Related Coursework**: Data Structures and Software Principles in C++, Introduction to OOP Java
+- **Frontend Development**: Mastery in HTML, CSS, JavaScript, and React.js, complemented by proficiency in Typescript and Tailwind CSS for crafting dynamic and responsive user interfaces.
+
+- **Backend Engineering**: Skilled in creating robust server-side applications with Node.js, Flask, and AWS, ensuring scalable and efficient back-end architectures.
+
+- **Database Management**: Versatile in handling data across various systems like MySQL, PostgreSQL, MongoDB, and Firebase, ensuring data integrity and optimized access.
+
+- **Machine Learning & AI**: Proficient in Python, with a strong command of ML/AI technologies such as TensorFlow, PyTorch, Keras, Scikit-learn, and Pandas, enabling the development of intelligent and autonomous systems.
+
+- **Additional Expertise**: Comfortable with Linux environments, version control using Git, and hardware programming with Raspberry Pi and Arduino, as well as GPIO interfacing for comprehensive technology solutions.
 
 ---
 
