@@ -35,15 +35,11 @@ An Express-style HTTP framework written from scratch in C++ (~3,200 LOC), built 
 
 ### Multi-Tenant AI Receptionist System
 
-⚠️ *(add repo/demo link if public)*
-
 Business automation platform with lead-generation pipelines, Google Sheets integration, and AI-powered sales calling via ElevenLabs and Twilio. Multi-tenant by design, containerized with Docker, backed by PostgreSQL with Firebase auth. Built for real small-business clients through Plainform — deployed, maintained, and iterated on with non-technical owners.
 
 **Tech:** n8n, GoHighLevel, ElevenLabs, Twilio, PostgreSQL, Docker
 
 ### Real-Time Communication Platform
-
-⚠️ *(add demo + repo links — currently missing)*
 
 Full-stack app with real-time messaging over WebSockets, video calling via Stream SDK, and Firebase auth. React frontend with custom components; Node/Express backend handling concurrent WebSocket connections at <100ms latency. Deployed on Render.
 
