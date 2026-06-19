@@ -1,114 +1,94 @@
 # Ahmed M. Sozzer
 
-**Full Stack Engineer | iOS Developer | Automation Specialist**
+**Forward Deployed Engineer | Full-Stack Engineer | Systems & Automation**
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-amsozzer.com-blue)](https://amsozzer.com)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-amsozzer1-0077B5)](https://linkedin.com/in/amsozzer1)
-[![Email](https://img.shields.io/badge/Email-asozzer2@illinois.edu-red)](mailto:asozzer2@illinois.edu)
+[![Portfolio](https://img.shields.io/badge/Portfolio-amsozzer.com-blue)](https://amsozzer.com) [![LinkedIn](https://img.shields.io/badge/LinkedIn-amsozzer1-0077B5)](https://linkedin.com/in/amsozzer1) [![Email](https://img.shields.io/badge/Email-ahmedsozzer9@gmail.com-red)](mailto:ahmedsozzer9@gmail.com)
 
 ---
 
 ## About
 
-Full Stack Engineer at **FYCLabs**, recently graduated from the **University of Illinois Urbana-Champaign** (May 2025) with a Bachelor of Science in Computer Science. I architect and deploy production-grade applications for early-stage startups, transforming product concepts into scalable solutions using modern technology stacks.
+Full-Stack Engineer at **FYCLabs**, working directly with founders and early users to take product concepts from whiteboard to production. I split my time between shipping customer-facing features and going a layer deeper than the framework — building the infrastructure, tooling, and automation that make a small team move fast.
 
-I operate **Prisma Automation Studio**, a freelance practice specializing in CRM automation, workflow orchestration, and custom development for marketing agencies and small businesses.
+I also run **Plainform**, my own automation and print-on-demand operation, which means I see software from the customer's side of the table: scoping with non-technical stakeholders, deploying into messy real-world environments, and owning the outcome rather than the ticket.
 
-## Current Focus
+Austin, TX.
 
-- Building cross-platform mobile applications with React Native and SwiftUI
-- Architecting automated business workflows with n8n, GoHighLevel, and Zapier
-- Optimizing backend infrastructure on GCP with PostgreSQL, Prisma, and Docker
-- Developing AI-powered automation solutions integrating ElevenLabs and Twilio
+## What I Do
 
-## Professional Experience
-
-### FYCLabs — Full Stack Engineer
-**May 2025 - Present | Remote**
-
-- Architect full-stack solutions using Next.js, React, TypeScript, PostgreSQL/Prisma, and GCP infrastructure
-- Build cross-platform applications with React Native, managing complete API architecture and database modeling
-- Implement automated CI/CD pipelines, reducing deployment cycles by 70% with 95%+ reliability
-- Scale backend infrastructure supporting growth from 700 to 5,000+ active users
-
-### Holiday Channel — Full Stack & iOS Developer
-**January 2025 - May 2025 | Colorado Springs, CO**
-
-- Engineered e-commerce platform delivering 20% improvement in customer retention
-- Built microservices infrastructure capable of scaling to handle 200% traffic surges during peak periods
-- Integrated Google Ads with responsive Figma-to-code implementations, increasing conversion rates by 28%
-
-### Luminii LLC — Data Analyst & Software Intern
-**May 2024 - August 2024 | Niles, IL**
-
-- Pioneered machine learning-powered automated pricing system reducing manual re-calibrations by 40%
-- Optimized website performance with lazy loading and compression techniques, cutting load times by 30%
-- Reconfigured 15,000+ record database with strategic indexing, boosting query performance by 65%
-
-## Technical Stack
-
-**Languages & Frameworks**  
-TypeScript, JavaScript, Python, C/C++, Java, Swift, Haskell  
-React.js, Next.js, React Native, Node.js, Express, Django, GraphQL, REST APIs
-
-**Frontend & UI**  
-TailwindCSS, Shadcn, Framer Motion, Redux, Vue.js, Angular, SwiftUI
-
-**Backend & Database**  
-PostgreSQL, Prisma, MongoDB, Redis, Firebase, Supabase
-
-**DevOps & Cloud Infrastructure**  
-Docker, Kubernetes, CI/CD, AWS, GCP, Microservices Architecture, Serverless Computing
-
-**Automation & Integration**  
-n8n, Zapier, GoHighLevel, Phantombuster, Make, ElevenLabs, Twilio
-
-**Development Tools & Practices**  
-Git, Jest, Cypress, Postman, JIRA, Agile Methodology, System Design
+- Ship full-stack production apps end to end — frontend, API, database, deploy
+- Work customer-facing: scoping with founders/C-suite, deploying on-site, iterating from real feedback
+- Go below the abstraction — I've written my own HTTP framework in C++ to understand the layer I build on
+- Build AI-powered automation and workflow tooling (n8n, GoHighLevel, ElevenLabs, Twilio)
 
 ## Featured Projects
 
-### Real-Time Communication Platform
-[Live Demo](https://link-to-demo) | [Frontend Repository](https://github.com/link) | [Backend Repository](https://github.com/link)
+### PlusWeb — C++ HTTP Server Framework
 
-Full-stack web application featuring real-time messaging via WebSockets, video calling using Stream SDK, and Firebase authentication. Engineered responsive React frontend with custom UI components and implemented Node.js/Express backend handling concurrent WebSocket connections with less than 100ms latency. Deployed on Render cloud platform with 99.9% uptime.
+[Repository](https://github.com/Amsozzer1/PlusWeb)
 
-**Technologies:** React, Node.js, Express, WebSockets, WebRTC, Firebase
+An Express-style HTTP framework written from scratch in C++ (~3,200 LOC), built to understand web servers from the socket up. Implements a **segment-trie router** with parameterized routes (exact matches beat params, e.g. `/user/me` over `/user/:id`), a **middleware chain** with `next()` continuations, and **mountable sub-routers** with path rewriting. Concurrency is handled by a bounded thread pool over keep-alive connections.
 
-### NavBus: Real-Time Bus Navigation System
-[View Project](https://github.com/link)
+*Currently refactoring the request layer toward an epoll-based event loop and hardening the parser for large/streamed bodies.*
 
-Real-time bus navigation platform utilizing geospatial analysis, reducing route planning time by 40% for over 200 users. Constructed map interface with calendar event synchronization, helping 85% of users save 10+ minutes on daily commutes. Optimized Node.js/MongoDB backend, cutting API response times by 30% while supporting 50+ concurrent users.
-
-**Technologies:** Node.js, MongoDB, Geospatial APIs, React
+**Tech:** C++, Sockets, Multithreading
 
 ### Multi-Tenant AI Receptionist System
 
-Comprehensive business automation solution featuring lead generation pipelines, Google Sheets integration, and AI-powered sales calling through ElevenLabs and Twilio. Implements Docker containerization, PostgreSQL database management, and Firebase authentication.
+⚠️ *(add repo/demo link if public)*
 
-**Technologies:** n8n, GoHighLevel, ElevenLabs, Twilio, PostgreSQL, Docker
+Business automation platform with lead-generation pipelines, Google Sheets integration, and AI-powered sales calling via ElevenLabs and Twilio. Multi-tenant by design, containerized with Docker, backed by PostgreSQL with Firebase auth. Built for real small-business clients through Plainform — deployed, maintained, and iterated on with non-technical owners.
 
-## Publications & Presentations
+**Tech:** n8n, GoHighLevel, ElevenLabs, Twilio, PostgreSQL, Docker
 
-- Research paper on mentor-mentee matching algorithms selected for review by the American Society for Engineering Education (ASEE) with positive editorial feedback — [Read Paper](https://link)
-- Presented mentor-matching research at the 2023 John S. Albazi Student Research Symposium at NEIU — [View Presentation](https://link)
-- Showcased mentor-matching application research at Wright College's Fall 2022 Student Research Colloquium — [View Presentation](https://link)
+### Real-Time Communication Platform
+
+⚠️ *(add demo + repo links — currently missing)*
+
+Full-stack app with real-time messaging over WebSockets, video calling via Stream SDK, and Firebase auth. React frontend with custom components; Node/Express backend handling concurrent WebSocket connections at <100ms latency. Deployed on Render.
+
+**Tech:** React, Node.js, Express, WebSockets, WebRTC, Firebase
+
+### AMS — Automatic Material System *(in progress)*
+
+Hardware + software system that routes M filament spools across N Bambu 3D printers — material multiplexing and job scheduling for my own print farm. Integrates with the printers over MQTT/LAN. A real engineer-builds-infra-for-their-own-business project; demo slice coming soon.
+
+**Tech:** Embedded, MQTT, Scheduling, Bambu Lab integration
+
+## Experience
+
+### FYCLabs — Full-Stack Engineer
+**May 2025 – Present · Remote**
+- Architect full-stack solutions in Next.js, React, TypeScript, PostgreSQL/Prisma, and GCP
+- Work directly with founders and end users to scope, ship, and iterate features
+- Build CRM integrations across GoHighLevel, Zoho, and HubSpot
+- Built CI/CD pipelines cutting deployment cycles ~70% at 95%+ reliability
+- Scaled backend infrastructure from 700 to 5,000+ active users
+
+### Holiday Channel — Full-Stack & iOS Developer
+**Jan 2025 – May 2025 · Colorado Springs, CO**
+- Built an e-commerce platform and microservices infrastructure designed for peak-traffic surges
+- Shipped Figma-to-code frontends with Google Ads integration
+
+### Luminii LLC — Data Analyst & Software Intern
+**May 2024 – Aug 2024 · Niles, IL**
+- Built an ML-driven automated pricing system, cutting manual re-calibrations ~40%
+- Re-indexed a 15,000+ record database, improving query performance ~65%
+
+## Technical Stack
+
+**Languages** TypeScript, JavaScript, Python, C/C++, Java, Swift
+**Frontend** React, Next.js, React Native, SwiftUI, TailwindCSS, Redux
+**Backend** Node.js, Express, Django, PostgreSQL, Prisma, MongoDB, Redis, GraphQL
+**Infra & DevOps** Docker, Kubernetes, GCP, AWS, CI/CD, Microservices
+**Automation & AI** n8n, GoHighLevel, Zapier, Make, ElevenLabs, Twilio
 
 ## Education
 
-**University of Illinois Urbana-Champaign**  
-Bachelor of Science in Computer Science | May 2025
-
-**Wilbur Wright College**  
-Associate of Engineering Science in Computer Science, High Honors
+**University of Illinois Urbana-Champaign** — B.S. Computer Science, May 2025
+**Wilbur Wright College** — A.E.S. Computer Science, High Honors
 
 ## Contact
 
-**Website:** [amsozzer.com](https://amsozzer.com)  
-**Email:** asozzer2@illinois.edu  
-**LinkedIn:** [linkedin.com/in/amsozzer1](https://linkedin.com/in/amsozzer1)  
-**GitHub:** [github.com/Amsozzer1](https://github.com/Amsozzer1)
-
----
-
-*Specializing in scalable full-stack solutions and automated workflows for business growth*
+**Website:** [amsozzer.com](https://amsozzer.com) · **Email:** ahmedsozzer9@gmail.com
+**LinkedIn:** [linkedin.com/in/amsozzer1](https://linkedin.com/in/amsozzer1) · **GitHub:** [github.com/Amsozzer1](https://github.com/Amsozzer1)
