@@ -1,0 +1,205 @@
+---
+import ArrowLink from '@src/components/ArrowLink.astro';
+import Band from '@src/components/Band.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import StackList from '@src/components/StackList.astro';
+import { jobSummaries } from '@src/components/home/_helpers/experience.consts';
+import { facts } from '@src/data/facts';
+import resume from '@src/data/resume.json';
+import { periodLabels } from '@src/lib/dates';
+
+const jobs = resume.work.map(job => ({
+  ...jobSummaries[job.name],
+  company: job.name,
+  start: job.startDate,
+  end: job.endDate,
+  period: periodLabels(job.startDate, job.endDate),
+}));
+---
+
+<Band ground="stone" id="experience" labelledby="experience-title">
+  <div class="container layout">
+    <div class="intro">
+      <SectionHeading class="title" id="experience-title" title="Experience" />
+      <p class="summary">
+        Three roles since {facts.experience.since}, all of them client-facing. I scope with the
+        people paying for it, build it, and own the pipeline that ships it — frontend, backend and
+        CI/CD, usually all three on the same project.
+      </p>
+      <ArrowLink class="more" href="/experience" label="every role, in detail" />
+    </div>
+
+    <ol class="jobs">
+      {jobs.map(job => <li class="job">
+        <div class="head">
+          <h3 class:list={['company', { current: !job.end }]}>{job.company}</h3>
+          <p class="role">{job.role}</p>
+        </div>
+        <p class="dates">
+          <time datetime={job.start}>{job.period.start}</time>
+          <span aria-hidden="true">→</span>
+          <span class="vh">to</span>
+          {job.end ? <time datetime={job.end}>{job.period.end}</time> : job.period.end}
+        </p>
+        <p class="lead">{job.lead}</p>
+        <p class="detail">{job.detail}</p>
+        <StackList class="stack" items={job.stack} />
+        <p class="outcome">{job.outcome}</p>
+      </li>)}
+    </ol>
+  </div>
+</Band>
+
+<style>
+  .layout {
+    display: grid;
+    row-gap: var(--space-l);
+  }
+  
+  .title {
+    font-size: var(--size-h3);
+    letter-spacing: var(--tracking-h3);
+  }
+  
+  .summary {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-s);
+    font-size: var(--size-small);
+  }
+  
+  .more {
+    margin-block-start: var(--space-m);
+  }
+  
+  .jobs {
+    padding: 0;
+    border-block-start: var(--rule-major) solid var(--fg);
+    list-style: none;
+  }
+  
+  .job {
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--space-m);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .job:last-child {
+    border-block-end: 0;
+  }
+  
+  .dates {
+    order: -1;
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .head {
+    margin-block-start: var(--space-xs);
+  }
+  
+  .company {
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: var(--size-lead);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-wordmark);
+  }
+  
+  .company.current {
+    font-family: var(--font-display);
+    font-size: var(--size-h4);
+    font-weight: 700;
+    letter-spacing: var(--tracking-h4);
+  }
+  
+  .role {
+    margin-block-start: var(--space-3xs);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .lead,
+  .detail {
+    max-inline-size: var(--layout-prose-max);
+    font-size: var(--size-small);
+  }
+  
+  .lead {
+    margin-block-start: var(--space-s);
+  }
+  
+  .detail {
+    margin-block-start: var(--space-xs);
+    color: var(--fg-secondary);
+  }
+  
+  .stack {
+    margin-block-start: var(--space-s);
+  }
+  
+  .outcome {
+    margin-block-start: var(--space-xs);
+    padding-block-start: var(--space-xs);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-link);
+    line-height: var(--leading-mono);
+  }
+  
+  /* Tablet up: the dates move into their own column beside each job. */
+  @media (width >= 48rem) {
+    .job {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 4fr);
+      column-gap: var(--space-l);
+      align-items: start;
+    }
+  
+    .job > * {
+      grid-column: 2;
+    }
+  
+    .job > .dates {
+      grid-row: 1 / span 5;
+      grid-column: 1;
+      padding-block-start: var(--space-2xs);
+    }
+  
+    .head {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: var(--space-m);
+      align-items: baseline;
+      justify-content: space-between;
+      margin-block-start: 0;
+    }
+  
+    .role {
+      margin-block-start: 0;
+    }
+  }
+  
+  /* Desktop: the intro beside the jobs, the current job closed with a black rule. */
+  @media (width >= 64rem) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr);
+      column-gap: var(--space-2xl);
+    }
+  
+    .jobs {
+      border-block-start: 0;
+    }
+  
+    .job:first-child {
+      padding-block-start: 0;
+      border-block-end-color: var(--fg);
+    }
+  }
+</style>

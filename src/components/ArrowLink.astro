@@ -1,0 +1,58 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  label: string;
+  direction?: 'right' | 'up-right' | 'down' | 'left';
+  download?: string;
+}
+
+const arrows = { right: '→', 'up-right': '↗', down: '↓', left: '←' } as const;
+
+const { href, label, direction = 'right', download, class: className, ...rest } = Astro.props;
+---
+
+<a
+  href={href}
+  download={download}
+  class:list={['arrow-link', { 'arrow-link-left': direction === 'left' }, className]}
+  {...rest}
+>
+  <span>{label}</span>
+  <span aria-hidden="true">{arrows[direction]}</span>
+</a>
+
+<style>
+  .arrow-link {
+    position: relative;
+    display: inline-flex;
+    gap: 1ch;
+    align-items: baseline;
+    padding-block-end: var(--space-3xs);
+    border-block-end: var(--rule-figure) solid var(--color-amber);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-link);
+    line-height: var(--leading-mono);
+    text-decoration: none;
+  }
+  
+  .arrow-link-left {
+    flex-direction: row-reverse;
+  }
+  
+  .arrow-link:hover {
+    border-block-end-color: currentcolor;
+  }
+  
+  /* Grows the hit area to the 44px touch target without changing the layout. */
+  .arrow-link::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline: 0;
+    block-size: max(100%, var(--layout-target-min));
+    translate: 0 -50%;
+  }
+</style>

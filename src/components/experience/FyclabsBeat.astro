@@ -1,0 +1,205 @@
+---
+import Band from '@src/components/Band.astro';
+import StackList from '@src/components/StackList.astro';
+import BeatKicker from '@src/components/experience/BeatKicker.astro';
+import SameJobStories from '@src/components/experience/SameJobStories.astro';
+import Stat from '@src/components/experience/Stat.astro';
+import { facts } from '@src/data/facts';
+import type resume from '@src/data/resume.json';
+
+interface Props {
+  job: (typeof resume.work)[number];
+  number: string;
+}
+
+const { job, number } = Astro.props;
+const id = `job-${number}`;
+const focus = job.summary ? ` — ${job.summary.charAt(0).toLowerCase()}${job.summary.slice(1)}` : '';
+
+const stack = [
+  'Next.js',
+  'React',
+  'TypeScript',
+  'PostgreSQL + Prisma',
+  'GCP',
+  'React Native',
+  'REST & webhooks',
+];
+
+// The web wording of the first five resume.json highlights; the sixth is the 7× figure above them.
+const highlights = [
+  {
+    label: 'Scoping, with the people paying for it',
+    detail:
+      'Client founders, C-suite and end users, directly — surfacing the pain point, then translating it into a shipped feature. Not a ticket queue.',
+  },
+  {
+    label: 'Product, concept to production',
+    detail:
+      'Full-stack applications for early-stage startups, end to end: Next.js, React, TypeScript, PostgreSQL with Prisma, on GCP.',
+  },
+  {
+    label: 'Mobile, straight off the design file',
+    detail:
+      'Cross-platform React Native from Figma, owning the full API layer and the database modelling underneath it.',
+  },
+  {
+    label: 'Integrations that delete typing',
+    detail:
+      'GoHighLevel, Zoho and HubSpot against client backends over REST and webhooks, replacing manual data entry for operations teams.',
+  },
+  {
+    label: 'Releases, manual to push-button',
+    detail:
+      'Automated CI/CD on GCP with test gates, running across several concurrent client projects at once.',
+  },
+];
+---
+
+<section class="job" aria-labelledby={id}>
+  <Band ground="body" class="beat">
+    <div class="container">
+      <div class="head">
+        <hgroup class="heading">
+          <BeatKicker
+            number={number}
+            place={job.location}
+            start={job.startDate}
+            end={job.endDate}
+          />
+          <h2 id={id} class="company">{job.name}</h2>
+          <p class="position">{job.position}{focus}</p>
+        </hgroup>
+        <StackList items={stack} class="stack" />
+      </div>
+
+      <div class="body">
+        <Stat value={facts.experience.fyclabs.growth} highlight>
+          The users that one backend carries, after query and schema work — then scaled out
+          horizontally on GCP. Same product, same codebase: seven times the traffic through it.
+        </Stat>
+        <dl class="highlights">
+          {highlights.map(({ label, detail }) => <div class="row">
+            <dt>{label}</dt>
+            <dd>{detail}</dd>
+          </div>)}
+        </dl>
+      </div>
+    </div>
+  </Band>
+  <SameJobStories />
+</section>
+
+<style>
+  .head {
+    display: grid;
+    gap: var(--space-s);
+  }
+  
+  .heading {
+    display: grid;
+    gap: var(--space-xs);
+  }
+  
+  .position {
+    color: var(--fg-body);
+    font-size: var(--size-lead);
+    line-height: var(--leading-tight);
+  }
+  
+  .body {
+    display: grid;
+    gap: var(--space-xl);
+    margin-block-start: var(--space-xl);
+  }
+  
+  .row {
+    padding-block: var(--space-s);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .row:last-child {
+    padding-block-end: 0;
+  }
+  
+  dt {
+    color: var(--fg);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+  }
+  
+  dd {
+    margin-block-start: var(--space-2xs);
+    color: var(--fg-body);
+    font-size: var(--size-small);
+  }
+  
+  @media (width >= 48rem) {
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: var(--space-m);
+      align-items: baseline;
+    }
+  
+    dd {
+      margin-block-start: 0;
+    }
+  }
+  
+  @media (width >= 64rem) {
+    .head {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: var(--space-xl);
+      align-items: end;
+    }
+  
+    .stack {
+      justify-content: flex-end;
+      max-inline-size: calc(var(--space-4xl) * 2);
+      text-align: end;
+    }
+  
+    .body {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 9fr);
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+  
+  @media print {
+    .beat {
+      padding-block: var(--space-s);
+    }
+  
+    .company {
+      font-size: var(--size-h3);
+    }
+  
+    .position {
+      font-size: var(--size-small);
+    }
+  
+    .body {
+      display: block;
+      margin-block-start: var(--space-s);
+    }
+  
+    .highlights {
+      margin-block-start: var(--space-s);
+    }
+  
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: var(--space-m);
+      padding-block: var(--space-2xs);
+      align-items: baseline;
+      break-inside: avoid;
+    }
+  
+    dd {
+      margin-block-start: 0;
+    }
+  }
+</style>

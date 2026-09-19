@@ -1,0 +1,66 @@
+---
+import Band from '@src/components/Band.astro';
+import Kicker from '@src/components/Kicker.astro';
+
+interface Props {
+  id: string;
+  title: string;
+  kicker?: string;
+  ground?: 'paper' | 'body' | 'stone';
+  wide?: boolean;
+}
+
+const { id, title, kicker, ground = 'body', wide = false } = Astro.props;
+---
+
+<Band ground={ground} labelledby={id} class="page-section">
+  <div class="container grid">
+    <hgroup class="heading">
+      {kicker && <Kicker>{kicker}</Kicker>}
+      <h2 id={id} class="title">{title}</h2>
+    </hgroup>
+    <div class:list={['content', 'prose', { wide }]}>
+      <slot />
+    </div>
+  </div>
+</Band>
+
+<style>
+  .grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+  
+  .heading {
+    display: grid;
+    gap: var(--space-xs);
+  }
+  
+  .title {
+    font-size: var(--size-h3);
+  }
+  
+  .content {
+    padding-block-start: var(--space-m);
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  /* Tables and grids need the whole column, not the reading measure. */
+  .content.wide {
+    max-inline-size: none;
+  }
+  
+  @media (width >= 64rem) {
+    .grid {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 5fr);
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+  
+  @media print {
+    .page-section {
+      padding-block: var(--space-m);
+    }
+  }
+</style>

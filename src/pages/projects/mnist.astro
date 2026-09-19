@@ -1,0 +1,450 @@
+---
+import MnistPad from '@src/components/demos/MnistPad/MnistPad.astro';
+import Band from '@src/components/Band.astro';
+import Tape from '@src/components/marks/Tape.astro';
+import {
+  capitalize,
+  count,
+  projectBySlug,
+  spell,
+} from '@src/components/projects/_helpers/projects.functions';
+import NextProject from '@src/components/projects/NextProject.astro';
+import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import { facts } from '@src/data/facts';
+import Base from '@src/layouts/Base.astro';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const project = projectBySlug('mnist');
+const { dataset, layers, filters, kernel, dense, classes, parameters, checkpoint } = facts.mnist;
+const [input] = layers;
+const [side] = input.shape;
+// input → conv → pool → conv → pool → flatten → dense → softmax: the head starts at the flatten
+const flattened = layers[layers.length - 3].shape[0];
+
+const shapeOf = (layer: (typeof layers)[number]) =>
+  layer.name === 'softmax' ? `${count(classes)} classes` : layer.shape.map(count).join(' × ');
+
+// A funnel, not a measurement: each layer's bar is shorter than the one above it.
+const funnel = (index: number) => `${((layers.length - index) / layers.length) * 100}%`;
+const solid = (name: string) => name.startsWith('conv') || name === 'softmax';
+
+const boxWidth = 130;
+const boxGap = 26;
+const boxHeight = 56;
+const diagramWidth = layers.length * boxWidth + (layers.length - 1) * boxGap;
+const boxes = layers.map((layer, index) => {
+  const x = index * (boxWidth + boxGap);
+  return {
+    name: layer.name,
+    shape: shapeOf(layer),
+    solid: solid(layer.name),
+    x,
+    centre: x + boxWidth / 2,
+  };
+});
+
+const training = [
+  {
+    label: 'dataset',
+    value: `MNIST — ${count(dataset.train)} train / ${count(dataset.test)} test`,
+  },
+  { label: 'input', value: `${side} × ${side} grayscale, scaled to [0, 1]` },
+  {
+    label: 'conv stack',
+    value: `${filters[0]} then ${filters[1]} filters, ${kernel} × ${kernel}, no bias term`,
+  },
+  { label: 'head', value: `${count(flattened)} → ${dense} → ${classes}` },
+  { label: 'parameters', value: `${count(parameters)} — counted from the checkpoint` },
+  { label: 'checkpoint', value: `epoch ${checkpoint.epoch}` },
+  // @TODO: numbers pass - the weights become a float16 binary plus a manifest when the model is retrained
+  { label: 'weights', value: 'plain JSON, loaded by the page' },
+  { label: 'inference', value: 'hand-written, in the browser' },
+  { label: 'hosting', value: 'static — no server in the loop' },
+];
+
+const digits = Array.from({ length: classes }, (_, digit) => digit);
+---
+
+<Base page="project" seo={routeSeo('/projects/mnist')}>
+  <ProjectHero
+    project={project}
+    lead="A convnet that runs with no runtime."
+    highlight="no runtime"
+    intro={`${capitalize(spell(filters.length))} convolution and pooling stages learn the strokes, then a dense head turns them into ${spell(classes)} probabilities. Trained with a library, served without one — the forward pass is written out by hand. Nothing you draw leaves your machine.`}
+  >
+    <div slot="figure" class="artifact">
+      <MnistPad />
+      <Tape class="tape-corner" />
+      <Tape class="tape-edge" />
+    </div>
+  </ProjectHero>
+
+  <Band ground="body" labelledby="shape-title">
+    <div class="container">
+      <SectionHeading
+        id="shape-title"
+        kicker="01 — the shape of it"
+        title="The network, layer by layer"
+      />
+
+      <svg
+        class="diagram"
+        viewBox={`0 0 ${diagramWidth} ${boxHeight + 16}`}
+        width={diagramWidth}
+        height={boxHeight + 16}
+        aria-hidden="true"
+      >
+        {boxes.map(box => <g>
+          <rect
+            class:list={['box', { solid: box.solid }]}
+            x={box.x}
+            y="8"
+            width={boxWidth}
+            height={boxHeight}
+          ></rect>
+          <text class:list={['box-name', { 'on-solid': box.solid }]} x={box.centre} y="32"
+            >{box.name}</text
+          >
+          <text class:list={['box-shape', { 'on-solid': box.solid }]} x={box.centre} y="52"
+            >{box.shape}</text
+          >
+        </g>)}
+        {boxes.slice(0, -1).map(box => (
+          <path
+            class="arrow"
+            d={`M${box.x + boxWidth + 5} 36 H${box.x + boxWidth + boxGap - 5} M${box.x + boxWidth + boxGap - 11} 31.5 L${box.x + boxWidth + boxGap - 5} 36 L${box.x + boxWidth + boxGap - 11} 40.5`}
+          ></path>
+        ))}
+      </svg>
+
+      <table class="layers">
+        <caption class="vh">
+          The network, layer by layer
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">layer</th>
+            <td class="bar-cell" aria-hidden="true"></td>
+            <th scope="col" class="shape">output</th>
+          </tr>
+        </thead>
+        <tbody>
+          {layers.map((layer, index) => <tr>
+            <th scope="row">{layer.name}</th>
+            <td class="bar-cell" aria-hidden="true">
+              <svg class:list={['bar', { solid: solid(layer.name) }]}>
+                <rect width={funnel(index)} height="100%"></rect>
+              </svg>
+            </td>
+            <td class="shape">{shapeOf(layer)}</td>
+          </tr>)}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row">parameters</th>
+            <td class="bar-cell" aria-hidden="true"></td>
+            <td class="shape">{count(parameters)}</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <p class="diagram-note">
+        ReLU after each convolution, dropout before the head, categorical cross-entropy.
+      </p>
+    </div>
+  </Band>
+
+  <Band ground="paper" labelledby="training-title">
+    <div class="container">
+      <div class="section-head">
+        <SectionHeading
+          id="training-title"
+          kicker="02 — the training run"
+          title={`${capitalize(spell(checkpoint.epoch))} epochs, straight to JSON.`}
+        />
+        <p class="head-label">read off {checkpoint.file}</p>
+      </div>
+
+      <div class="training">
+        <div>
+          <p class="section-lead">
+            Everything on this page is read off that one file — the layer shapes above it, the
+            numbers below it, and the weights the browser loads to do the arithmetic itself.
+          </p>
+          {/* @TODO: numbers pass - add the test accuracy row once the network is retrained and measured */}
+          <dl class="facts">
+            {training.map(item => <div class="fact">
+              <dt class="fact-label">{item.label}</dt>
+              <dd class="fact-value">{item.value}</dd>
+            </div>)}
+          </dl>
+        </div>
+
+        <div class="classes">
+          <h3 class="classes-title">{capitalize(spell(classes))} classes</h3>
+          <p class="classes-row" aria-hidden="true">{digits.map(digit => <span>{digit}</span>)}</p>
+          <p class="classes-note">
+            A flat {spell(classes)}-way choice, which is why MNIST is the right first problem — a 4
+            read as a 9 tells you something specific about what the filters learned.
+          </p>
+        </div>
+      </div>
+    </div>
+  </Band>
+
+  <NextProject current="mnist" />
+</Base>
+
+<style>
+  .artifact {
+    position: relative;
+  }
+  
+  .tape-corner {
+    inset-block-start: calc(var(--space-xs) * -1);
+    inset-inline-start: calc(var(--space-l) * -1);
+    rotate: -30deg;
+  }
+  
+  .tape-edge {
+    display: none;
+    inset-block-end: var(--space-3xl);
+    inset-inline-end: calc(var(--space-l) * -1);
+    rotate: 25deg;
+  }
+  
+  .section-lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-body);
+  }
+  
+  .diagram {
+    display: none;
+    max-inline-size: 100%;
+    margin-block-start: var(--space-xl);
+    block-size: auto;
+  }
+  
+  .box {
+    fill: none;
+    stroke: var(--color-text);
+    stroke-width: var(--rule-row);
+  }
+  
+  .box.solid {
+    fill: var(--color-ground-ink);
+  }
+  
+  .box-name,
+  .box-shape {
+    font-family: var(--font-mono);
+    text-anchor: middle;
+  }
+  
+  .box-name {
+    fill: var(--color-text);
+    font-size: var(--size-mono);
+  }
+  
+  .box-shape {
+    fill: var(--color-text-caption);
+    font-size: var(--size-mono-small);
+  }
+  
+  .box-name.on-solid {
+    fill: var(--color-text-on-ink);
+  }
+  
+  .box-shape.on-solid {
+    fill: var(--color-text-on-ink-muted);
+  }
+  
+  .arrow {
+    fill: none;
+    stroke: var(--color-text-caption);
+    stroke-width: var(--rule-row);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  
+  .layers {
+    inline-size: 100%;
+    margin-block-start: var(--space-xl);
+    border-block-start: var(--rule-major) solid var(--color-text);
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .layers th,
+  .layers td {
+    padding-block: var(--space-s);
+    text-align: start;
+    vertical-align: baseline;
+  }
+  
+  .layers tr {
+    border-block-end: var(--rule-row) solid var(--color-rule-light);
+  }
+  
+  .layers thead th,
+  .layers thead td {
+    padding-block: var(--space-xs);
+    color: var(--color-text-caption);
+    font-size: var(--size-mono-small);
+    font-weight: 400;
+  }
+  
+  .layers tbody th {
+    color: var(--color-text-caption);
+    font-weight: 400;
+  }
+  
+  .layers tfoot th {
+    color: var(--color-text);
+    font-weight: 700;
+  }
+  
+  .layers .shape {
+    color: var(--color-text);
+    text-align: end;
+  }
+  
+  .bar-cell {
+    inline-size: 50%;
+    padding-inline: var(--space-m);
+  }
+  
+  .bar {
+    display: block;
+    inline-size: 100%;
+    max-inline-size: var(--space-2xl);
+    block-size: var(--space-2xs);
+    fill: var(--color-rule-light);
+  }
+  
+  .bar.solid {
+    fill: var(--color-amber);
+  }
+  
+  .diagram-note {
+    margin-block-start: var(--space-m);
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-note);
+    font-style: italic;
+  }
+  
+  .section-head {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+  
+  .head-label {
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .training {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+  
+  .facts {
+    display: grid;
+    margin-block-start: var(--space-xl);
+    border-block-start: var(--rule-major) solid var(--color-text);
+  }
+  
+  .fact {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-block: var(--space-s);
+    border-block-end: var(--rule-row) solid var(--color-rule-light);
+  }
+  
+  .fact-label {
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .fact-value {
+    margin: 0;
+    color: var(--color-text);
+    font-size: var(--size-small);
+  }
+  
+  .classes-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    justify-content: space-between;
+    margin-block-start: var(--space-m);
+    padding-block-start: var(--space-m);
+    border-block-start: var(--rule-row) solid var(--color-text);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--size-h2);
+    line-height: 1;
+    letter-spacing: var(--tracking-h4);
+  }
+  
+  .classes-note {
+    margin-block-start: var(--space-m);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-note);
+    font-style: italic;
+  }
+  
+  @media (width >= 48rem) {
+    .section-head {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-l);
+      align-items: baseline;
+    }
+  
+    .fact {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: var(--space-m);
+      align-items: baseline;
+    }
+  }
+  
+  @media (width >= 64rem) {
+    .tape-edge {
+      display: block;
+    }
+  
+    .training {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+  }
+  
+  /* The pipeline needs its own width to stay legible; below that the table carries it. */
+  @media (width >= 75rem) {
+    .diagram {
+      display: block;
+    }
+  
+    .layers {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+  }
+</style>

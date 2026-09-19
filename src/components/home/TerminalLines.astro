@@ -1,0 +1,22 @@
+---
+import type { Line } from '@src/components/home/_helpers/terminalLines.functions';
+
+interface Props {
+  lines: Line[];
+}
+
+const { lines } = Astro.props;
+const segments = lines.flatMap((line, index) => (index === 0 ? line : ['\n', ...line]));
+---
+
+<pre>{segments.map(segment => (typeof segment === 'string' ? segment : <span class={segment.tone}>{segment.text}</span>))}</pre>
+
+<style>
+  .accent {
+    color: var(--fg-label);
+  }
+  
+  .muted {
+    color: var(--fg-caption);
+  }
+</style>

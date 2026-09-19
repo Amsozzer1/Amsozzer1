@@ -1,0 +1,112 @@
+---
+import Band from '@src/components/Band.astro';
+import Kicker from '@src/components/Kicker.astro';
+import { facts } from '@src/data/facts';
+import type { ProjectSlug } from '@src/data/projects';
+
+interface Thread {
+  project: ProjectSlug;
+  text: string;
+}
+
+// @TODO: the Blogs canvas also lists two PlusWeb threads (parser crashes, connection starvation); they need Ahmed's go-ahead and their figures in facts.ts
+const threads: Thread[] = [
+  {
+    project: 'ams-x',
+    text: `The spool module is a human right now. ${facts.amsx.stepperDriver} next, and the swap timing is worth a write-up once a motor is doing it instead of me.`,
+  },
+];
+---
+
+<Band ground="stone" labelledby="open-threads" class="threads">
+  <div class="container grid">
+    <div class="intro">
+      <hgroup class="heading">
+        <Kicker>not written up yet</Kicker>
+        <h2 id="open-threads" class="title">Open threads</h2>
+      </hgroup>
+      <p class="lede">
+        Things currently unresolved in my own code. They are on the project pages as caveats; they
+        get a post when they get an answer.
+      </p>
+    </div>
+    <ul class="list">
+      {threads.map(({ project, text }) => <li class="thread">
+        <a class="project" href={`/projects/${project}`}>
+          {project}
+        </a>
+        <p>{text}</p>
+      </li>)}
+    </ul>
+  </div>
+</Band>
+
+<style>
+  .threads {
+    border-block-start: var(--rule-row) solid var(--color-text);
+  }
+  
+  .grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  
+  .heading {
+    display: grid;
+    gap: var(--space-s);
+  }
+  
+  .title {
+    font-size: var(--size-h3);
+  }
+  
+  .lede {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-secondary);
+  }
+  
+  .list {
+    padding: 0;
+    list-style: none;
+  }
+  
+  .thread {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-block: var(--space-m);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+    color: var(--fg);
+  }
+  
+  .thread:first-child {
+    border-block-start-color: var(--fg);
+  }
+  
+  /* The padding makes the 44px touch target; the negative margin keeps it from moving the row. */
+  .project {
+    justify-self: start;
+    margin-block: calc(var(--space-xs) * -1);
+    padding-block: var(--space-xs);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  @media (width >= 48rem) {
+    .thread {
+      grid-template-columns: calc(var(--space-4xl) + var(--space-s)) minmax(0, 1fr);
+      gap: var(--space-m);
+      align-items: baseline;
+    }
+  }
+  
+  @media (width >= 64rem) {
+    .grid {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+</style>

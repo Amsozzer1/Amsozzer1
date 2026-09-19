@@ -1,0 +1,110 @@
+---
+import { facts } from '@src/data/facts';
+
+const { digit, bars } = facts.mnist.sample;
+const runnersUp = new Intl.ListFormat('en', { type: 'conjunction' }).format(
+  bars.filter(bar => bar.digit !== digit).map(bar => String(bar.digit)),
+);
+const description = `The MNIST demo, drawn: a hand-written ${digit} on the pad, and the softmax bars with ${digit} far ahead of ${runnersUp}.`;
+---
+
+<div class="mnist on-ink" role="img" aria-label={description}>
+  <div class="pad">
+    <span class="digit">{digit}</span>
+  </div>
+  <div class="softmax">
+    <span class="label">softmax</span>
+    {bars.map(bar => <span class:list={['bar', { top: bar.digit === digit }]}>
+      <span class="bar-digit">{bar.digit}</span>
+      <svg class="bar-track" viewBox="0 0 100 1" preserveAspectRatio="none">
+        <rect width={bar.share * 100} height="1" />
+      </svg>
+    </span>)}
+  </div>
+</div>
+
+<style>
+  .mnist {
+    display: flex;
+    gap: var(--space-m);
+    align-items: center;
+    padding: var(--space-m) var(--space-s);
+    background-color: var(--color-ground-ink);
+  }
+  
+  /* A 16 × 16 drawing grid, the size of the pad on the MNIST page. */
+  .pad {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: 35%;
+    aspect-ratio: 1;
+    background-color: var(--color-ground-ink-raised);
+    background-image:
+      linear-gradient(to right, var(--color-rule-ink) var(--rule-row), transparent var(--rule-row)),
+      linear-gradient(to bottom, var(--color-rule-ink) var(--rule-row), transparent var(--rule-row));
+    background-size: calc(100% / 16) calc(100% / 16);
+  }
+  
+  .digit {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: var(--size-display-project);
+    line-height: var(--leading-display);
+  }
+  
+  .softmax {
+    display: grid;
+    flex: 1;
+    gap: var(--space-2xs);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .label {
+    margin-block-end: var(--space-3xs);
+  }
+  
+  .bar {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: center;
+  }
+  
+  .bar-digit {
+    min-inline-size: 1ch;
+  }
+  
+  .bar-track {
+    inline-size: 75%;
+    block-size: var(--space-2xs);
+    fill: var(--color-text-on-ink-subtle);
+  }
+  
+  .top {
+    color: var(--fg);
+  }
+  
+  .top .bar-track {
+    fill: var(--color-amber);
+  }
+  
+  @media (width >= 64rem) {
+    .mnist {
+      gap: var(--space-l);
+      padding: var(--space-m) var(--space-l);
+    }
+  }
+  
+  @media (forced-colors: active) {
+    .bar-track {
+      fill: canvastext;
+    }
+  
+    .top .bar-track {
+      fill: highlight;
+    }
+  }
+</style>

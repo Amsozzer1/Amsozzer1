@@ -1,0 +1,52 @@
+---
+import FormattedDate from '@src/components/pages/FormattedDate.astro';
+import type { Post } from '@src/data/posts';
+
+interface Props {
+  post: Post;
+  withUpdated?: boolean;
+  class?: string;
+}
+
+const { post, withUpdated = false, class: className, ...rest } = Astro.props;
+const { pubDate, updated, tags } = post.data;
+
+const wordsPerMinute = 230;
+const words = post.body?.split(/\s+/).filter(Boolean).length ?? 0;
+const minutes = Math.max(1, Math.round(words / wordsPerMinute));
+---
+
+<p class:list={['post-meta', className]} {...rest}>
+  <FormattedDate date={pubDate} />
+  {withUpdated && updated && (
+    <>
+      <span class="sep" aria-hidden="true">/</span>
+      <span>updated <FormattedDate date={updated} /></span>
+    </>
+  )}
+  {tags.map(tag => (
+    <>
+      <span class="sep" aria-hidden="true">/</span>
+      <span>{tag}</span>
+    </>
+  ))}
+  <span class="sep" aria-hidden="true">/</span>
+  <span aria-hidden="true">~{minutes} min</span
+  ><span class="vh">{`, about ${minutes} minutes to read`}</span>
+</p>
+
+<style>
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-xs);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .sep {
+    color: var(--rule-color);
+  }
+</style>

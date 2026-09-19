@@ -1,0 +1,27 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['mark-overlay', 'tape', className]} aria-hidden="true" {...rest}></span>
+
+<style>
+  .tape {
+    inline-size: var(--layout-mark-tape-width);
+    block-size: var(--layout-mark-tape-height);
+    border-block: var(--rule-row) solid var(--color-tape-edge-light);
+    border-block-end-color: var(--color-tape-edge-dark);
+    background-color: var(--color-tape);
+    rotate: -28deg;
+  }
+  
+  @media (width < 48rem) {
+    .tape {
+      inline-size: var(--layout-mark-tape-width-compact);
+      block-size: var(--layout-mark-tape-height-compact);
+    }
+  }
+</style>

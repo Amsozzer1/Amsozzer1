@@ -1,0 +1,75 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['mark-overlay', 'tack', className]} aria-hidden="true" {...rest}>
+  <span class="tack-pin"></span>
+  <span class="tack-head"></span>
+</span>
+
+<style>
+  /* The tack's details are drawn in em, so they scale with its token size. */
+  .tack {
+    inset-block-start: 0;
+    inset-inline-start: 50%;
+    inline-size: 1em;
+    block-size: 1em;
+    font-size: var(--layout-mark-tack);
+    translate: -50% -50%;
+  }
+  
+  .tack-pin {
+    position: absolute;
+    inset-block-start: 0.8em;
+    inset-inline-start: 50%;
+    inline-size: 0.12em;
+    block-size: 0.46em;
+    background-color: var(--color-tack-pin);
+    rotate: 3deg;
+  }
+  
+  .tack-head {
+    position: absolute;
+    inset: 0;
+    border: var(--rule-row) solid var(--color-tack-rim);
+    border-radius: 50%;
+    background-color: var(--color-amber);
+    box-shadow: 0 0.12em 0.19em var(--color-shadow-tack);
+  }
+  
+  .tack-head::before,
+  .tack-head::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+  }
+  
+  .tack-head::before {
+    inset-block-start: 0.15em;
+    inset-inline-start: 0.19em;
+    inline-size: 0.35em;
+    block-size: 0.27em;
+    background-color: var(--color-tack-highlight);
+    rotate: -24deg;
+  }
+  
+  .tack-head::after {
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    inline-size: 0.38em;
+    block-size: 0.38em;
+    border: var(--rule-row) solid var(--color-tack-pin);
+    background-color: var(--color-tack-recess);
+    translate: -50% -50%;
+  }
+  
+  @media (width < 48rem) {
+    .tack {
+      font-size: var(--layout-mark-tack-compact);
+    }
+  }
+</style>

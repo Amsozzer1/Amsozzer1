@@ -6,7 +6,7 @@ on:
     paths:
       - 'resume.tex'
       - 'Makefile'
-      - '.github/workflows/resume.yml'
+      - '.github/workflows/tex.yml'
   workflow_dispatch:
 
 permissions:
@@ -18,7 +18,7 @@ jobs:
     container: texlive/texlive:latest-full
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Build
         run: |
@@ -27,8 +27,8 @@ jobs:
 
       - name: Commit PDF
         run: |
-          cp build/resume.pdf resume.pdf
-          git add resume.pdf
+          cp build/resume.pdf public/resume.pdf
+          git add public/resume.pdf
           if git diff --cached --quiet; then echo "no change"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

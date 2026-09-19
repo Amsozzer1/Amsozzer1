@@ -1,0 +1,165 @@
+---
+import AmberRule from '@src/components/AmberRule.astro';
+import Band from '@src/components/Band.astro';
+import CtaButton from '@src/components/CtaButton.astro';
+import StackList from '@src/components/StackList.astro';
+import type { Project } from '@src/data/projects';
+
+interface Props {
+  project: Project;
+  lead: string;
+  highlight: string;
+  intro: string;
+}
+
+const { project, lead, highlight, intro } = Astro.props;
+
+// The lead arrives as text, not as a slot: the amber highlight has to be styled here, and scoped
+// styles never reach markup a page passes in.
+const at = lead.indexOf(highlight);
+---
+
+<Band ground="paper" graph labelledby="project-title" class="project-hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <a class="back-link" href="/#projects"><span aria-hidden="true">←</span> back to projects</a>
+      <h1 id="project-title" class="title">{project.name}</h1>
+      <p class="lead">
+        {lead.slice(0, at)}<span class="highlight">{highlight}</span
+        >{lead.slice(at + highlight.length)}
+      </p>
+      <p class="intro">{intro}</p>
+      <StackList class="stack" items={project.stack} />
+    </div>
+    <div class="hero-figure">
+      <slot name="figure" />
+    </div>
+    <div class="hero-foot">
+      <div class="cta-anchor">
+        <CtaButton href={project.repo} direction="up-right" bleed
+          ><span class="vh">{project.name} </span>Source on GitHub</CtaButton
+        >
+        <slot name="annotation" />
+      </div>
+      <slot name="foot" />
+    </div>
+  </div>
+</Band>
+<AmberRule />
+
+<style>
+  .project-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-block-size: calc(100svh - var(--layout-header-height) - var(--layout-amber-band));
+    padding-block: var(--space-l) 0;
+  }
+  
+  .hero-inner {
+    display: grid;
+    flex-grow: 1;
+    grid-template:
+      'text' auto
+      'figure' auto
+      'foot' 1fr;
+    row-gap: var(--space-xl);
+  }
+  
+  .hero-text {
+    grid-area: text;
+  }
+  
+  .back-link {
+    display: inline-flex;
+    gap: var(--space-2xs);
+    align-items: center;
+    min-block-size: var(--layout-target-min);
+    padding-inline: var(--space-s);
+    border: var(--rule-row) solid var(--color-text);
+    background-color: var(--color-ground-paper);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+    text-decoration: none;
+  }
+  
+  .back-link:hover {
+    text-decoration-line: underline;
+  }
+  
+  .title {
+    margin-block-start: var(--space-l);
+    font-size: var(--size-display-project);
+  }
+  
+  .lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--color-text-body);
+    font-size: var(--size-lead);
+    line-height: var(--leading-tight);
+  }
+  
+  .highlight {
+    padding-inline: var(--space-2xs);
+    background-color: var(--color-amber);
+    color: var(--color-text);
+    box-decoration-break: clone;
+  }
+  
+  .intro {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--color-text-secondary);
+  }
+  
+  .stack {
+    margin-block-start: var(--space-m);
+  }
+  
+  .hero-figure {
+    position: relative;
+    grid-area: figure;
+    align-self: start;
+  }
+  
+  .hero-foot {
+    display: flex;
+    grid-area: foot;
+    gap: var(--space-l);
+    align-items: center;
+    align-self: end;
+    justify-content: space-between;
+  }
+  
+  .cta-anchor {
+    position: relative;
+    z-index: 2;
+    flex-grow: 1;
+    margin-inline: calc(var(--layout-gutter) * -1);
+  }
+  
+  /* Desktop: text left, the artifact right and bleeding into the gutter, the CTA hanging over the amber band. */
+  @media (width >= 64rem) {
+    .hero-inner {
+      grid-template:
+        'text figure' 1fr
+        'foot foot' auto
+        / minmax(0, 11fr) minmax(0, 9fr);
+      gap: var(--space-l) var(--space-xl);
+    }
+  
+    .hero-figure {
+      inline-size: calc(100% + var(--layout-gutter));
+      margin-block-start: var(--space-xl);
+    }
+  
+    .cta-anchor {
+      flex-grow: 0;
+      margin-inline: 0;
+      translate: 0 50%;
+    }
+  }
+</style>

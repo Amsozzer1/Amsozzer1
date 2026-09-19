@@ -1,0 +1,141 @@
+---
+import PageHero from '@src/components/pages/PageHero.astro';
+import PageSection from '@src/components/pages/PageSection.astro';
+import Pending from '@src/components/pages/Pending.astro';
+import { routes } from '@src/data/routes';
+import { site } from '@src/data/site';
+import Base from '@src/layouts/Base.astro';
+import { lastModified } from '@src/lib/dates';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const updated = lastModified(...routes['/accessibility'].sources);
+
+const measures = [
+  'Real landmarks on every page — header, primary navigation, main and footer — with a skip link as the first thing you reach by keyboard.',
+  'One h1 per page, and headings in order under it.',
+  'A two-tone focus ring on every link, button and field: a solid outline for the shape, a halo for contrast. Windows high-contrast mode drops the halo and keeps the outline.',
+  'Every text and background pair passes 4.5:1; the closest is a caption on the stone band at 4.78:1. Amber is a fill on light grounds and only becomes text on black.',
+  'Nothing is carried by colour alone. The current page in the navigation is bold as well as marked, and figures are labelled in text.',
+  'Touch targets of at least 44px on phones.',
+  'Readable from 320px wide and at 200% zoom with no sideways scrolling. Type is set in rem, so browser text size settings work.',
+  'No motion is needed to read anything, and decorative marks are hidden from screen readers and from high-contrast mode.',
+  'Pages carry no JavaScript unless they hold a demo, so nothing breaks when scripts do not run.',
+];
+
+const tests = [
+  {
+    setup: 'Keyboard only — Safari, Chrome, Firefox',
+    checks: 'every control reachable in a sensible order, focus always visible, skip link works',
+  },
+  {
+    setup: 'VoiceOver with Safari, macOS',
+    checks: 'landmarks, heading outline, link and button names, table headers',
+  },
+  {
+    setup: 'VoiceOver with Safari, iPhone',
+    checks: 'reading order, touch targets, the navigation rail',
+  },
+  {
+    setup: '200% zoom and a 320px window',
+    checks: 'no horizontal scrolling, nothing clipped or overlapping',
+  },
+  {
+    setup: 'Windows high contrast (forced colours)',
+    checks: 'focus ring, filled buttons and data bars still visible',
+  },
+];
+---
+
+<Base seo={routeSeo('/accessibility')}>
+  <PageHero kicker="accessibility" title="WCAG 2.2 AA, and how it is tested." updated={updated}>
+    <p>
+      This site aims at <a href="https://www.w3.org/TR/WCAG22/">WCAG 2.2</a> level AA on every page,
+      and is built that way from the start rather than patched afterwards.
+    </p>
+  </PageHero>
+
+  <PageSection id="how" title="How the site meets it">
+    <ul class="measures">
+      {measures.map(measure => <li>{measure}</li>)}
+    </ul>
+    <p>
+      Every push is checked automatically: the markup is validated, the accessibility lint rules run
+      over it, and Lighthouse has to score 100 for accessibility or the build fails.
+    </p>
+  </PageSection>
+
+  <PageSection id="tests" title="Manual tests" ground="paper" wide>
+    <table class="matrix">
+      <caption>
+        The manual pass, run before launch and after any change to the shell.
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Setup</th>
+          <th scope="col">What is checked</th>
+          <th scope="col">Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {/* @TODO: run the manual pass and replace each result */}
+        {tests.map(({ setup, checks }) => <tr>
+          <th scope="row">{setup}</th>
+          <td>{checks}</td>
+          <td>not run yet</td>
+        </tr>)}
+      </tbody>
+    </table>
+  </PageSection>
+
+  <PageSection id="limits" title="Known limitations">
+    {/* @TODO: what the manual pass turns up, and anything waiting on a fix */}
+    <Pending />
+  </PageSection>
+
+  <PageSection id="report" title="Report a problem" ground="paper">
+    <p>
+      If something here gets in your way, email <a href={`mailto:${site.email}`}>{site.email}</a>
+      with the address of the page and what happened. Tell me what you were using — browser, screen
+      reader, zoom level — and I will fix it.
+    </p>
+  </PageSection>
+</Base>
+
+<style>
+  .measures {
+    padding-inline-start: var(--space-m);
+  }
+  
+  .measures li + li {
+    margin-block-start: var(--space-2xs);
+  }
+  
+  .matrix {
+    inline-size: 100%;
+    font-size: var(--size-small);
+  }
+  
+  .matrix caption {
+    margin-block-end: var(--space-s);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+    text-align: start;
+  }
+  
+  .matrix :is(th, td) {
+    padding: var(--space-2xs) var(--space-xs) var(--space-2xs) 0;
+    border-block-end: var(--rule-row) solid var(--rule-color);
+    text-align: start;
+    vertical-align: baseline;
+  }
+  
+  .matrix thead th {
+    border-block-end: var(--rule-figure) solid var(--fg);
+  }
+  
+  .matrix tbody th {
+    font-weight: 600;
+  }
+</style>

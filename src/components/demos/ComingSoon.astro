@@ -1,0 +1,35 @@
+---
+interface Props {
+  id: string;
+  class?: string;
+}
+
+const { id, class: className, ...rest } = Astro.props;
+---
+
+<p id={id} class:list={['coming-soon', className]} {...rest}>
+  <span class="tag">coming soon</span>
+  <span><slot /></span>
+</p>
+
+<style>
+  .coming-soon {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-xs);
+    align-items: baseline;
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  /* A border, not just the fill, so the tag keeps its edge in forced-colors mode. */
+  .tag {
+    padding-inline: var(--space-2xs);
+    border: var(--rule-row) solid var(--color-amber);
+    background-color: var(--color-amber);
+    color: var(--color-text);
+    font-weight: 700;
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import Kicker from '@src/components/Kicker.astro';
+import { periodLabels } from '@src/lib/dates';
+
+interface Props {
+  number: string;
+  place: string;
+  start: string;
+  end?: string;
+}
+
+const { number, place, start, end } = Astro.props;
+const period = periodLabels(start, end);
+---
+
+<Kicker>
+  {number} — {end ? '' : 'current, '}{place.toLowerCase()}{' '}
+  <span aria-hidden="true">·</span>
+  <time datetime={start}>{period.start}</time>
+  <span aria-hidden="true">→</span><span class="vh">to</span>
+  {end ? <time datetime={end}>{period.end}</time> : period.end}
+</Kicker>

@@ -1,0 +1,25 @@
+---
+interface Props {
+  ground: 'paper' | 'body' | 'stone' | 'ink';
+  graph?: boolean;
+  id?: string;
+  labelledby?: string;
+  class?: string;
+}
+
+const { ground, graph = false, id, labelledby, class: className, ...rest } = Astro.props;
+---
+
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  class:list={[
+    'band',
+    `band-${ground}`,
+    { 'graph-paper': graph, 'on-ink': ground === 'ink' },
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+</section>

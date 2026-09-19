@@ -1,0 +1,234 @@
+---
+import Band from '@src/components/Band.astro';
+import { facts } from '@src/data/facts';
+
+const { services, layerWeeks, shipMonths } = facts.experience.deliveries;
+---
+
+<Band ground="paper" labelledby="same-job" class="stories">
+  <div class="container">
+    <hgroup class="head">
+      <h3 id="same-job" class="title">Two more from the same job</h3>
+      <p class="client">
+        a different client — regulated deliveries, medical samples and hazardous materials
+      </p>
+    </hgroup>
+
+    <div class="grid">
+      <div class="story">
+        <h4>Five backends, one door</h4>
+        <p>
+          Their platform had grown into five separate services — some GraphQL, some REST, each with
+          its own login and its own idea of what a response looks like. The mobile app had to talk
+          to all of them. I was the engineer closest to the client, so the integration was mine.
+        </p>
+        <p>
+          I put one typed layer over the whole thing, organised by subject rather than by service,
+          so the other developer could call <code>api.auth.signIn()</code> and never learn which
+          backend was behind it. When one of them changed — and they changed constantly — the fix
+          happened in one file instead of across every screen that touched it.
+        </p>
+        <p>
+          I did consider putting a real service in the middle, which is the textbook answer. But a
+          sixth deployable, pointed at five moving targets, is a maintenance bill with no ceiling.
+          The client-side layer took two weeks, added nothing to run, and gave us one place to
+          absorb whatever they did next.
+        </p>
+        <ul class="figures">
+          <li>
+            <span class="value">{services}</span>
+            <span class="label">services behind one interface</span>
+          </li>
+          <li>
+            <span class="value">
+              {layerWeeks}<span class="unit" aria-hidden="true">{' wks'}</span
+              ><span class="vh">{' weeks'}</span>
+            </span>
+            <span class="label">to build the layer</span>
+          </li>
+          <li>
+            <span class="value">
+              {shipMonths}<span class="unit" aria-hidden="true">{' mo'}</span
+              ><span class="vh">{' months'}</span>
+            </span>
+            <span class="label">for two of us to ship the app</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="story">
+        <h4>The rewrite that did not happen</h4>
+        <p>
+          Their technical co-founder wanted to add a sixth service, written in Rust, because the
+          driver-matching was slow. I had concerns, and they were mostly about us: nearly every bug
+          we were chasing traced back to a change in one of their existing services, and a new one
+          in a new language meant more of that, plus waiting on their team to build it.
+        </p>
+        <p>
+          I had asked for read access to their backend earlier, so I could understand what we were
+          integrating against, and they had given it to me. Our contract was frontend only — I could
+          not fix anything on their side, but I could see it. What I saw looked like an algorithm
+          and a data-structure choice rather than anything a language would fix.
+        </p>
+        <p>
+          So I walked him through it: the specific problems we had been hitting, and the workarounds
+          we were carrying on our side to absorb them. Not a verdict — the list. He agreed to look
+          at what they already had first. Their team made a round of optimisations that cleared
+          several bugs we had been flagging for weeks, and we shipped on schedule.
+        </p>
+        <p class="aside">
+          if he had insisted, I would have supported it. It is their system. I would have put the
+          new service behind our layer so it did not slow the app down.
+        </p>
+      </div>
+    </div>
+  </div>
+</Band>
+
+<style>
+  .head {
+    display: grid;
+    gap: var(--space-xs);
+  }
+  
+  .title {
+    font-size: var(--size-h3);
+    font-weight: 700;
+    letter-spacing: var(--tracking-h3);
+  }
+  
+  .client {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .grid {
+    display: grid;
+    gap: var(--space-xl);
+    margin-block-start: var(--space-xl);
+  }
+  
+  .story {
+    padding-block-start: var(--space-m);
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  .story p {
+    margin-block-start: var(--space-s);
+  }
+  
+  .aside {
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-note);
+    font-style: italic;
+    line-height: var(--leading-mono);
+  }
+  
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-block-start: var(--space-l);
+    padding: 0;
+    border-block-start: var(--rule-figure) solid var(--fg);
+    list-style: none;
+  }
+  
+  .figures li {
+    padding: var(--space-s) var(--space-xs) 0;
+    border-inline-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .figures li:first-child {
+    padding-inline-start: 0;
+  }
+  
+  .figures li:last-child {
+    padding-inline-end: 0;
+    border-inline-end: 0;
+  }
+  
+  .value {
+    display: block;
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: var(--size-h3);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-h2);
+  }
+  
+  .unit {
+    font-size: var(--size-body);
+  }
+  
+  .label {
+    display: block;
+    margin-block-start: var(--space-2xs);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  @media (width >= 48rem) {
+    .figures li {
+      padding: var(--space-m) var(--space-m) 0;
+    }
+  }
+  
+  @media (width >= 64rem) {
+    .head {
+      grid-template-columns: auto auto;
+      align-items: end;
+      justify-content: space-between;
+      column-gap: var(--space-xl);
+    }
+  
+    .client {
+      text-align: end;
+    }
+  
+    .grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+  
+  @media print {
+    .stories {
+      padding-block: var(--space-s);
+    }
+  
+    .title {
+      font-size: var(--size-h4);
+    }
+  
+    .grid {
+      display: block;
+      columns: 2;
+      column-gap: var(--space-l);
+      margin-block-start: var(--space-s);
+    }
+  
+    .story + .story {
+      margin-block-start: var(--space-m);
+    }
+  
+    .story h4 {
+      font-size: var(--size-lead);
+    }
+  
+    .story p {
+      margin-block-start: var(--space-2xs);
+      font-size: var(--size-small);
+    }
+  
+    .figures {
+      margin-block-start: var(--space-s);
+      break-inside: avoid;
+    }
+  }
+</style>

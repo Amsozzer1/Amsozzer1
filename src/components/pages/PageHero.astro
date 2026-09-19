@@ -1,0 +1,57 @@
+---
+import AmberRule from '@src/components/AmberRule.astro';
+import Band from '@src/components/Band.astro';
+import Kicker from '@src/components/Kicker.astro';
+import FormattedDate from '@src/components/pages/FormattedDate.astro';
+
+interface Props {
+  kicker: string;
+  title: string;
+  updated?: string;
+}
+
+const { kicker, title, updated } = Astro.props;
+---
+
+<Band ground="paper" graph class="page-hero">
+  <div class="container">
+    <Kicker>
+      {kicker}
+      {updated && (
+        <>
+          <span aria-hidden="true">·</span><span class="vh">,</span> updated
+          <FormattedDate date={updated} />
+        </>
+      )}
+    </Kicker>
+    <h1 class="title">{title}</h1>
+    <div class="lead prose">
+      <slot />
+    </div>
+  </div>
+</Band>
+<AmberRule />
+
+<style>
+  .title {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-s);
+  }
+  
+  .lead {
+    margin-block-start: var(--space-l);
+    color: var(--fg-body);
+    font-size: var(--size-lead);
+    line-height: var(--leading-body);
+  }
+  
+  @media print {
+    .page-hero {
+      padding-block: 0 var(--space-m);
+    }
+  
+    .title {
+      font-size: var(--size-h2);
+    }
+  }
+</style>

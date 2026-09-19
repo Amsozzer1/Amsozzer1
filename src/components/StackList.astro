@@ -1,0 +1,34 @@
+---
+interface Props {
+  items: string[];
+  class?: string;
+}
+
+const { items, class: className, ...rest } = Astro.props;
+---
+
+<ul class:list={['stack-list', className]} {...rest}>
+  {items.map((item, index) => <li class="stack-list-item">
+    {item}
+    {index < items.length - 1 && <span aria-hidden="true"> · </span>}
+  </li>)}
+</ul>
+
+<style>
+  .stack-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) 1ch;
+    padding: 0;
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+    list-style: none;
+  }
+  
+  .stack-list-item {
+    display: inline-flex;
+    gap: 1ch;
+  }
+</style>

@@ -1,0 +1,165 @@
+---
+import AmberRule from '@src/components/AmberRule.astro';
+import { site } from '@src/data/site';
+import { monthYearLong } from '@src/lib/dates';
+
+const { since } = site.availability;
+const sinceLabel = monthYearLong(since);
+
+const profiles = [site.links.github, site.links.linkedin, site.links.devto, site.links.orcid].map(
+  href => ({ href, label: href.replace(/^https:\/\/(www\.)?/, '') }),
+);
+---
+
+<footer class="site-footer on-ink">
+  <div class="container inner">
+    <div>
+      <h2 class="title">Open to <span class="line">full-time roles.</span></h2>
+      <p class="note">
+        Forward deployed and backend work, from <time datetime={since}>{sinceLabel}</time>.
+        {site.location.city}, or remote.
+      </p>
+      <a class="email" href={`mailto:${site.email}`}>{site.email}</a>
+    </div>
+    <div class="links">
+      <ul class="list">
+        {profiles.map(({ href, label }) => <li>
+          <a href={href} rel="me">
+            {label}
+          </a>
+        </li>)}
+      </ul>
+      <ul class="list">
+        <li>
+          <a href={site.resumePdf} download="ahmed-sozzer-resume.pdf" aria-label="Résumé (PDF)">
+            resume (pdf) <span aria-hidden="true">↓</span>
+          </a>
+        </li>
+        <li>
+          <a href="/now">now</a>
+        </li>
+        <li>
+          <a href="/uses">uses</a>
+        </li>
+        <li>
+          <a href="/accessibility">accessibility</a>
+        </li>
+        <li>
+          <a href="/colophon">How this site is built <span aria-hidden="true">→</span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <AmberRule />
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-ground-ink);
+    color: var(--color-text-on-ink-muted);
+  }
+  
+  .inner {
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--space-xl);
+  }
+  
+  .title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--size-h2);
+    font-weight: 700;
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-h2);
+    color: var(--color-text-on-ink);
+    text-wrap: balance;
+  }
+  
+  .line {
+    display: block;
+  }
+  
+  .note {
+    max-inline-size: var(--layout-prose-max);
+    margin-block: var(--space-s) 0;
+    font-size: var(--size-small);
+    line-height: var(--leading-body);
+    text-wrap: pretty;
+  }
+  
+  /* The transparent border turns into a visible edge in forced-colors mode. */
+  .email {
+    display: block;
+    margin-block-start: var(--space-m);
+    padding: var(--space-m) var(--space-l);
+    border: var(--rule-figure) solid transparent;
+    background: var(--color-amber);
+    font-family: var(--font-body);
+    font-size: var(--size-small);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--color-text);
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .email:hover {
+    text-decoration-line: underline;
+  }
+  
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    margin-block-start: var(--space-l);
+    padding-block-start: var(--space-xs);
+    border-block-start: var(--rule-row) solid var(--color-rule-ink);
+  }
+  
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .list a {
+    display: inline-block;
+    padding-block: var(--space-xs);
+    color: var(--color-text-on-ink);
+    text-decoration: none;
+  }
+  
+  .list a:hover {
+    text-decoration-line: underline;
+  }
+  
+  @media (width >= 48rem) {
+    .inner {
+      flex-direction: row;
+      gap: var(--space-xl);
+      align-items: flex-end;
+      justify-content: space-between;
+      padding-block: var(--space-3xl) var(--space-2xl);
+    }
+  
+    .email {
+      display: inline-block;
+    }
+  
+    .links {
+      align-items: flex-end;
+      margin-block-start: 0;
+      padding-block-start: 0;
+      border-block-start: 0;
+      text-align: end;
+    }
+  
+    .list a {
+      padding-block: var(--space-3xs);
+    }
+  }
+</style>

@@ -1,0 +1,170 @@
+---
+import ArrowLink from '@src/components/ArrowLink.astro';
+import Band from '@src/components/Band.astro';
+import PostMeta from '@src/components/writing/PostMeta.astro';
+import type { Post } from '@src/data/posts';
+import { postPath } from '@src/data/routes';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+const count = `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`;
+---
+
+<Band ground="body" labelledby="written-up" class="written-up">
+  <div class="container">
+    <div class="head">
+      <h2 id="written-up" class="label">written up</h2>
+      {posts.length > 0 && <p class="label">{count}</p>}
+    </div>
+
+    {posts.length > 0 ? (
+      <ol class="posts">
+        {posts.map(post => <li class="post">
+          <article class="card">
+            <div class="card-text">
+              <PostMeta post={post} />
+              <h3 class="card-title">
+                <a href={postPath(post.id)}>{post.data.title}</a>
+              </h3>
+              <p class="card-description">{post.data.description}</p>
+            </div>
+            <span class="card-cue" aria-hidden="true">read it →</span>
+          </article>
+        </li>)}
+      </ol>
+    ) : (
+      <div class="empty">
+        <p class="empty-title">Writing is on the way.</p>
+        <ul class="feeds">
+          <li>
+            <ArrowLink href="/feed.xml" label="rss feed" aria-label="RSS feed of new posts" />
+          </li>
+          <li>
+            <ArrowLink href="/feed.json" label="json feed" aria-label="JSON feed of new posts" />
+          </li>
+        </ul>
+      </div>
+    )}
+  </div>
+</Band>
+
+<style>
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-l);
+    align-items: baseline;
+    justify-content: space-between;
+    padding-block-end: var(--space-l);
+  }
+  
+  .label {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    font-weight: 400;
+    line-height: var(--leading-mono);
+    letter-spacing: normal;
+  }
+  
+  .posts {
+    padding: 0;
+    list-style: none;
+  }
+  
+  .post {
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  .post:last-child {
+    border-block-end: var(--rule-row) solid var(--fg);
+  }
+  
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+    align-items: flex-start;
+    padding-block: var(--space-xl);
+  }
+  
+  .card-text {
+    display: grid;
+    gap: var(--space-s);
+  }
+  
+  .card-title {
+    max-inline-size: var(--layout-prose-max);
+    font-size: var(--size-h2);
+    font-weight: 700;
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-h2);
+  }
+  
+  .card-title a {
+    text-decoration: none;
+  }
+  
+  /* The title link covers the whole card, so the card is one tab stop with the title as its name. */
+  .card-title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  
+  .card:hover .card-title a {
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--rule-figure);
+  }
+  
+  .card-description {
+    max-inline-size: var(--layout-prose-max);
+    color: var(--fg-secondary);
+  }
+  
+  .card-cue {
+    flex-shrink: 0;
+    padding-block-end: var(--space-3xs);
+    border-block-end: var(--rule-figure) solid var(--color-amber);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-link);
+    line-height: var(--leading-mono);
+  }
+  
+  .empty {
+    padding-block: var(--space-l) 0;
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  .empty-title {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: var(--size-h3);
+    font-weight: 700;
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-h3);
+  }
+  
+  .feeds {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s) var(--space-l);
+    margin-block-start: var(--space-m);
+    padding: 0;
+    list-style: none;
+  }
+  
+  @media (width >= 64rem) {
+    .card {
+      flex-direction: row;
+      gap: var(--space-2xl);
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+  }
+</style>

@@ -1,0 +1,132 @@
+---
+import ArrowLink from '@src/components/ArrowLink.astro';
+import Band from '@src/components/Band.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import resume from '@src/data/resume.json';
+
+const [degree] = resume.education;
+const [paper, neiu, wright] = resume.publications;
+
+const talks = [
+  { venue: 'NEIU', publication: neiu },
+  { venue: 'Wright College', publication: wright },
+];
+
+const year = (date: string) => date.slice(0, 4);
+---
+
+<Band ground="paper" id="education" labelledby="education-title">
+  <div class="container layout">
+    <div class="intro">
+      <SectionHeading class="title" id="education-title" title="Education" />
+      <p class="summary">A CS degree, and the research that came out of it.</p>
+    </div>
+
+    <div class="school">
+      <div class="head">
+        <h3 class="name">{degree.institution}</h3>
+        <p class="degree">
+          <abbr title={degree.studyType}>B.S.</abbr>
+          {degree.area}
+          <span aria-hidden="true">·</span>
+          <time datetime={degree.endDate}>{year(degree.endDate)}</time>
+        </p>
+      </div>
+      <p class="research prose">
+        Before any of the jobs: a matching algorithm for pairing mentors with mentees at scale. The
+        work is credited in a
+        <a href={paper.url}>work-in-progress paper<span class="vh"> (PDF)</span></a> for the
+        American Society for Engineering Education, and I presented it twice.
+      </p>
+      <ul class="talks">
+        {talks.map(({ venue, publication }) => <li>
+          <ArrowLink
+            href={publication.url}
+            label={`${venue}, ${year(publication.releaseDate)}`}
+            direction="up-right"
+          />
+        </li>)}
+      </ul>
+    </div>
+  </div>
+</Band>
+
+<style>
+  .layout {
+    display: grid;
+    row-gap: var(--space-l);
+  }
+  
+  .title {
+    font-size: var(--size-h3);
+    letter-spacing: var(--tracking-h3);
+  }
+  
+  .summary {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-s);
+    font-size: var(--size-small);
+  }
+  
+  .school {
+    padding-block-start: var(--space-m);
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  .name {
+    font-size: var(--size-h3);
+    font-weight: 700;
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-h2);
+  }
+  
+  .degree {
+    inline-size: fit-content;
+    margin-block-start: var(--space-s);
+    padding: var(--space-3xs) var(--space-2xs);
+    background-color: var(--color-amber);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--size-link);
+    line-height: var(--leading-mono);
+  }
+  
+  .research {
+    margin-block-start: var(--space-m);
+    font-size: var(--size-small);
+  }
+  
+  .talks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    margin-block-start: var(--space-m);
+    padding: 0;
+    list-style: none;
+  }
+  
+  @media (width >= 64rem) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr);
+      column-gap: var(--space-2xl);
+    }
+  
+    /* The name wraps onto two lines, as on the canvas, and the degree stays on its right. */
+    .head {
+      display: flex;
+      column-gap: var(--space-m);
+      align-items: baseline;
+      justify-content: space-between;
+    }
+  
+    .degree {
+      flex: none;
+      margin-block-start: 0;
+    }
+  
+    .talks {
+      flex-flow: row wrap;
+      column-gap: var(--space-l);
+    }
+  }
+</style>

@@ -1,0 +1,16 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['amber-rule', className]} aria-hidden="true" {...rest}></div>
+
+<style>
+  .amber-rule {
+    block-size: var(--layout-amber-band);
+    background-color: var(--color-amber);
+  }
+</style>

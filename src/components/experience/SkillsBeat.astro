@@ -1,0 +1,115 @@
+---
+import Band from '@src/components/Band.astro';
+import resume from '@src/data/resume.json';
+---
+
+<Band ground="body" labelledby="skills" class="beat">
+  <div class="container">
+    <div class="head">
+      <h2 id="skills" class="title">Skills</h2>
+      <p class="note">the same list as the PDF</p>
+    </div>
+    <dl class="skills">
+      {resume.skills.map(({ name, keywords }) => <div class="row">
+        <dt>{name.toLowerCase()}</dt>
+        <dd>
+          <ul class="keywords">
+            {keywords.map((keyword, index) => <li>
+              {keyword}
+              {index < keywords.length - 1 && <span aria-hidden="true"> · </span>}
+            </li>)}
+          </ul>
+        </dd>
+      </div>)}
+    </dl>
+  </div>
+</Band>
+
+<style>
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-l);
+    align-items: baseline;
+    justify-content: space-between;
+    padding-block-end: var(--space-m);
+  }
+  
+  .title {
+    font-size: var(--size-h3);
+  }
+  
+  .note {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .skills {
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  .row {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-block: var(--space-m);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .row:last-child {
+    border-block-end: 0;
+  }
+  
+  dt {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-2xs);
+    padding: 0;
+    color: var(--fg);
+    list-style: none;
+  }
+  
+  .keywords li {
+    display: inline-flex;
+    gap: var(--space-2xs);
+  }
+  
+  @media (width >= 48rem) {
+    .row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 5fr);
+      gap: var(--space-l);
+      align-items: baseline;
+    }
+  }
+  
+  @media print {
+    .beat {
+      padding-block: var(--space-s);
+    }
+  
+    .title {
+      font-size: var(--size-h4);
+    }
+  
+    .head {
+      padding-block-end: var(--space-2xs);
+    }
+  
+    .row {
+      padding-block: var(--space-2xs);
+      break-inside: avoid;
+    }
+  
+    .keywords {
+      font-size: var(--size-small);
+    }
+  }
+</style>

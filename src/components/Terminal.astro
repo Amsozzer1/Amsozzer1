@@ -1,0 +1,89 @@
+---
+interface Props {
+  title?: string;
+  meta?: string;
+  caption?: string;
+  class?: string;
+}
+
+const { title, meta, caption, class: className, ...rest } = Astro.props;
+---
+
+<figure class:list={['terminal', className]} {...rest}>
+  <div class="terminal-panel on-ink">
+    {(title || meta) && <div class="terminal-bar">
+      {title && <span class="terminal-title">{title}</span>}
+      {meta && <span class="terminal-meta">{meta}</span>}
+    </div>}
+    <div class="terminal-body">
+      <slot />
+    </div>
+  </div>
+  {caption && <figcaption class="terminal-caption">{caption}</figcaption>}
+</figure>
+
+<style is:global>
+  /* Global so these rules reach the <pre> the page passes into the slot. */
+  .terminal-panel {
+    padding: var(--space-m) var(--space-l) var(--space-l);
+    background-color: var(--color-ground-ink);
+  }
+  
+  .terminal-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    padding-block-end: var(--space-s);
+    border-block-end: var(--rule-figure) solid var(--color-amber);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .terminal-title {
+    color: var(--fg);
+  }
+  
+  .terminal-meta {
+    color: var(--fg-caption);
+  }
+  
+  .terminal-body {
+    margin-block-start: var(--space-s);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-code);
+    line-height: var(--leading-code);
+  }
+  
+  /* Long lines wrap instead of scrolling, so nothing is cut off at 320px and no extra tab stop is needed. */
+  .terminal-body pre {
+    font-size: inherit;
+    line-height: inherit;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  
+  .terminal-caption {
+    margin-block-start: var(--space-xs);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  @media (width < 48rem) {
+    .terminal-panel {
+      padding: var(--space-s);
+    }
+  }
+  
+  @media print {
+    .terminal-panel {
+      border: var(--rule-row) solid var(--color-text);
+      background: none;
+    }
+  }
+</style>

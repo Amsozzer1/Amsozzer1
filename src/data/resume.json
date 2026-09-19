@@ -1,0 +1,164 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/@jsonresume/schema@1.3.1/schema.json",
+  "basics": {
+    "name": "Ahmed M. Sozzer",
+    "label": "Full Stack Engineer",
+    "email": "ahmed@amsozzer.com",
+    "url": "https://amsozzer.com",
+    "summary": "Forward deployed engineer in Austin, TX. I sit with the client, find the step a person is doing by hand, and build whatever it takes to delete it, product or systems.",
+    "location": {
+      "city": "Austin",
+      "region": "TX",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "Amsozzer1",
+        "url": "https://github.com/Amsozzer1"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "amsozzer1",
+        "url": "https://www.linkedin.com/in/amsozzer1"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "FYCLabs",
+      "location": "Remote",
+      "position": "Full Stack Engineer (Engineer II)",
+      "summary": "Frontend, backend, CI/CD.",
+      "startDate": "2025-05",
+      "highlights": [
+        "Work directly with client founders, C-suite, and end users to scope requirements and surface pain points, then translate them into shipped features",
+        "Build and ship full-stack applications for early-stage startups end-to-end, taking product concepts to production with Next.js, React, TypeScript, PostgreSQL with Prisma, and GCP infrastructure",
+        "Build cross-platform mobile apps in React Native from Figma designs, owning the full API layer and database modeling",
+        "Engineer CRM integrations against client backends (GoHighLevel, Zoho, HubSpot) via REST APIs and webhooks, replacing manual data entry for client operations teams",
+        "Build automated CI/CD pipelines on GCP with test gates, taking releases from manual to push-button across multiple concurrent client projects",
+        "Optimize backend and database performance to scale from 700 to 5000 active users, improving query efficiency and horizontal scalability across distributed GCP infrastructure"
+      ]
+    },
+    {
+      "name": "Holiday Channel",
+      "location": "Colorado Springs, CO",
+      "position": "Full Stack & iOS Developer",
+      "startDate": "2025-01",
+      "endDate": "2025-05",
+      "highlights": [
+        "Built and shipped an e-commerce platform end to end, from checkout flow through order fulfillment",
+        "Shipped the customer-facing mobile app in React Native for iOS, from Figma designs through App Store release",
+        "Designed the service architecture to absorb holiday-season traffic peaks without degrading checkout",
+        "Integrated Google Ads and built responsive interfaces from Figma designs using Shadcn and Framer Motion"
+      ]
+    },
+    {
+      "name": "Luminii LLC",
+      "location": "Niles, IL",
+      "position": "Data Analyst and Software Intern",
+      "startDate": "2024-05",
+      "endDate": "2024-08",
+      "highlights": [
+        "Built an ML-driven pricing system on real-time supplier data to adjust component costs, replacing a manual re-calibration process",
+        "Reindexed a 15,000+ record database and added automated data validation, cutting query times across the pricing pipeline"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Illinois Urbana-Champaign",
+      "url": "https://illinois.edu",
+      "area": "Computer Science",
+      "studyType": "Bachelor of Science",
+      "endDate": "2025-05"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Languages",
+      "keywords": ["Python", "C/C++ (C++17)", "JavaScript/TypeScript", "Java"]
+    },
+    {
+      "name": "Frameworks",
+      "keywords": [
+        "React",
+        "Next.js",
+        "Node.js",
+        "Express",
+        "React Native",
+        "FastAPI",
+        "TailwindCSS"
+      ]
+    },
+    {
+      "name": "Systems",
+      "keywords": ["POSIX sockets", "MQTT", "multithreading", "CMake", "embedded (ESP32)", "Linux"]
+    },
+    {
+      "name": "Databases & Cloud",
+      "keywords": ["PostgreSQL", "Prisma", "MongoDB", "Redis", "GCP", "Firebase", "Docker"]
+    },
+    {
+      "name": "Practices",
+      "keywords": [
+        "REST APIs",
+        "Webhooks & Integrations",
+        "CI/CD",
+        "System Design",
+        "Testing (GoogleTest, Jest, Cypress)"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "AMS-X",
+      "description": "Open Modular Filament System for Bambu Lab Printers",
+      "url": "https://github.com/Amsozzer1/AMS",
+      "highlights": [
+        "Bambu Lab printers cap multi-material printing at 4 spools, forcing a manual swap on every material change; AMS-X removes the cap by running the printer in external-spool mode and automating the swap over MQTT (Python, FastAPI, ESP32) \u2014 protocol is undocumented, so the command set and report fields were reverse-engineered against a live printer",
+        "Server owns the job: parses the sliced 3MF into a material-swap plan, pushes it over LAN FTPS, starts the print over MQTT, and validates every live pause event against the plan before anything moves",
+        "Swap state machine (retract \u2192 select \u2192 feed \u2192 sense \u2192 resume) drives the printer's own change routine rather than authoring hotend gcode; the spool module is an interface with a human implementation today and a stepper (TMC2209 over ESP32) next"
+      ],
+      "keywords": ["Python", "FastAPI", "MQTT", "ESP32", "3MF"]
+    },
+    {
+      "name": "PlusWeb",
+      "description": "Express-style HTTP Framework in C++",
+      "url": "https://github.com/Amsozzer1/PlusWeb",
+      "highlights": [
+        "Built an Express-style C++17 HTTP framework (app.GET, app.use) directly on POSIX sockets; one acceptor thread feeding a bounded thread pool with HTTP keep-alive. MIT-licensed and installable via CMake",
+        "Designed a segment-trie router keyed by METHOD:/path with parameterized routes (/users/new beats /users/:id), plus mountable sub-routers",
+        "Implemented a composable middleware chain with next() continuations, path-scoped middleware, and relative-path rewriting for nested routers",
+        "Unit and integration tested (GoogleTest/CTest), the integration suite booting a live server and driving it over loopback; CI covers Linux and macOS, verifies the install target, and re-runs the suite under AddressSanitizer and UBSan with leak detection"
+      ],
+      "keywords": ["C++17", "POSIX sockets", "CMake", "GoogleTest"]
+    }
+  ],
+  "publications": [
+    {
+      "name": "Work in Progress: The Development of a Research-Based Application for Effective Mentor-Mentee Matching",
+      "publisher": "American Society for Engineering Education (ASEE)",
+      "releaseDate": "2024-06",
+      "url": "https://peer.asee.org/board-177-work-in-progress-the-development-of-a-research-based-application-for-effective-mentor-mentee-matching.pdf",
+      "summary": "Contributed to the mentor-mentee matching research; credited in the acknowledgements of the ASEE work-in-progress paper."
+    },
+    {
+      "name": "The Development of a Research-Based Application for Effective Mentor-Mentee Matching",
+      "publisher": "John S. Albazi Student Research Symposium, Northeastern Illinois University (NEIU)",
+      "releaseDate": "2023-04-28",
+      "url": "https://neiudc.neiu.edu/srcas/2023/s06/4/",
+      "summary": "Presented the mentor-matching research at the 2023 John S. Albazi Student Research Symposium."
+    },
+    {
+      "name": "The Development of a Research-Based App for Effective Mentor-Mentee Matching",
+      "publisher": "Wright College Student Research and Creative Scholarship Colloquium",
+      "releaseDate": "2022-12-01",
+      "url": "https://www.ccc.edu/wp-content/uploads/wright_departments_Documents_Honors-at-Wright_Student-Colloquium-Program-Fall-2022.pdf",
+      "summary": "Presented the mentor-matching app research at Wright College's Fall 2022 Student Research Colloquium."
+    }
+  ],
+  "meta": {
+    "canonical": "https://amsozzer.com/resume.json"
+  }
+}

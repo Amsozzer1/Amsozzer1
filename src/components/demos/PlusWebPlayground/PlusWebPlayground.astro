@@ -1,0 +1,438 @@
+---
+import ComingSoon from '@src/components/demos/ComingSoon.astro';
+import {
+  boilerplateBottom,
+  boilerplateTop,
+  handlers,
+  methods,
+  methodTone,
+  sampleRequest,
+  sampleResponse,
+} from '@src/components/demos/PlusWebPlayground/_helpers/plusWebPlayground.consts';
+import {
+  highlight,
+  routesFrom,
+} from '@src/components/demos/PlusWebPlayground/_helpers/plusWebPlayground.functions';
+
+const blocks = [
+  { lines: boilerplateTop.map(highlight), editable: false },
+  { lines: handlers.map(highlight), editable: true },
+  { lines: boilerplateBottom.map(highlight), editable: false },
+];
+const routes = routesFrom(handlers.join('\n'));
+const body = JSON.stringify(sampleResponse.body, null, 2);
+---
+
+{/* @TODO: wire the real PlusWeb playground (WASM router, editable handlers, live lint, timing) when Ahmed brings the finished demo */}
+<div class="playground">
+  <ComingSoon id="playground-status">
+    This is a drawing of the playground. The live one will run the real router in your browser;
+    until then nothing here can be edited or sent.
+  </ComingSoon>
+
+  <div class="workbench">
+    <figure class="editor">
+      <figcaption class="panel-bar">
+        <span class="panel-title">main.cpp</span>
+        <span>read-only for now</span>
+      </figcaption>
+      <div class="editor-code on-ink">
+        {blocks.map(block => <pre
+          class:list={['code', { editable: block.editable }]}
+        ><code>{block.lines.map((line, index) => <>{index > 0 && '\n'}{line.map(token => <span class={token.kind}>{token.text}</span>)}</>)}</code></pre>)}
+      </div>
+      <p class="lint on-ink">{routes.length} routes compiled</p>
+    </figure>
+
+    <div class="routes">
+      <table class="route-table">
+        <caption>
+          <span class="panel-bar">
+            <span class="panel-title">the route table</span>
+            <span>{routes.length} routes</span>
+          </span>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">method</th>
+            <th scope="col">path</th>
+            <th scope="col" class="status">status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {routes.map(route => <tr>
+            <td class:list={['verb', `tone-${methodTone[route.method]}`]}>{route.method}</td>
+            <td class="pattern">{route.pattern}</td>
+            <td class="status">{route.status}</td>
+          </tr>)}
+        </tbody>
+      </table>
+      <p class="routes-note">
+        Derived from the handlers. When the playground is live it rebuilds on every keystroke, and a
+        click on a route sends it.
+      </p>
+    </div>
+  </div>
+
+  <fieldset class="request" disabled aria-describedby="playground-status">
+    <legend class="vh">Request</legend>
+    <div class="verbs">
+      {methods.map(method => <button
+        type="button"
+        class:list={['verb-button', `tone-${methodTone[method]}`]}
+        aria-pressed={method === sampleRequest.method ? 'true' : 'false'}
+      >
+        {method}
+      </button>)}
+    </div>
+    <label class="vh" for="playground-path">Request path</label>
+    <input id="playground-path" class="path" type="text" value={sampleRequest.path} />
+    <button type="button" class="send">Send</button>
+  </fieldset>
+
+  <figure class="response on-ink">
+    <figcaption class="response-label">
+      sample response · {sampleRequest.method}
+      {sampleRequest.path}
+    </figcaption>
+    <ol class="walk" aria-label="Trie walk">
+      {sampleResponse.walk.map((step, index) => <li class:list={['walk-step', step.kind]}>
+        {index > 1 && <span class="walk-separator" aria-hidden="true"> / </span>}
+        {step.segment}
+        {step.bound ? (
+          <span class="walk-bound">
+            :{step.bound}
+            <span class="vh">, bound as a parameter</span>
+          </span>
+        ) : (
+          <span class="vh">, matched</span>
+        )}
+      </li>)}
+    </ol>
+    <p class="result">
+      <span class="status-line">{sampleResponse.status}</span>
+      <span class="matched">matched {sampleResponse.matched}</span>
+    </p>
+    <pre class="body"><code>{body}</code></pre>
+    <p class="note">{sampleResponse.note}</p>
+  </figure>
+</div>
+
+<style>
+  .playground {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  
+  .workbench {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+  
+  .panel-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+    align-items: baseline;
+    justify-content: space-between;
+    padding-block-end: var(--space-s);
+    border-block-end: var(--rule-figure) solid var(--color-text);
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .panel-title {
+    color: var(--color-text);
+  }
+  
+  .editor-code {
+    padding-block: var(--space-m);
+    background-color: var(--color-ground-ink);
+  }
+  
+  .code {
+    padding-inline: var(--space-m);
+    color: var(--fg-secondary);
+    font-size: var(--size-code);
+    line-height: var(--leading-code);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  
+  .code.editable {
+    margin-block: var(--space-s);
+    padding-block: var(--space-2xs);
+    border-inline-start: var(--rule-figure) solid var(--color-amber);
+    color: var(--fg);
+  }
+  
+  .keyword,
+  .type {
+    color: var(--fg);
+    font-weight: 700;
+  }
+  
+  .object {
+    color: var(--fg-secondary);
+  }
+  
+  .string {
+    color: var(--color-amber);
+  }
+  
+  .number {
+    color: var(--color-error-on-ink);
+  }
+  
+  .comment {
+    color: var(--color-text-on-ink-subtle);
+  }
+  
+  .lint {
+    padding: var(--space-s) var(--space-m);
+    background-color: var(--color-ground-ink-raised);
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .route-table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .route-table caption {
+    text-align: start;
+  }
+  
+  .route-table th {
+    padding-block: var(--space-xs) var(--space-2xs);
+    color: var(--color-text-caption);
+    font-size: var(--size-mono-small);
+    font-weight: 400;
+    text-align: start;
+  }
+  
+  .route-table td {
+    padding-block: var(--space-xs);
+    border-block-end: var(--rule-row) solid var(--color-rule-light);
+    font-size: var(--size-mono);
+    vertical-align: baseline;
+  }
+  
+  .route-table .verb {
+    padding-inline-end: var(--space-s);
+    font-weight: 700;
+  }
+  
+  .route-table .pattern {
+    inline-size: 100%;
+    color: var(--color-text);
+    overflow-wrap: anywhere;
+  }
+  
+  .route-table .status {
+    color: var(--color-text-caption);
+    text-align: end;
+  }
+  
+  .tone-get {
+    color: var(--color-method-get);
+  }
+  
+  .tone-post {
+    color: var(--color-method-post);
+  }
+  
+  .tone-delete {
+    color: var(--color-method-delete);
+  }
+  
+  .routes-note {
+    margin-block-start: var(--space-s);
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  /* A fieldset keeps min-content width by default, which would overflow a 320px screen. */
+  .request {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--space-m) 0 0;
+    border: 0;
+    border-block-start: var(--rule-major) solid var(--color-text);
+  }
+  
+  .verbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+  
+  .verb-button,
+  .path,
+  .send {
+    min-block-size: var(--layout-target-min);
+    font-family: var(--font-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .verb-button {
+    padding-inline: var(--space-s);
+    border: var(--rule-row) solid var(--color-rule-light);
+    background: none;
+    font-size: var(--size-mono);
+  }
+  
+  .verb-button[aria-pressed='true'] {
+    border-color: var(--color-text);
+    background-color: var(--color-text);
+    color: var(--color-text-on-ink);
+  }
+  
+  /* At least 16px, so iOS does not zoom into the field once it is live. */
+  .path {
+    flex: 1 1 calc(var(--space-4xl) + var(--space-2xl));
+    min-inline-size: 0;
+    padding-inline: var(--space-s);
+    border: var(--rule-row) solid var(--color-text);
+    background-color: var(--color-ground-paper);
+    color: var(--color-text);
+    font-size: var(--size-body);
+  }
+  
+  .send {
+    padding-inline: var(--space-l);
+    border: var(--rule-row) solid var(--color-amber);
+    background-color: var(--color-amber);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--size-small);
+    font-weight: 600;
+  }
+  
+  .request:disabled .verb-button,
+  .request:disabled .send {
+    cursor: not-allowed;
+  }
+  
+  .response {
+    padding: var(--space-l);
+    background-color: var(--color-ground-ink);
+  }
+  
+  .response-label {
+    color: var(--fg-label);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .walk {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+    align-items: baseline;
+    margin-block-start: var(--space-m);
+    padding: 0 0 var(--space-m);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-body);
+    line-height: var(--leading-mono);
+    list-style: none;
+  }
+  
+  .walk-step {
+    display: inline-flex;
+    gap: var(--space-xs);
+    align-items: baseline;
+  }
+  
+  .walk-step.param {
+    color: var(--color-amber);
+  }
+  
+  .walk-separator {
+    color: var(--fg-secondary);
+  }
+  
+  .walk-bound {
+    color: var(--fg-secondary);
+    font-size: var(--size-mono);
+  }
+  
+  .result {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-l);
+    align-items: baseline;
+    padding-block-end: var(--space-m);
+    border-block-end: var(--rule-figure) solid var(--color-amber);
+  }
+  
+  .status-line {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: var(--size-h3);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-h3);
+  }
+  
+  .matched {
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+  }
+  
+  .body {
+    margin-block-start: var(--space-m);
+    color: var(--fg);
+    font-size: var(--size-code);
+    line-height: var(--leading-code);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  
+  .note {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    padding-block-start: var(--space-s);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    font-style: italic;
+    line-height: var(--leading-mono);
+  }
+  
+  @media (width >= 64rem) {
+    .workbench {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+  
+    .response {
+      padding: var(--space-l) var(--space-xl) var(--space-xl);
+    }
+  }
+  
+  @media (width < 48rem) {
+    .code {
+      padding-inline: var(--space-s);
+    }
+  
+    .response {
+      padding: var(--space-m) var(--space-s);
+    }
+  }
+</style>

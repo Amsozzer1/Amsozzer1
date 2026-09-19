@@ -1,0 +1,55 @@
+{
+  "name": "amsozzer.com",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.4.2",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "eslint . --max-warnings 0 && stylelint \"src/**/*.{css,astro}\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "validate:html": "html-validate \"dist/**/*.html\"",
+    "tokens": "node scripts/build-tokens.ts && prettier --write src/styles/tokens.css",
+    "fonts": "sh fonts/subset.sh && node scripts/build-font-fallbacks.ts",
+    "resume:typst": "mkdir -p build && typst compile --root . --ignore-system-fonts resume/resume.typ build/resume-typst.pdf --pdf-standard ua-1",
+    "links:report": "node scripts/links-report.ts",
+    "indexnow": "node scripts/indexnow.ts",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "astro": "^7.3.2",
+    "satori": "^0.33.4",
+    "schema-dts": "^2.0.0",
+    "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@capsizecss/metrics": "^4.3.0",
+    "@capsizecss/unpack": "^4.0.1",
+    "@cloudflare/workers-types": "^5.20260916.1",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.1",
+    "astro-eslint-parser": "^3.1.0",
+    "eslint": "^10.10.0",
+    "eslint-plugin-astro": "^3.2.0",
+    "eslint-plugin-jsx-a11y-x": "^0.2.0",
+    "globals": "^17.12.0",
+    "html-validate": "^11.16.0",
+    "postcss-html": "^2.0.0",
+    "prettier": "^3.9.7",
+    "prettier-plugin-astro": "^1.0.0",
+    "stylelint": "^17.15.0",
+    "stylelint-config-html": "^2.0.0",
+    "stylelint-config-standard": "^40.0.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.70.0",
+    "wrangler": "^4.132.0"
+  }
+}

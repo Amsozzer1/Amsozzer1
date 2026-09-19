@@ -1,0 +1,249 @@
+---
+import ArrowLink from '@src/components/ArrowLink.astro';
+import CtaButton from '@src/components/CtaButton.astro';
+import StackList from '@src/components/StackList.astro';
+import Tack from '@src/components/marks/Tack.astro';
+import Tape from '@src/components/marks/Tape.astro';
+import type { Project } from '@src/data/projects';
+
+interface Props {
+  project: Project;
+  note: string;
+  mark: 'tape' | 'tack';
+  flip?: boolean;
+}
+
+const { project, note, mark, flip = false } = Astro.props;
+---
+
+<article class:list={['row', { 'row-flip': flip }]}>
+  <div class="text">
+    <hgroup>
+      <p class="number">{project.number}</p>
+      <h3 class="name">{project.name}</h3>
+      <p class="tagline">{project.tagline}</p>
+    </hgroup>
+    <p class="summary">{project.summary}</p>
+    <StackList class="stack" items={project.stack} />
+    <dl class="specs">
+      {project.specs.map(({ label, value }) => <div class="spec">
+        <dt>{label}</dt>
+        <dd>{value}</dd>
+      </div>)}
+    </dl>
+  </div>
+
+  <div class="art">
+    <div class="frame">
+      <slot />
+      {mark === 'tack' ? <Tack /> : <Tape class="corner-tape" />}
+    </div>
+    <p class="note">{note}</p>
+  </div>
+
+  <div class="actions">
+    <CtaButton class="cta" href={project.path}>{project.cta}</CtaButton>
+    <ArrowLink
+      href={project.repo}
+      label="repo"
+      direction="up-right"
+      aria-label={`${project.name} repo on GitHub`}
+    />
+  </div>
+</article>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-areas:
+      'text'
+      'art'
+      'actions';
+    row-gap: var(--space-l);
+    padding-block: var(--space-xl);
+    border-block-start: var(--rule-row) solid var(--fg);
+  }
+  
+  .row:first-of-type {
+    border-block-start-width: var(--rule-major);
+  }
+  
+  .text {
+    grid-area: text;
+  }
+  
+  .number {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .name {
+    margin-block-start: var(--space-xs);
+    font-size: var(--size-h2);
+    font-weight: 700;
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-h2);
+  }
+  
+  .tagline {
+    margin-block-start: var(--space-s);
+    color: var(--fg-body);
+    font-size: var(--size-lead);
+    line-height: var(--leading-tight);
+  }
+  
+  .summary {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-secondary);
+    font-size: var(--size-small);
+  }
+  
+  .stack {
+    margin-block-start: var(--space-s);
+  }
+  
+  .specs {
+    margin-block-start: var(--space-m);
+  }
+  
+  .spec {
+    display: grid;
+    grid-template-columns: var(--space-4xl) minmax(0, 1fr);
+    column-gap: var(--space-s);
+    align-items: baseline;
+    padding-block: var(--space-xs);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .spec dt {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .spec dd {
+    color: var(--fg);
+    font-size: var(--size-small);
+    line-height: var(--leading-tight);
+  }
+  
+  .art {
+    grid-area: art;
+  }
+  
+  .frame {
+    position: relative;
+    rotate: 1.1deg;
+  }
+  
+  .row-flip .frame {
+    rotate: -1.2deg;
+  }
+  
+  .frame .corner-tape {
+    inset-block-start: calc(var(--space-xs) * -1);
+    inset-inline-start: calc(var(--space-s) * -1);
+    rotate: -28deg;
+  }
+  
+  .row-flip .frame .corner-tape {
+    inset-inline: auto calc(var(--space-s) * -1);
+    rotate: 26deg;
+  }
+  
+  .note {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-note);
+    font-style: italic;
+    line-height: var(--leading-mono);
+    rotate: 0.7deg;
+  }
+  
+  .row-flip .note {
+    rotate: -0.6deg;
+  }
+  
+  .actions {
+    display: grid;
+    grid-area: actions;
+    gap: var(--space-m);
+    justify-items: start;
+  }
+  
+  .actions .cta {
+    justify-self: stretch;
+  }
+  
+  /* Desktop: text beside the panel, which bleeds into the outer gutter and crops at the page edge. */
+  @media (width >= 64rem) {
+    .row {
+      grid-template:
+        'text art' auto
+        'actions art' 1fr
+        / minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: var(--space-2xl);
+      padding-block: var(--space-2xl);
+    }
+  
+    .row-flip {
+      grid-template:
+        'art text' auto
+        'art actions' 1fr
+        / minmax(0, 7fr) minmax(0, 5fr);
+    }
+  
+    .art {
+      margin-inline-end: calc(var(--layout-gutter) / -2);
+      padding-block-start: var(--space-l);
+    }
+  
+    .row-flip .art {
+      margin-inline: calc(var(--layout-gutter) * -1) 0;
+    }
+  
+    .frame {
+      rotate: 1.2deg;
+    }
+  
+    .row-flip .frame {
+      rotate: -1.4deg;
+    }
+  
+    .frame .corner-tape {
+      inset-block-start: calc(var(--space-s) * -1);
+      inset-inline-start: calc(var(--space-m) * -1);
+      rotate: -29deg;
+    }
+  
+    .row-flip .frame .corner-tape {
+      inset-inline: auto calc(var(--space-m) * -1);
+    }
+  
+    .note {
+      max-inline-size: 60%;
+      margin-block-start: var(--space-l);
+      margin-inline-start: var(--space-xl);
+      rotate: 0.8deg;
+    }
+  
+    .row-flip .note {
+      margin-inline-start: var(--layout-gutter);
+      rotate: -0.7deg;
+    }
+  
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-m) var(--space-l);
+      align-items: center;
+      align-self: start;
+    }
+  }
+</style>

@@ -1,0 +1,56 @@
+.container {
+  inline-size: 100%;
+  max-inline-size: calc(var(--layout-content-max) + 2 * var(--layout-gutter));
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter);
+}
+
+/* clip, never hidden: panels may crop past the right edge without creating a scroll container. */
+.band {
+  position: relative;
+  padding-block: max(var(--space-xl), var(--layout-gutter));
+  overflow-x: clip;
+}
+
+.band-paper {
+  background-color: var(--color-ground-paper);
+}
+
+.band-body {
+  background-color: var(--color-ground-body);
+}
+
+.band-stone {
+  background-color: var(--color-ground-stone);
+}
+
+.band-ink {
+  background-color: var(--color-ground-ink);
+}
+
+.graph-paper {
+  background-color: var(--color-ground-paper);
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      var(--color-ground-grid) 0 var(--rule-row),
+      transparent var(--rule-row) var(--layout-graph-cell)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      var(--color-ground-grid) 0 var(--rule-row),
+      transparent var(--rule-row) var(--layout-graph-cell)
+    );
+}
+
+.mark-overlay {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@media (forced-colors: active) {
+  .mark-overlay {
+    display: none;
+  }
+}

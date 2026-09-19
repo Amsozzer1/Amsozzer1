@@ -1,0 +1,54 @@
+---
+import AmberRule from '@src/components/AmberRule.astro';
+import Band from '@src/components/Band.astro';
+import OpenThreads from '@src/components/writing/OpenThreads.astro';
+import WrittenUp from '@src/components/writing/WrittenUp.astro';
+import { getPosts } from '@src/data/posts';
+import Base from '@src/layouts/Base.astro';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const posts = await getPosts();
+---
+
+<Base seo={routeSeo('/writing')}>
+  <Band ground="paper" graph class="hero">
+    <div class="container">
+      <h1 class="title">
+        <span class="line">Things I was</span>
+        <span class="line highlight">wrong about.</span>
+      </h1>
+      <p class="lead">
+        The long write-ups, kept off the project pages on purpose. A project page should say what a
+        thing is and let you use it. This is where the measurements go — including the ones that
+        contradicted what I believed when I wrote the code.
+      </p>
+      {/* @TODO: the "perf stat — plusweb" panel from the Blogs canvas, once the first post is out and its figures are in facts.ts */}
+    </div>
+  </Band>
+  <AmberRule />
+  <WrittenUp posts={posts} />
+  <OpenThreads />
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--space-2xl);
+  }
+  
+  .line {
+    display: block;
+  }
+  
+  .highlight {
+    inline-size: fit-content;
+    margin-inline-start: calc(var(--space-2xs) * -1);
+    padding-inline: var(--space-2xs);
+    background-color: var(--color-amber);
+  }
+  
+  .lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-l);
+    color: var(--fg-body);
+  }
+</style>

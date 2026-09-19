@@ -1,0 +1,40 @@
+---
+import AmberRule from '@src/components/AmberRule.astro';
+import EducationBeat from '@src/components/experience/EducationBeat.astro';
+import ExperienceHero from '@src/components/experience/ExperienceHero.astro';
+import FyclabsBeat from '@src/components/experience/FyclabsBeat.astro';
+import HolidayChannelBeat from '@src/components/experience/HolidayChannelBeat.astro';
+import LuminiiBeat from '@src/components/experience/LuminiiBeat.astro';
+import SkillsBeat from '@src/components/experience/SkillsBeat.astro';
+import resume from '@src/data/resume.json';
+import Base from '@src/layouts/Base.astro';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const [fyclabs, holidayChannel, luminii] = resume.work;
+---
+
+<Base seo={routeSeo('/experience')}>
+  <div class="experience">
+    <ExperienceHero />
+    <AmberRule />
+    <FyclabsBeat job={fyclabs} number="01" />
+    <HolidayChannelBeat job={holidayChannel} number="02" />
+    <LuminiiBeat job={luminii} number="03" />
+    <EducationBeat number="04" />
+    <SkillsBeat />
+  </div>
+</Base>
+
+<style is:global>
+  /* Page-wide print layout: the bands lose their grounds (print.css) and most of their padding, so the page reads as a two-page résumé. */
+  @media print {
+    /* @TODO: with every section kept the page prints to about four sheets; hiding .stories would make it two */
+    .experience .container {
+      padding-inline: 0;
+    }
+  
+    .experience {
+      font-size: var(--size-small);
+    }
+  }
+</style>

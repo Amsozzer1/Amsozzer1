@@ -1,0 +1,55 @@
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none;
+    transition: none;
+  }
+
+  body,
+  .band,
+  .graph-paper,
+  .on-ink {
+    background: none;
+  }
+
+  body,
+  .on-ink,
+  .on-ink * {
+    --fg: var(--color-text);
+    --fg-body: var(--color-text);
+    --fg-secondary: var(--color-text);
+    --fg-caption: var(--color-text);
+    --fg-label: var(--color-text);
+
+    color: var(--color-text);
+  }
+
+  nav,
+  .mark-overlay,
+  .amber-rule,
+  .skip-link {
+    display: none;
+  }
+
+  pre {
+    white-space: pre-wrap;
+  }
+
+  main a[href^='http']::after {
+    content: ' (' attr(href) ')';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  figure,
+  table,
+  pre {
+    break-inside: avoid;
+  }
+}
