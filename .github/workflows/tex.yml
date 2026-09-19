@@ -5,7 +5,8 @@ on:
     branches: [main]
     paths:
       - 'resume.tex'
-      - '.github/workflows/tex.yml'
+      - 'Makefile'
+      - '.github/workflows/resume.yml'
   workflow_dispatch:
 
 permissions:
@@ -22,16 +23,15 @@ jobs:
       - name: Build
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          latexmk -xelatex -interaction=nonstopmode -halt-on-error resume.tex
+          make pdf DOCKER=
 
       - name: Commit PDF
         run: |
-          git add -f resume.pdf
-          if git diff --cached --quiet; then
-            echo "no change"
-            exit 0
-          fi
+          cp build/resume.pdf resume.pdf
+          git add resume.pdf
+          if git diff --cached --quiet; then echo "no change"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "build: resume.pdf"
+          git pull --rebase
           git push
