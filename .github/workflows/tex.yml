@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - 'resume.tex'
-      - '.github/workflows/resume.yml'
+      - '.github/workflows/tex.yml'
   workflow_dispatch:
 
 permissions:
