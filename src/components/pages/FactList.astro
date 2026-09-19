@@ -1,0 +1,44 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<dl class:list={['fact-list', className]} {...rest}>
+  <slot />
+</dl>
+
+<style is:global>
+  /* Global so the rows a page passes into the slot pick these up. Each row is a <div> holding one dt and its dd. */
+  .fact-list > div {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-block: var(--space-s);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .fact-list > div:first-child {
+    padding-block-start: 0;
+  }
+  
+  .fact-list dt {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .fact-list dd {
+    color: var(--fg-body);
+  }
+  
+  @media (width >= 48rem) {
+    .fact-list > div {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+      gap: var(--space-m);
+      align-items: baseline;
+    }
+  }
+</style>

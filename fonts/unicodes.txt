@@ -1,0 +1,25 @@
+# The characters the site sets. Uncut Sans also keeps all of Latin-1 (subset.sh adds it).
+U+0020-007E  # printable ASCII
+U+00A0       # no-break space
+U+00A9       # ©
+U+00AB       # «
+U+00B0       # °
+U+00B1       # ±
+U+00B3       # ³
+U+00B5       # µ
+U+00B7       # ·
+U+00BB       # »
+U+00D7       # ×
+U+2013       # en dash
+U+2014       # em dash
+U+2018       # ‘
+U+2019       # ’
+U+201C       # “
+U+201D       # ”
+U+2022       # •
+U+2026       # …
+U+2075       # superscript five
+U+2190-2193  # ← ↑ → ↓
+U+2197       # ↗
+U+2212       # minus
+U+25AC       # ▬ redaction bar

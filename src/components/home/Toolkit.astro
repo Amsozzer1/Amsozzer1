@@ -1,0 +1,134 @@
+---
+import Band from '@src/components/Band.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import { toolkit } from '@src/components/home/_helpers/toolkit.consts';
+---
+
+<Band ground="body" id="toolkit" labelledby="toolkit-title">
+  <div class="container">
+    <div class="head">
+      <SectionHeading class="title" id="toolkit-title" title="The tech stack" />
+      <p class="aside">
+        most days it is the top row; the rest of the list is what the problem asked for
+      </p>
+    </div>
+
+    <dl class="rows">
+      {toolkit.map(({ label, items, link }) => <div class="row">
+        <dt class="label">{label}</dt>
+        <dd class="items">
+          <ul class="list">
+            {items.map((item, index) => <li>
+              {item}
+              {index < items.length - 1 && <span aria-hidden="true"> · </span>}
+            </li>)}
+          </ul>
+        </dd>
+        <dd class="see">
+          <a href={link.href}> {link.label} <span aria-hidden="true">→</span> </a>
+        </dd>
+      </div>)}
+    </dl>
+  </div>
+</Band>
+
+<style>
+  .head {
+    display: grid;
+    gap: var(--space-s);
+    padding-block-end: var(--space-m);
+  }
+  
+  .title {
+    font-size: var(--size-h3);
+    letter-spacing: var(--tracking-h3);
+  }
+  
+  .aside {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .rows {
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  .row {
+    padding-block: var(--space-s);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .row:last-child {
+    border-block-end: 0;
+  }
+  
+  .label {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-link);
+    line-height: var(--leading-mono);
+  }
+  
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) 1ch;
+    margin-block-start: var(--space-2xs);
+    padding: 0;
+    color: var(--fg);
+    line-height: var(--leading-tight);
+    list-style: none;
+  }
+  
+  .list li {
+    display: inline-flex;
+    gap: 1ch;
+  }
+  
+  .see a {
+    display: inline-block;
+    padding-block: var(--space-xs);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+    text-decoration-line: underline;
+    text-decoration-color: var(--rule-color);
+    text-underline-offset: var(--space-3xs);
+  }
+  
+  .see a:hover {
+    text-decoration-color: currentcolor;
+  }
+  
+  @media (width >= 64rem) {
+    .head {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: var(--space-xl);
+      align-items: end;
+      padding-block-end: var(--space-l);
+    }
+  
+    .aside {
+      text-align: end;
+    }
+  
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 4fr) auto;
+      column-gap: var(--space-l);
+      align-items: baseline;
+      padding-block: var(--space-m);
+    }
+  
+    .list {
+      margin-block-start: 0;
+    }
+  
+    .see a {
+      padding-block: 0;
+    }
+  }
+</style>

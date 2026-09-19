@@ -1,0 +1,357 @@
+---
+import Band from '@src/components/Band.astro';
+import CtaButton from '@src/components/CtaButton.astro';
+import Terminal from '@src/components/Terminal.astro';
+import Scribble from '@src/components/marks/Scribble.astro';
+import Stamp from '@src/components/marks/Stamp.astro';
+import Tape from '@src/components/marks/Tape.astro';
+import TerminalLines from '@src/components/home/TerminalLines.astro';
+import { serverLog } from '@src/components/home/_helpers/hero.consts';
+import { facts } from '@src/data/facts';
+import { projects } from '@src/data/projects';
+import { site } from '@src/data/site';
+
+const [plusweb] = projects;
+
+const contents = [
+  { href: '#projects', label: 'projects' },
+  { href: '#experience', label: 'experience' },
+  { href: '#education', label: 'education' },
+  { href: '#toolkit', label: 'tech stack' },
+];
+---
+
+<Band ground="paper" graph labelledby="hero-title" class="hero">
+  <div class="container layout">
+    <div class="copy">
+      <h1 id="hero-title" class="vh">{site.name} — {site.role}</h1>
+      <p class="display tagline">
+        <span class="line">I write</span>
+        <span class="line">the layer</span>
+        <span class="line">most people</span>
+        <span class="line fill">import.</span>
+      </p>
+      <p class="lead">
+        Forward deployed engineer at {site.employer.name}. I sit with the client, find the step a
+        person is doing by hand, and build whatever it takes to delete it — the product in Next.js,
+        React Native and Postgres on GCP, and the systems underneath it in C++ and Python when the
+        product needs them.
+      </p>
+      <ul class="profiles">
+        <li><a class="profile" href={site.links.github}>github</a></li>
+        <li><a class="profile" href={site.links.linkedin}>linkedin</a></li>
+      </ul>
+    </div>
+
+    <div class="art">
+      <p class="note">started PlusWeb because I wanted to know what Express was actually doing.</p>
+      <div class="pinned">
+        <Terminal
+          class="panel"
+          title={`plusweb — 0.0.0.0:${facts.plusweb.port}`}
+          meta={plusweb.programmingLanguage[0]}
+        >
+          <TerminalLines lines={serverLog} />
+        </Terminal>
+        <Tape class="tape-start" />
+        <Tape class="tape-end" />
+      </div>
+      <div class="stamped">
+        <Stamp>one dependency, coffee</Stamp>
+        <Scribble
+          class="arrow"
+          d="M4,62 C30,64 58,50 66,12 M55,22 C59,18 63,13 66,8 C69,13 72,18 77,22"
+          width={84}
+          height={70}
+        />
+      </div>
+    </div>
+
+    <nav class="contents" aria-labelledby="contents-title">
+      <p id="contents-title" class="contents-title">further down</p>
+      <ul class="contents-list">
+        {contents.map(({ href, label }) => <li>
+          <a class="contents-link" href={href}>{label}</a>
+        </li>)}
+      </ul>
+    </nav>
+
+    <CtaButton class="cta" href="#projects" bleed>See the work</CtaButton>
+  </div>
+</Band>
+
+<style>
+  .hero {
+    display: grid;
+    align-content: center;
+    min-block-size: calc(100svh - var(--layout-header-height) - var(--layout-amber-band));
+    padding-block: var(--space-l) 0;
+  }
+  
+  .layout {
+    display: grid;
+    row-gap: var(--space-xl);
+  }
+  
+  .tagline .line {
+    display: block;
+  }
+  
+  .tagline .fill {
+    inline-size: fit-content;
+    margin-inline-start: calc(var(--space-2xs) * -1);
+    padding-inline: var(--space-2xs);
+    background-color: var(--color-amber);
+  }
+  
+  .lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+  }
+  
+  .profiles {
+    display: flex;
+    gap: var(--space-m);
+    margin-block-start: var(--space-s);
+    padding: 0;
+    list-style: none;
+  }
+  
+  /* The rule runs past the word, as on the canvas; ::before stretches the hit area to 44px. */
+  .profile {
+    position: relative;
+    display: inline-block;
+    padding-inline-end: var(--space-s);
+    padding-block-end: var(--space-3xs);
+    border-block-end: var(--rule-figure) solid var(--fg);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-link);
+    line-height: var(--leading-mono);
+    text-decoration: none;
+  }
+  
+  .profile::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline: 0;
+    block-size: max(100%, var(--layout-target-min));
+    translate: 0 -50%;
+  }
+  
+  .profile:hover {
+    border-block-end-color: var(--color-amber);
+  }
+  
+  .art {
+    display: grid;
+    align-content: start;
+    row-gap: var(--space-l);
+  }
+  
+  .note {
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-note);
+    font-style: italic;
+    line-height: var(--leading-mono);
+    rotate: -0.7deg;
+  }
+  
+  .pinned {
+    position: relative;
+  }
+  
+  .pinned .panel {
+    rotate: 1.1deg;
+  }
+  
+  .pinned .tape-start {
+    inset-block-start: calc(var(--space-xs) * -1);
+    inset-inline-start: calc(var(--space-s) * -1);
+    rotate: -29deg;
+  }
+  
+  .pinned .tape-end {
+    display: none;
+  }
+  
+  .stamped {
+    position: relative;
+    justify-self: end;
+  }
+  
+  .stamped .arrow {
+    display: none;
+  }
+  
+  .contents {
+    padding-block-start: var(--space-s);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .contents-title {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .contents-list {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--space-m);
+    padding: 0;
+    list-style: none;
+  }
+  
+  .contents-link {
+    display: block;
+    padding-block: var(--space-xs);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-link);
+    line-height: var(--leading-mono);
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-amber);
+    text-decoration-thickness: var(--rule-figure);
+    text-underline-offset: var(--space-2xs);
+  }
+  
+  .contents-link:hover {
+    text-decoration-color: currentcolor;
+  }
+  
+  /* On phones the CTA is a full-bleed bar that closes the hero. */
+  .layout .cta {
+    margin-inline: calc(var(--layout-gutter) * -1);
+  }
+  
+  /* Wide screens: the canvas is drawn at 1440, so the hero's type and panel grow past it. */
+  @media (width >= 90rem) {
+    .hero {
+      --size-display: clamp(5.5rem, 2rem + 3.9vw, 7.25rem);
+      --size-lead: clamp(1.375rem, 1.1rem + 0.5vw, 1.625rem);
+      --size-body: clamp(1.125rem, 0.95rem + 0.35vw, 1.3125rem);
+      --size-code: clamp(0.8438rem, 0.6rem + 0.5vw, 1rem);
+      --size-mono: clamp(0.8125rem, 0.6rem + 0.45vw, 0.9375rem);
+      --size-note: clamp(1rem, 0.8rem + 0.45vw, 1.1875rem);
+    }
+  
+    .layout {
+      gap: var(--space-s) var(--space-2xl);
+    }
+  
+    .art {
+      row-gap: var(--space-l);
+    }
+  }
+  
+  /* Desktop: the hero fills the first screen, capped at the canvas height, and keeps the hanging CTA inside it. */
+  @media (width >= 64rem) {
+    .hero {
+      display: grid;
+      align-content: stretch;
+      min-block-size: calc(100svh - var(--layout-header-height) - var(--layout-amber-band));
+      padding-block-start: var(--space-s);
+    }
+  
+    /* The copy and the panel sit centred; the contents list and the CTA stay at the foot of the screen. */
+    .layout {
+      grid-template:
+        'copy art' 1fr
+        'copy contents' auto
+        'cta .' auto
+        / minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0 var(--space-xl);
+      min-block-size: 100%;
+    }
+  
+    .copy,
+    .art {
+      align-self: center;
+    }
+  
+    .copy {
+      grid-area: copy;
+    }
+  
+    .lead {
+      margin-block-start: var(--space-s);
+    }
+  
+    .art {
+      grid-area: art;
+      row-gap: var(--space-m);
+      padding-block-start: var(--space-s);
+    }
+  
+    .note {
+      justify-self: end;
+      max-inline-size: 75%;
+    }
+  
+    .pinned {
+      margin-inline-end: calc(var(--layout-gutter) * -1);
+    }
+  
+    .pinned .panel {
+      rotate: 1.4deg;
+    }
+  
+    .pinned .tape-start {
+      inset-block-start: calc(var(--space-m) * -1);
+      inset-inline-start: calc(var(--space-m) * -1);
+      rotate: -31deg;
+    }
+  
+    .pinned .tape-end {
+      display: block;
+      inset-block-end: var(--space-xs);
+      inset-inline-end: calc(var(--space-m) * -1);
+      rotate: -24deg;
+    }
+  
+    .stamped {
+      justify-self: start;
+      margin-block-start: var(--space-m);
+      margin-inline-start: var(--space-4xl);
+    }
+  
+    .stamped .arrow {
+      display: block;
+      inset-block-end: 50%;
+      inset-inline-start: 100%;
+    }
+  
+    .contents {
+      display: flex;
+      grid-area: contents;
+      flex-wrap: wrap;
+      column-gap: var(--space-m);
+      align-items: baseline;
+      place-self: end end;
+      margin-block-start: var(--space-l);
+      padding-block-start: 0;
+      border-block-start: 0;
+    }
+  
+    .layout .cta {
+      position: relative;
+      z-index: 1;
+      grid-area: cta;
+      justify-self: start;
+      margin-block: var(--space-2xs) calc(var(--space-l) * -1);
+      margin-inline: 0;
+    }
+  }
+  
+  /* The desktop rules set display on these marks, so the global hiding rules are restated. */
+  @media print, (forced-colors: active) {
+    .pinned .tape-end,
+    .stamped .arrow {
+      display: none;
+    }
+  }
+</style>

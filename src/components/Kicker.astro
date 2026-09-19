@@ -1,0 +1,19 @@
+---
+interface Props {
+  tag?: 'p' | 'span';
+  class?: string;
+}
+
+const { tag: Tag = 'p', class: className, ...rest } = Astro.props;
+---
+
+<Tag class:list={['kicker', className]} {...rest}><slot /></Tag>
+
+<style>
+  .kicker {
+    color: var(--fg-label);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+</style>

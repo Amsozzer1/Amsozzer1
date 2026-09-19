@@ -1,0 +1,171 @@
+---
+import ArrowLink from '@src/components/ArrowLink.astro';
+import Band from '@src/components/Band.astro';
+import Kicker from '@src/components/Kicker.astro';
+import resume from '@src/data/resume.json';
+import { monthYear } from '@src/lib/dates';
+
+interface Props {
+  number: string;
+}
+
+const { number } = Astro.props;
+const [degree] = resume.education;
+const [paper, neiu, wright] = resume.publications;
+
+const year = (date: string) => date.slice(0, 4);
+const graduated = monthYear(degree.endDate);
+
+const talks = [
+  { place: 'NEIU', page: 'symposium listing', talk: neiu },
+  { place: 'Wright College', page: 'colloquium programme (PDF)', talk: wright },
+];
+---
+
+<Band ground="paper" labelledby="education" class="beat">
+  <div class="container grid">
+    <hgroup class="heading">
+      <Kicker>
+        {number} — urbana-champaign <span aria-hidden="true">·</span>
+        <time datetime={degree.endDate}>{graduated}</time>
+      </Kicker>
+      <h2 id="education" class="title">Education</h2>
+      <p class="intro">A CS degree, and the research that came out of it.</p>
+    </hgroup>
+
+    <div class="school">
+      <div class="school-head">
+        <h3 class="name">{degree.institution}</h3>
+        <p class="degree">
+          <abbr title={degree.studyType}>B.S.</abbr>
+          {degree.area} <span aria-hidden="true">·</span>
+          {year(degree.endDate)}
+        </p>
+      </div>
+      <p class="paper">
+        Before any of the jobs: a matching algorithm for pairing mentors with mentees at scale. The
+        work is credited in a
+        <a href={paper.url}>work-in-progress paper<span class="vh">{' (PDF)'}</span></a> for the
+        American Society for Engineering Education, and I presented it twice.
+      </p>
+      <ul class="talks">
+        {talks.map(({ place, page, talk }) => <li>
+          <ArrowLink
+            href={talk.url}
+            label={`${place}, ${year(talk.releaseDate)}`}
+            direction="up-right"
+            aria-label={`${place}, ${year(talk.releaseDate)}: ${page}`}
+          />
+        </li>)}
+      </ul>
+    </div>
+  </div>
+</Band>
+
+<style>
+  .grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+  
+  .heading {
+    display: grid;
+    gap: var(--space-s);
+  }
+  
+  .title {
+    font-size: var(--size-h3);
+  }
+  
+  .school {
+    padding-block-start: var(--space-m);
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  .school-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s) var(--space-m);
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  
+  .name {
+    font-size: var(--size-h3);
+    font-weight: 700;
+    line-height: var(--leading-heading);
+  }
+  
+  .degree {
+    padding: var(--space-3xs) var(--space-xs);
+    background-color: var(--color-amber);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+    white-space: nowrap;
+  }
+  
+  abbr {
+    text-decoration: none;
+  }
+  
+  .paper {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+  }
+  
+  .paper a {
+    text-decoration-color: var(--prose-underline-color);
+    text-decoration-thickness: var(--rule-figure);
+  }
+  
+  .paper a:hover {
+    text-decoration-color: currentcolor;
+  }
+  
+  .talks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s) var(--space-l);
+    margin-block-start: var(--space-m);
+    padding: 0;
+    list-style: none;
+  }
+  
+  @media (width >= 64rem) {
+    .grid {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 5fr);
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+  }
+  
+  @media print {
+    .beat {
+      padding-block: var(--space-s);
+    }
+  
+    .grid {
+      display: block;
+    }
+  
+    .school {
+      margin-block-start: var(--space-s);
+    }
+  
+    .title,
+    .name {
+      font-size: var(--size-h4);
+    }
+  
+    .degree {
+      padding-inline: 0;
+    }
+  
+    .paper {
+      max-inline-size: none;
+      font-size: var(--size-small);
+    }
+  }
+</style>

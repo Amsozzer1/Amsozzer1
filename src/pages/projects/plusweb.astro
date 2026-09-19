@@ -1,0 +1,374 @@
+---
+import Band from '@src/components/Band.astro';
+import PlusWebPlayground from '@src/components/demos/PlusWebPlayground/PlusWebPlayground.astro';
+import Scribble from '@src/components/marks/Scribble.astro';
+import Tape from '@src/components/marks/Tape.astro';
+import {
+  capitalize,
+  count,
+  projectBySlug,
+  spell,
+} from '@src/components/projects/_helpers/projects.functions';
+import ExpressComparison from '@src/components/projects/ExpressComparison.astro';
+import NextProject from '@src/components/projects/NextProject.astro';
+import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import Terminal from '@src/components/Terminal.astro';
+import { facts } from '@src/data/facts';
+import Base from '@src/layouts/Base.astro';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const project = projectBySlug('plusweb');
+const { stats, throughput, box, memoryMb, libuv, threads, port } = facts.plusweb;
+const [smallest] = throughput;
+const largest = throughput[throughput.length - 1];
+const expressStart = Math.round(smallest.express / 1_000) * 1_000;
+
+const stat = [
+  {
+    figure: stats.speedup,
+    caption: `faster than Express at ${count(largest.routes)} routes — its router scans the table, mine walks a trie`,
+  },
+  {
+    figure: stats.requestsPerSecond,
+    caption: `requests a second on a ${spell(box.cores)}-core box, steady however many routes are loaded`,
+  },
+  {
+    figure: stats.memory,
+    caption: `resident with ${count(memoryMb.routes)} routes loaded — the Express cluster on the same box: ${memoryMb.express} MB`,
+  },
+  {
+    figure: stats.libuv,
+    caption: `requests a second across ${libuv.connections} connections, nobody starved — on the libuv branch, not main`,
+  },
+];
+
+// The curve, then the arrowhead: it lands on the source button below it.
+const scribble =
+  'M262,30 C196,20 118,34 76,68 C54,86 46,106 52,126 M40,112 C46,122 50,130 52,136 C56,128 62,120 70,114';
+---
+
+<Base page="project" seo={routeSeo('/projects/plusweb')}>
+  <ProjectHero
+    project={project}
+    lead="An Express-style HTTP framework written on raw POSIX sockets, in C++17."
+    highlight="C++17"
+    intro={`${capitalize(spell(threads.acceptors))} acceptor thread feeds a bounded pool of ${threads.workers} workers, connections stay open for keep-alive, and requests resolve through a segment trie keyed on method and path.`}
+  >
+    <div slot="figure" class="artifact">
+      <Terminal class="code-panel" title="examples/users.cpp" meta="C++17">
+        <pre><code>pw::App    app;
+pw::Router users;
+
+users.GET(<span class="string">"/new"</span>,       newUserForm);
+users.GET(<span class="string">"/:id"</span>,       showUser);
+users.GET(<span class="string">"/:id/posts"</span>, listPosts);
+
+app.mount(<span class="string">"/users"</span>, users);
+app.listen({port});</code></pre>
+      </Terminal>
+      <Tape class="tape-corner" />
+      <Tape class="tape-edge" />
+      <p class="hand-note">
+        mounting rewrites the path, so the sub-router never knows where it was attached.
+      </p>
+    </div>
+    <Fragment slot="annotation">
+      <Scribble class="cta-scribble" d={scribble} />
+      <p class="mit-note">MIT — take it</p>
+    </Fragment>
+    <a slot="foot" class="playground-hint" href="#playground">the playground is below</a>
+  </ProjectHero>
+
+  <Band ground="body" labelledby="parts-title">
+    <div class="container">
+      <SectionHeading
+        id="parts-title"
+        kicker="01 — the parts that are mine"
+        title="An HTTP framework that starts at the socket."
+      />
+      <p class="section-lead">
+        Express hands you <code>app.get(path, handler)</code> and hides everything under it. I
+        wanted to know what stands between that call and a file descriptor, so I wrote the whole
+        path: accept, parse, route, run the middleware chain, serialize, write, and hold the
+        connection open for the next request.
+      </p>
+      <ul class="stats">
+        {stat.map(item => <li class="stat">
+          <span class="stat-figure">{item.figure}</span>
+          <span class="stat-caption">{item.caption}</span>
+        </li>)}
+      </ul>
+    </div>
+  </Band>
+
+  <Band ground="ink" labelledby="express-title">
+    <div class="container">
+      <SectionHeading
+        id="express-title"
+        kicker="02 — against Express, on one box"
+        title="Add routes to Express and it slows down. This one doesn’t."
+      />
+      <p class="section-lead">
+        Same machine, same handlers, the same load pointed at both. Go from {spell(smallest.routes)}
+        routes to {spell(largest.routes)} and Express falls from {count(expressStart)} requests a
+        second to {count(largest.express)}. This one barely moves — and it holds those routes in
+        {memoryMb.plusweb} MB of memory where the Express cluster needs {memoryMb.express} MB.
+      </p>
+      <ExpressComparison />
+    </div>
+  </Band>
+
+  <Band id="playground" ground="paper" graph labelledby="playground-title">
+    <div class="container">
+      <SectionHeading
+        id="playground-title"
+        class="playground-head"
+        kicker="03 — run it"
+        title="Write the routes. Send a request."
+      />
+      <p class="section-lead">
+        Write the handlers and the router rebuilds as you type. Underneath it is
+        <code class="file">src/trie.cpp</code> itself, compiled for the browser — the method is the
+        first segment of the key, a literal child always beats a parameter, and nothing backtracks.
+      </p>
+      <PlusWebPlayground />
+    </div>
+  </Band>
+
+  {/* @TODO: point this at the post, with its date, once "The bottleneck was not the router" is published */}
+  <div class="band band-paper">
+    <div class="container">
+      <a class="related" href="/writing">
+        <span class="related-text">
+          <span class="related-kicker">related writing — a post about this project</span>
+          <span class="related-title">The bottleneck was not the router</span>
+        </span>
+        <span class="related-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+
+  <NextProject current="plusweb" />
+</Base>
+
+<style>
+  .artifact {
+    position: relative;
+  }
+  
+  .code-panel {
+    rotate: -1.2deg;
+  }
+  
+  .string {
+    color: var(--color-amber);
+  }
+  
+  .tape-corner {
+    inset-block-start: var(--space-xs);
+    inset-inline-start: calc(var(--space-xl) * -1);
+  }
+  
+  .tape-edge {
+    display: none;
+    inset-block-start: calc(var(--space-m) * -1);
+    inset-inline-end: calc(var(--space-xl) * -1);
+    rotate: 27deg;
+  }
+  
+  .hand-note {
+    max-inline-size: calc(var(--layout-footnote-max) + var(--space-3xl));
+    margin-block-start: var(--space-m);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-note);
+    font-style: italic;
+    rotate: 0.7deg;
+  }
+  
+  .cta-scribble,
+  .mit-note,
+  .playground-hint {
+    display: none;
+  }
+  
+  .section-lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-body);
+  }
+  
+  .file {
+    padding-inline: var(--space-2xs);
+    background-color: var(--color-amber);
+    color: var(--color-text);
+    box-decoration-break: clone;
+  }
+  
+  .stats {
+    display: grid;
+    margin-block-start: var(--space-xl);
+    padding: 0;
+    border-block-start: var(--rule-major) solid var(--color-text);
+    list-style: none;
+  }
+  
+  .stat {
+    display: grid;
+    gap: var(--space-xs);
+    padding-block: var(--space-m);
+    border-block-end: var(--rule-row) solid var(--color-rule-light);
+  }
+  
+  .stat-figure {
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--size-h2);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+  }
+  
+  .stat-caption {
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .playground-head {
+    padding-block-end: var(--space-m);
+    border-block-end: var(--rule-major) solid var(--color-text);
+  }
+  
+  .related {
+    display: flex;
+    gap: var(--space-m);
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-l);
+    border-block: var(--rule-major) solid var(--color-text);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  
+  .related-text {
+    display: grid;
+    gap: var(--space-xs);
+  }
+  
+  .related-kicker {
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .related-title {
+    font-family: var(--font-display);
+    font-size: var(--size-h3);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-h3);
+  }
+  
+  .related:hover .related-title {
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-amber);
+    text-decoration-thickness: var(--rule-figure);
+  }
+  
+  .related-arrow {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--space-2xl);
+    block-size: var(--space-2xl);
+    background-color: var(--color-ground-ink);
+    color: var(--color-text-on-ink);
+    font-family: var(--font-mono);
+    font-size: var(--size-lead);
+  }
+  
+  @media (width >= 48rem) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-l);
+    }
+  }
+  
+  @media (width >= 64rem) {
+    .hand-note {
+      margin-inline-start: var(--space-2xl);
+    }
+  
+    .tape-edge {
+      display: block;
+    }
+  
+    /* The curve starts beside the note and lands just above the source button. */
+    .cta-scribble {
+      display: block;
+      inset-block-end: calc(100% - var(--space-2xs));
+      inset-inline-start: calc(100% - var(--space-2xl) - var(--space-3xs));
+    }
+  
+    .mit-note {
+      position: absolute;
+      z-index: 1;
+      display: block;
+      inset-block-end: calc(100% + var(--space-3xl) + var(--space-2xs));
+      inset-inline-start: calc(100% + var(--space-4xl) + var(--space-2xl) + var(--space-xs));
+      color: var(--color-text);
+      font-family: var(--font-mono);
+      font-size: var(--size-note);
+      font-style: italic;
+      white-space: nowrap;
+      rotate: -3deg;
+      pointer-events: none;
+    }
+  
+    .playground-hint {
+      display: flex;
+      gap: var(--space-s);
+      align-items: center;
+      color: var(--color-text-caption);
+      font-family: var(--font-mono);
+      font-size: var(--size-mono);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+  
+    .playground-hint::after {
+      content: '';
+      inline-size: var(--space-l);
+      block-size: var(--rule-row);
+      background-color: currentcolor;
+    }
+  
+    .playground-hint:hover {
+      color: var(--color-text);
+    }
+  
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      column-gap: 0;
+    }
+  
+    .stat {
+      padding: var(--space-m) var(--space-m) 0;
+      border-block-end: 0;
+      border-inline-start: var(--rule-row) solid var(--color-rule-light);
+    }
+  
+    .stat:first-child {
+      padding-inline-start: 0;
+      border-inline-start: 0;
+    }
+  
+    .stat:last-child {
+      padding-inline-end: 0;
+    }
+  }
+</style>

@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "amsozzer",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-19",
+  "workers_dev": false,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash",
+    "run_worker_first": ["/r/*"],
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "amsozzer-links",
+      "database_id": "42e49405-b077-4444-bdaa-50c97b7759da",
+    },
+  ],
+}

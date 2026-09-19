@@ -1,0 +1,96 @@
+---
+import AmberRule from '@src/components/AmberRule.astro';
+import Base from '@src/layouts/Base.astro';
+
+const links = [
+  { label: 'home', href: '/' },
+  { label: 'projects', href: '/#projects' },
+  { label: 'writing', href: '/writing' },
+  { label: 'experience', href: '/experience' },
+];
+---
+
+<Base
+  seo={{
+    title: 'Page not found — Ahmed Sozzer',
+    description: 'This page was redacted. Nothing is filed at this address.',
+    path: '/404',
+    noindex: true,
+  }}
+>
+  <div class="graph-paper not-found">
+    <div class="container inner">
+      <p class="mono kicker">404 <span aria-hidden="true">·</span> not found</p>
+      <h1 class="title">This page was redacted.</h1>
+      <p class="line">Nothing is filed at this address. The link may be old, or mistyped.</p>
+      <ul class="links">
+        {links.map(({ label, href }) => <li>
+          <a href={href}>{label}</a>
+        </li>)}
+      </ul>
+    </div>
+  </div>
+  <AmberRule />
+</Base>
+
+<style>
+  .not-found {
+    min-block-size: calc(100svh - var(--layout-header-height) - var(--layout-amber-band));
+  }
+  
+  .inner {
+    padding-block: var(--space-3xl) var(--space-2xl);
+  }
+  
+  .kicker {
+    margin: 0;
+    color: var(--color-text-caption);
+  }
+  
+  .title {
+    max-inline-size: var(--layout-prose-max);
+    margin-block: var(--space-s) 0;
+    font-family: var(--font-redacted);
+    font-size: var(--size-display);
+    font-weight: 400;
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+    color: var(--color-text);
+    text-wrap: balance;
+  }
+  
+  .line {
+    max-inline-size: var(--layout-prose-max);
+    margin-block: var(--space-l) 0;
+    font-size: var(--size-lead);
+    line-height: var(--leading-body);
+    color: var(--color-text-body);
+    text-wrap: pretty;
+  }
+  
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--space-m);
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .links a {
+    display: block;
+    padding-block: var(--space-xs);
+    color: var(--color-text);
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-amber);
+    text-decoration-thickness: var(--rule-figure);
+    text-underline-offset: var(--space-2xs);
+  }
+  
+  .links a:hover {
+    text-decoration-color: currentcolor;
+  }
+</style>

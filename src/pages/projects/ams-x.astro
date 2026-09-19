@@ -1,0 +1,441 @@
+---
+import AmsxSwap from '@src/components/demos/AmsxSwap/AmsxSwap.astro';
+import { swapSteps } from '@src/components/demos/AmsxSwap/_helpers/amsxSwap.consts';
+import Band from '@src/components/Band.astro';
+import Stamp from '@src/components/marks/Stamp.astro';
+import Tape from '@src/components/marks/Tape.astro';
+import {
+  capitalize,
+  projectBySlug,
+  spell,
+} from '@src/components/projects/_helpers/projects.functions';
+import NextProject from '@src/components/projects/NextProject.astro';
+import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import Terminal from '@src/components/Terminal.astro';
+import { facts } from '@src/data/facts';
+import Base from '@src/layouts/Base.astro';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const project = projectBySlug('ams-x');
+const { benchMotors, stockSpools, spools, states, stepperDriver } = facts.amsx;
+
+const specs = [
+  { label: 'server', value: 'Python, FastAPI' },
+  { label: 'control', value: 'MQTT over TLS, reverse-engineered' },
+  { label: 'file transfer', value: 'FTPS, on the local network' },
+  { label: 'plan source', value: 'the sliced .3mf, parsed server-side' },
+  { label: 'spool module', value: 'an interface — human today' },
+  { label: 'next', value: `stepper, ${stepperDriver} over ESP32` },
+];
+
+const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
+---
+
+<Base page="project" seo={routeSeo('/projects/ams-x')}>
+  <ProjectHero
+    project={project}
+    lead="An open modular filament system, driven over MQTT."
+    highlight="MQTT"
+    intro={`Stock hardware caps multi-material at ${spell(stockSpools)} spools and asks a human to stand there for every change. None of that protocol is published, so the command set was pulled apart against a live machine.`}
+  >
+    <div slot="figure" class="artifact">
+      <Terminal
+        class="swap-panel"
+        title="one swap, end to end"
+        meta={`${spell(states.length)} states, each confirmed`}
+      >
+        {/* @TODO: numbers pass - print each state's duration here once a full swap has been filmed and timed */}
+        <ol class="swap-list">
+          {swapSteps.map((step, position) => <li class="swap-row">
+            <span class="swap-index">{stepNumber(position)}</span>
+            <span class="swap-key">{step.key}</span>
+            <span class="swap-actor">{step.actor}</span>
+          </li>)}
+        </ol>
+        <p class="swap-caption">
+          the printer already knows how to pause for a filament change. these are the steps
+          something has to drive while it waits.
+        </p>
+      </Terminal>
+      <Tape class="tape-corner" />
+      <Tape class="tape-edge" />
+      <Stamp class="stamp-placement">closed source? not any more</Stamp>
+    </div>
+  </ProjectHero>
+
+  <Band ground="body" labelledby="slots-title">
+    <div class="container two-up">
+      <div>
+        <SectionHeading
+          id="slots-title"
+          class="h3"
+          title={`${capitalize(spell(stockSpools))} slots is a hardware answer to a software problem.`}
+        />
+        <p class="section-lead">
+          A model with six materials doesn’t need a bigger changer. It needs something to sit at the
+          printer and swap spools on cue. The machine already knows how to pause for a filament
+          change and resume afterwards — what it doesn’t have is anyone to talk to.
+        </p>
+        <p class="section-lead">
+          AMS-X is that someone: a server that reads the sliced job, knows exactly which layer needs
+          which material, and drives the printer’s own change routine rather than writing gcode for
+          the hotend.
+        </p>
+      </div>
+
+      <dl class="counts">
+        <div class="count">
+          <dt class="count-label">stock</dt>
+          <dd class="count-value">
+            <span class="count-figure">{stockSpools}</span>
+            spools. Past the fourth, somebody stands at the printer and swaps them by hand.
+          </dd>
+        </div>
+        <div class="count">
+          <dt class="count-label">{project.name}</dt>
+          <dd class="count-value">
+            <span class="count-figure filled">{spools}</span>
+            spools. Bolt on another module and the server drives the swap, one module per spool.
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="container">
+      <dl class="specs">
+        {specs.map(spec => <div class="spec">
+          <dt class="spec-label">{spec.label}</dt>
+          <dd class="spec-value">{spec.value}</dd>
+        </div>)}
+      </dl>
+    </div>
+  </Band>
+
+  <Band ground="paper" graph labelledby="swap-title">
+    <div class="container">
+      <SectionHeading
+        id="swap-title"
+        kicker={`one swap, ${spell(states.length)} states`}
+        title="Each step waits to be confirmed."
+      />
+      <p class="section-lead">
+        The server sends one message at a time and watches the machine’s own reports until the guard
+        for that state holds. Nothing runs on a timer.
+      </p>
+      <AmsxSwap />
+
+      <figure class="footage">
+        <div class="footage-frame on-ink">
+          <Tape class="footage-tape-start" />
+          <Tape class="footage-tape-end" />
+          <ol class="footage-strip" aria-hidden="true">
+            {states.map(state => <li class="footage-state">{state}</li>)}
+          </ol>
+        </div>
+        {/* @TODO: replace this slot with the filmed swap (H.264 MP4, AVIF poster, step description) once Ahmed has shot it */}
+        <figcaption class="footage-caption">A full swap cycle, filmed — coming soon.</figcaption>
+      </figure>
+    </div>
+  </Band>
+
+  <Band ground="body" labelledby="where-title">
+    <div class="container two-up">
+      <SectionHeading id="where-title" class="h3" title="Where it is" />
+      <div class="where">
+        <div class="where-block">
+          <h3 class="where-label running">running</h3>
+          <p class="section-lead">
+            The protocol half. The server parses the sliced job, talks to the printer over its own
+            MQTT channel, drives pause and resume, and confirms every step against the machine’s
+            report before the next one. None of those commands are documented anywhere — they came
+            off a live machine.
+          </p>
+        </div>
+        <div class="where-block">
+          <h3 class="where-label bench">on the bench</h3>
+          <p class="section-lead">
+            The spool module. {capitalize(spell(benchMotors))} motors turning on a desk, with the
+            drive and guide parts being printed now. The swap step is a human implementing the same
+            interface until they go on — nothing above that line changes when they do.
+          </p>
+        </div>
+      </div>
+    </div>
+  </Band>
+
+  <NextProject current="ams-x" />
+</Base>
+
+<style>
+  .artifact {
+    position: relative;
+  }
+  
+  .swap-panel {
+    rotate: 1.3deg;
+  }
+  
+  .swap-list {
+    display: grid;
+    gap: var(--space-s);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .swap-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+    align-items: baseline;
+  }
+  
+  .swap-index {
+    color: var(--fg-caption);
+    font-size: var(--size-mono-small);
+  }
+  
+  .swap-key {
+    flex-grow: 1;
+    color: var(--fg);
+  }
+  
+  .swap-actor {
+    color: var(--fg-caption);
+    font-size: var(--size-mono-small);
+  }
+  
+  .swap-caption {
+    margin-block-start: var(--space-m);
+    padding-block-start: var(--space-s);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+    color: var(--fg-caption);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .tape-corner {
+    inset-block-start: var(--space-xs);
+    inset-inline-start: calc(var(--space-xl) * -1);
+    rotate: -31deg;
+  }
+  
+  .tape-edge {
+    display: none;
+    inset-block-end: var(--space-3xl);
+    inset-inline-end: calc(var(--space-l) * -1);
+    rotate: -24deg;
+  }
+  
+  .stamp-placement {
+    margin-block-start: var(--space-l);
+  }
+  
+  .section-lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-body);
+  }
+  
+  .two-up {
+    display: grid;
+    gap: var(--space-l);
+    align-items: start;
+  }
+  
+  .counts {
+    margin: 0;
+    border-block-start: var(--rule-figure) solid var(--color-text);
+  }
+  
+  .count {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block: var(--space-m);
+    border-block-end: var(--rule-row) solid var(--color-rule-light);
+  }
+  
+  .count:last-child {
+    border-block-end: 0;
+  }
+  
+  .count-label {
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .count-value {
+    margin: 0;
+    color: var(--color-text-body);
+  }
+  
+  /* Black on an amber fill: amber text on paper would not pass. */
+  .count-figure {
+    margin-inline-end: var(--space-2xs);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--size-h2);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+  }
+  
+  .count-figure.filled {
+    padding-inline: var(--space-xs);
+    background-color: var(--color-amber);
+  }
+  
+  .specs {
+    display: grid;
+    margin-block-start: var(--space-xl);
+    border-block-start: var(--rule-major) solid var(--color-text);
+  }
+  
+  .spec {
+    display: grid;
+    gap: var(--space-3xs);
+    padding-block: var(--space-s);
+    border-block-end: var(--rule-row) solid var(--color-rule-light);
+  }
+  
+  .spec-label {
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .spec-value {
+    margin: 0;
+    color: var(--color-text);
+    font-size: var(--size-small);
+  }
+  
+  .footage {
+    margin-block-start: var(--space-2xl);
+  }
+  
+  .footage-frame {
+    position: relative;
+    display: flex;
+    max-inline-size: calc(var(--layout-prose-max) * 1.5);
+    aspect-ratio: 16 / 9;
+    align-items: flex-end;
+    background-color: var(--color-ground-ink);
+  }
+  
+  .footage-strip {
+    display: flex;
+    inline-size: 100%;
+    margin: 0;
+    padding: 0;
+    border-block-start: var(--rule-row) solid var(--rule-color);
+    list-style: none;
+  }
+  
+  .footage-state {
+    flex: 1 1 0;
+    padding: var(--space-2xs) var(--space-xs);
+    border-inline-start: var(--rule-row) solid var(--rule-color);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .footage-state:first-child {
+    border-inline-start: 0;
+  }
+  
+  .footage-tape-start {
+    inset-block-start: calc(var(--space-s) * -1);
+    inset-inline-start: calc(var(--space-l) * -1);
+  }
+  
+  .footage-tape-end {
+    inset-block-start: calc(var(--space-s) * -1);
+    inset-inline-end: calc(var(--space-l) * -1);
+    rotate: 28deg;
+  }
+  
+  .footage-caption {
+    max-inline-size: calc(var(--layout-prose-max) * 1.5);
+    margin-block-start: var(--space-s);
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .where {
+    display: grid;
+    gap: var(--space-l);
+  }
+  
+  .where-label {
+    padding-block-end: var(--space-xs);
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    font-weight: 400;
+    line-height: var(--leading-mono);
+    letter-spacing: normal;
+  }
+  
+  .where-label.running {
+    border-block-end: var(--rule-figure) solid var(--color-amber);
+  }
+  
+  .where-label.bench {
+    border-block-end: var(--rule-figure) solid var(--color-text);
+  }
+  
+  @media (width >= 48rem) {
+    .specs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-2xl);
+    }
+  
+    .spec {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: var(--space-m);
+      align-items: baseline;
+    }
+  
+    .where {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2xl);
+    }
+  }
+  
+  @media (width >= 64rem) {
+    .two-up {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: var(--space-2xl);
+    }
+  
+    .tape-edge {
+      display: block;
+    }
+  
+    .stamp-placement {
+      margin-inline-start: var(--space-3xl);
+    }
+  
+    .count {
+      display: flex;
+      gap: var(--space-l);
+      align-items: baseline;
+    }
+  
+    .count-label {
+      flex-shrink: 0;
+      inline-size: var(--space-3xl);
+    }
+  }
+</style>

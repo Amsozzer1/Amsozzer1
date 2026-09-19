@@ -1,0 +1,63 @@
+---
+import { site } from '@src/data/site';
+import { monthYear } from '@src/lib/dates';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...attrs } = Astro.props;
+const { label, since } = site.availability;
+const sinceLabel = monthYear(since);
+---
+
+<div class:list={['availability', className]} {...attrs}>
+  <p class="location">{site.location.label}</p>
+  <p class="open">
+    <span class="dot" aria-hidden="true"></span>
+    {label}
+    <span class="since">
+      <span aria-hidden="true">·</span>
+      <span class="vh">from</span>
+      <time datetime={since}>{sinceLabel}</time>
+    </span>
+  </p>
+</div>
+
+<style>
+  .availability {
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .location,
+  .open {
+    margin: 0;
+  }
+  
+  .location {
+    color: var(--color-text-caption);
+  }
+  
+  .open {
+    color: var(--color-text);
+  }
+  
+  .dot {
+    display: inline-block;
+    inline-size: var(--space-2xs);
+    block-size: var(--space-2xs);
+    border-radius: 50%;
+    background: var(--color-amber);
+    vertical-align: middle;
+  }
+  
+  /* The phone header only has room for the dot and the label; the footer repeats the city and the date. */
+  @media (width < 64rem) {
+    .location,
+    .since {
+      display: none;
+    }
+  }
+</style>

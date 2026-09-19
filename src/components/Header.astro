@@ -1,0 +1,97 @@
+---
+import Availability from '@src/components/Availability.astro';
+import Nav from '@src/components/Nav.astro';
+import Wordmark from '@src/components/Wordmark.astro';
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <Wordmark class="mark" />
+    <Nav class="nav" path={path} />
+    <Availability class="status" />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    background: var(--color-ground-paper);
+  }
+  
+  /* Phone: wordmark and availability share a row, the nav rail sits under them. */
+  .bar {
+    display: grid;
+    grid-template-areas:
+      'mark status'
+      'nav nav';
+    grid-template-columns: 1fr auto;
+    column-gap: var(--space-s);
+    align-items: center;
+    padding-block-start: var(--space-2xs);
+  }
+  
+  .mark {
+    grid-area: mark;
+    justify-self: start;
+  }
+  
+  .nav {
+    grid-area: nav;
+    border-block-start: var(--rule-row) solid var(--color-rule-light);
+  }
+  
+  .status {
+    grid-area: status;
+    text-align: end;
+  }
+  
+  /* Desktop: one 84px row on a shared baseline, crop marks in the top corners. */
+  @media (width >= 64rem) {
+    .bar {
+      grid-template-areas: 'mark nav status';
+      grid-template-columns: auto auto auto;
+      place-content: end space-between;
+      align-items: baseline;
+      min-block-size: var(--layout-header-height);
+      padding-block: 0 var(--space-3xs);
+    }
+  
+    .nav {
+      border-block-start: 0;
+    }
+  
+    .site-header::before,
+    .site-header::after {
+      content: '';
+      position: absolute;
+      inset-block-start: var(--space-m);
+      inline-size: var(--space-s);
+      block-size: var(--space-s);
+      border-block-start: var(--rule-row) solid var(--color-crop);
+      pointer-events: none;
+    }
+  
+    .site-header::before {
+      inset-inline-start: var(--space-m);
+      border-inline-start: var(--rule-row) solid var(--color-crop);
+    }
+  
+    .site-header::after {
+      inset-inline-end: var(--space-m);
+      border-inline-end: var(--rule-row) solid var(--color-crop);
+    }
+  }
+  
+  @media (forced-colors: active) {
+    .site-header::before,
+    .site-header::after {
+      display: none;
+    }
+  }
+</style>

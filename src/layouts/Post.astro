@@ -1,0 +1,219 @@
+---
+import AmberRule from '@src/components/AmberRule.astro';
+import ArrowLink from '@src/components/ArrowLink.astro';
+import PostMeta from '@src/components/writing/PostMeta.astro';
+import type { Post } from '@src/data/posts';
+import Base from '@src/layouts/Base.astro';
+import { postSeo } from '@src/lib/seo/post';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const seo = postSeo(post);
+const trail = seo.breadcrumbs?.slice(0, -1) ?? [];
+---
+
+<Base seo={seo} page="post">
+  <article class="post" aria-labelledby="post-title">
+    <header class="post-header graph-paper">
+      <div class="container">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <ol class="crumb-list">
+            {trail.map(({ name, path }, index) => <li>
+              {index > 0 && <span class="crumb-sep" aria-hidden="true">/</span>}
+              <a href={path}>{name.toLowerCase()}</a>
+            </li>)}
+          </ol>
+        </nav>
+        <PostMeta class="meta" post={post} withUpdated />
+        <h1 id="post-title" class="title">{post.data.title}</h1>
+        <p class="standfirst">{post.data.description}</p>
+      </div>
+    </header>
+    <AmberRule />
+
+    <div class="container">
+      <div class="post-body prose">
+        <slot />
+      </div>
+    </div>
+
+    <footer class="post-footer">
+      <div class="container">
+        <ArrowLink href="/writing" label="all writing" direction="left" />
+      </div>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .post-header {
+    padding-block: var(--space-l) var(--space-2xl);
+  }
+  
+  .crumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+    list-style: none;
+  }
+  
+  .crumb-list li {
+    display: flex;
+    align-items: baseline;
+  }
+  
+  .crumb-sep {
+    padding-inline: var(--space-xs);
+    color: var(--rule-color);
+  }
+  
+  /* 12px of padding each way makes the 44px touch target. */
+  .crumb-list a {
+    display: inline-block;
+    padding-block: var(--space-xs);
+    color: var(--fg-caption);
+  }
+  
+  .meta {
+    margin-block-start: var(--space-m);
+  }
+  
+  .title {
+    max-inline-size: calc(var(--layout-prose-max) * 1.25);
+    margin-block-start: var(--space-m);
+  }
+  
+  .standfirst {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-body);
+    font-size: var(--size-lead);
+    line-height: var(--leading-tight);
+  }
+  
+  .post-body {
+    padding-block: var(--space-2xl);
+  }
+  
+  .post-footer {
+    padding-block: var(--space-xl) var(--space-2xl);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+  }
+  
+  @media print {
+    .post-header {
+      padding-block: 0 var(--space-m);
+    }
+  
+    .title {
+      font-size: var(--size-h2);
+    }
+  
+    .post-footer {
+      display: none;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Global because the post's Markdown renders outside this component's scope. */
+  .post-body h2 {
+    margin-block-start: var(--space-2xl);
+    font-size: var(--size-h3);
+  }
+  
+  .post-body h3 {
+    margin-block-start: var(--space-xl);
+    font-size: var(--size-h4);
+  }
+  
+  .post-body h2 + *,
+  .post-body h3 + * {
+    margin-block-start: var(--space-s);
+  }
+  
+  .post-body :is(ul, ol) {
+    padding-inline-start: var(--space-m);
+  }
+  
+  .post-body li + li {
+    margin-block-start: var(--space-2xs);
+  }
+  
+  .post-body blockquote {
+    padding-inline-start: var(--space-m);
+    border-inline-start: var(--rule-major) solid var(--color-amber);
+    color: var(--fg-secondary);
+  }
+  
+  .post-body :not(pre) > code {
+    padding-inline: var(--space-3xs);
+    background-color: var(--color-ground-stone);
+  }
+  
+  /* Shiki adds tabindex, so long lines scroll inside the block. @TODO: its inline colours fail html-validate's no-inline-style rule */
+  .post-body pre {
+    padding: var(--space-m);
+    overflow-x: auto;
+    font-size: var(--size-code);
+    line-height: var(--leading-code);
+  }
+  
+  .post-body table {
+    inline-size: 100%;
+    font-size: var(--size-small);
+    font-variant-numeric: tabular-nums;
+  }
+  
+  .post-body :is(th, td) {
+    padding: var(--space-2xs) var(--space-xs) var(--space-2xs) 0;
+    border-block-end: var(--rule-row) solid var(--rule-color);
+    text-align: start;
+    vertical-align: baseline;
+  }
+  
+  .post-body thead th {
+    border-block-end: var(--rule-figure) solid var(--fg);
+  }
+  
+  .post-body hr {
+    margin-block: var(--space-xl);
+    border: 0;
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  .post-body figcaption {
+    margin-block-start: var(--space-2xs);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .post-body .footnotes {
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-m);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+    font-size: var(--size-small);
+  }
+  
+  /* remark-gfm labels its footnote list with a class the site otherwise calls .vh. */
+  .post-body .sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

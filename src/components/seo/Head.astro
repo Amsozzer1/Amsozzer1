@@ -1,0 +1,79 @@
+---
+import redactionBold from '@src/assets/fonts/redaction-bold.woff2?url';
+import JsonLd from '@src/components/seo/JsonLd.astro';
+import { site } from '@src/data/site';
+import { colors } from '@src/design/tokens';
+import { buildGraph } from '@src/lib/seo/graph';
+import { absoluteUrl, ogImage } from '@src/lib/seo/meta';
+import type { PageSeo } from '@src/lib/seo/types';
+
+interface Props {
+  seo: PageSeo;
+}
+
+const { seo } = Astro.props;
+const type = seo.type ?? 'website';
+const url = absoluteUrl(seo.path);
+const image = ogImage(seo);
+const feedTitle = `${site.name} — Writing`;
+const profiles = [site.links.github, site.links.linkedin, site.links.orcid, site.links.devto];
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{seo.title}</title>
+<meta name="description" content={seo.description} />
+<link rel="canonical" href={url} />
+<meta name="robots" content={seo.noindex ? 'noindex, nofollow' : 'max-image-preview:large'} />
+<meta name="theme-color" content={colors.groundPaper} />
+<meta name="color-scheme" content="light" />
+<meta name="text-scale" content="scale" />
+<link rel="preload" href={redactionBold} as="font" type="font/woff2" crossorigin />
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content={site.locale} />
+<meta property="og:title" content={seo.title} />
+<meta property="og:description" content={seo.description} />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={image.url} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content={String(image.width)} />
+<meta property="og:image:height" content={String(image.height)} />
+<meta property="og:image:alt" content={image.alt} />
+{type === 'profile' && (
+  <>
+    <meta property="profile:first_name" content={site.givenName} />
+    <meta property="profile:last_name" content={site.familyName} />
+  </>
+)}
+{type === 'article' && seo.published && (
+  <meta property="article:published_time" content={seo.published} />
+)}
+{type === 'article' && seo.modified && (
+  <meta property="article:modified_time" content={seo.modified} />
+)}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image:alt" content={image.alt} />
+
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={feedTitle}
+  href={absoluteUrl('/feed.xml')}
+/>
+<link
+  rel="alternate"
+  type="application/feed+json"
+  title={feedTitle}
+  href={absoluteUrl('/feed.json')}
+/>
+{profiles.map(href => (
+  <link rel="me" href={href} />
+))}
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+{!seo.noindex && <JsonLd graph={buildGraph(seo)} />}
+{/* @TODO: Cloudflare Web Analytics token */}

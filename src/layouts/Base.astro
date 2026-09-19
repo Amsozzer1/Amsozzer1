@@ -1,0 +1,46 @@
+---
+import Footer from '@src/components/Footer.astro';
+import Header from '@src/components/Header.astro';
+import Head from '@src/components/seo/Head.astro';
+import type { PageSeo } from '@src/lib/seo/types';
+import '@src/styles/index.css';
+
+interface Props {
+  seo: PageSeo;
+  page?: 'index' | 'project' | 'page' | 'post';
+}
+
+const { seo, page = 'page' } = Astro.props;
+---
+
+<html lang="en" data-page={page}>
+  <head>
+    <Head seo={seo} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header path={seo.path} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100svh;
+  }
+  
+  main {
+    flex-grow: 1;
+  }
+  
+  /* main only takes focus as the skip link's target; it is not a control, so it needs no ring. */
+  main:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+</style>

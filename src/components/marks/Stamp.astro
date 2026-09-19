@@ -1,0 +1,38 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<p class:list={['stamp', className]} {...rest}><slot /></p>
+
+<style>
+  .stamp {
+    inline-size: fit-content;
+    padding: 0.7em 1.1em;
+    border: var(--rule-stamp) solid var(--fg);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-stamp);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    text-transform: lowercase;
+    opacity: 0.8;
+    rotate: -6deg;
+    pointer-events: none;
+  }
+  
+  @media (width < 48rem) {
+    .stamp {
+      border-width: var(--rule-figure);
+    }
+  }
+  
+  @media (prefers-contrast: more) {
+    .stamp {
+      opacity: 1;
+    }
+  }
+</style>

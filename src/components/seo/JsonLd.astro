@@ -1,0 +1,13 @@
+---
+import type { Graph } from 'schema-dts';
+
+interface Props {
+  graph: Graph;
+}
+
+const { graph } = Astro.props;
+// Escaping "<" keeps a "</script>" inside any string from closing the block early.
+const json = JSON.stringify(graph).replaceAll('<', '\\u003c');
+---
+
+<script is:inline type="application/ld+json" set:html={json}></script>

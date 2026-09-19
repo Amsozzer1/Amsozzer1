@@ -1,0 +1,37 @@
+---
+interface Props {
+  d: string;
+  width?: number;
+  height?: number;
+  class?: string;
+}
+
+const { d, width = 280, height = 150, class: className, ...rest } = Astro.props;
+---
+
+<svg
+  class:list={['mark-overlay', 'scribble', className]}
+  viewBox={`0 0 ${width} ${height}`}
+  width={width}
+  height={height}
+  aria-hidden="true"
+  {...rest}
+>
+  <path d={d}></path>
+</svg>
+
+<style>
+  .scribble {
+    block-size: auto;
+    overflow: visible;
+    fill: none;
+    stroke: var(--fg);
+    stroke-width: var(--rule-scribble);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  
+  .scribble path {
+    vector-effect: non-scaling-stroke;
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import { execFileSync } from 'node:child_process';
+import FactList from '@src/components/pages/FactList.astro';
+import PageHero from '@src/components/pages/PageHero.astro';
+import PageSection from '@src/components/pages/PageSection.astro';
+import Pending from '@src/components/pages/Pending.astro';
+import { routes } from '@src/data/routes';
+import { site } from '@src/data/site';
+import Base from '@src/layouts/Base.astro';
+import { lastModified } from '@src/lib/dates';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const updated = lastModified(...routes['/colophon'].sources);
+const commit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+const repo = `${site.links.github}/Amsozzer1`;
+
+const faces = [
+  {
+    name: 'Redaction',
+    role: 'headings and display',
+    credit:
+      'Jeremy Mickel, with creative direction by Forest Young, for Titus Kaphar and Reginald Dwayne Betts’ The Redaction at MoMA PS1. The 404 page uses one of its degraded grades, Redaction 70.',
+    licence: 'SIL Open Font License 1.1, also LGPL 2.1',
+    href: '/fonts/OFL-Redaction.txt',
+  },
+  {
+    name: 'Uncut Sans',
+    role: 'body text',
+    credit: 'Kasper Nordkvist.',
+    licence: 'SIL Open Font License 1.1',
+    href: '/fonts/OFL-UncutSans.txt',
+  },
+  {
+    name: 'Monaspace Xenon',
+    role: 'labels, data and code',
+    credit:
+      'GitHub Next with Lettermatic. Its licence reserves the Monaspace name, so the subset served here is renamed Sozzer Mono.',
+    licence: 'SIL Open Font License 1.1',
+    href: '/fonts/OFL-Monaspace.txt',
+  },
+];
+---
+
+<Base seo={routeSeo('/colophon')}>
+  <PageHero kicker="colophon" title="How this site is built." updated={updated}>
+    <p>
+      Static HTML and CSS, typeset in three libre faces, deployed from a public repository. Pages
+      ship no JavaScript unless they carry a demo.
+    </p>
+  </PageHero>
+
+  <PageSection id="stack" title="Stack">
+    <FactList>
+      <div>
+        <dt>generator</dt>
+        <dd>{Astro.generator}, static output with no adapter.</dd>
+      </div>
+      <div>
+        <dt>hosting</dt>
+        <dd>Cloudflare Workers, serving the built files as static assets.</dd>
+      </div>
+      <div>
+        <dt>deploys</dt>
+        <dd>
+          GitHub Actions. Every push runs the checks below; main deploys only once they pass, and
+          pull requests get their own preview.
+        </dd>
+      </div>
+      <div>
+        <dt>styles</dt>
+        <dd>
+          Plain CSS. Colours, type sizes and spacing live in one TypeScript file that generates the
+          custom properties every component reads.
+        </dd>
+      </div>
+      <div>
+        <dt>code</dt>
+        <dd>TypeScript, strict, with no UI framework.</dd>
+      </div>
+      <div>
+        <dt>content</dt>
+        <dd>
+          Markdown for posts, and <a href="/resume.json">resume.json</a> (JSON Resume 1.3.1) for the
+          experience page, the structured data and the PDF.
+        </dd>
+      </div>
+      <div>
+        <dt>feeds</dt>
+        <dd><a href="/feed.xml">RSS</a> and <a href="/feed.json">JSON Feed</a>.</dd>
+      </div>
+    </FactList>
+  </PageSection>
+
+  <PageSection id="type" title="Type" ground="paper">
+    <FactList>
+      {faces.map(({ name, role, credit, licence, href }) => <div>
+        <dt>{name}</dt>
+        <dd>{role} — {credit} <a href={href}>{licence}</a>.</dd>
+      </div>)}
+    </FactList>
+    <p>
+      Every face is subset to the characters this site actually sets, self-hosted, and paired with a
+      metric-matched fallback so nothing shifts when the real font arrives.
+    </p>
+  </PageSection>
+
+  <PageSection id="checks" title="Checks">
+    <p>
+      There is no test suite. Every push runs Prettier, ESLint, Stylelint and the TypeScript check,
+      builds the site, then validates the HTML and every internal link. Lighthouse CI fails the
+      build if the accessibility score drops below 100, or SEO and best practices below 95.
+    </p>
+    <p>
+      <a href="/accessibility">The accessibility statement</a> covers what those checks cannot: the
+      manual keyboard, screen reader and zoom passes.
+    </p>
+  </PageSection>
+
+  <PageSection id="lighthouse" title="Lighthouse" ground="paper">
+    {/* @TODO: the four scores from the last CI run, written in by the deploy */}
+    <Pending />
+  </PageSection>
+
+  <PageSection id="source" title="Source">
+    <p>
+      The whole site is in a public repository, beside the profile README it shares with:
+      <a href={repo}>github.com/Amsozzer1/Amsozzer1</a>.
+    </p>
+    <p class="build">
+      Built from commit <a href={`${repo}/commit/${commit}`}><code>{commit.slice(0, 7)}</code></a>.
+    </p>
+  </PageSection>
+</Base>
+
+<style>
+  .build {
+    color: var(--fg-caption);
+    font-size: var(--size-small);
+  }
+</style>

@@ -1,0 +1,58 @@
+---
+import FactList from '@src/components/pages/FactList.astro';
+import PageHero from '@src/components/pages/PageHero.astro';
+import PageSection from '@src/components/pages/PageSection.astro';
+import Pending from '@src/components/pages/Pending.astro';
+import { routes } from '@src/data/routes';
+import Base from '@src/layouts/Base.astro';
+import { lastModified } from '@src/lib/dates';
+import { routeSeo } from '@src/lib/seo/meta';
+
+interface Tool {
+  name: string;
+  note: string;
+}
+
+interface Group {
+  id: string;
+  title: string;
+  tools: Tool[];
+}
+
+// @TODO: Ahmed fills these in — the machine and monitors, the editor and terminal, the everyday
+// software, and the printer AMS-X drives (make and model)
+const groups: Group[] = [
+  { id: 'hardware', title: 'Hardware', tools: [] },
+  { id: 'editor', title: 'Editor and terminal', tools: [] },
+  { id: 'software', title: 'Everyday software', tools: [] },
+  { id: 'printing', title: '3D printing', tools: [] },
+];
+
+const updated = lastModified(...routes['/uses'].sources);
+---
+
+<Base seo={routeSeo('/uses')}>
+  <PageHero kicker="uses" title="The hardware and software I work with." updated={updated}>
+    <p>
+      The machine the client work runs on, the tools the C++ and Python projects need, and the
+      printer AMS-X talks to. Kept current as things change.
+    </p>
+  </PageHero>
+
+  {groups.map(({ id, title, tools }, index) => <PageSection
+    id={id}
+    title={title}
+    ground={index % 2 === 0 ? 'body' : 'paper'}
+  >
+    {tools.length > 0 ? (
+      <FactList>
+        {tools.map(({ name, note }) => <div>
+          <dt>{name}</dt>
+          <dd>{note}</dd>
+        </div>)}
+      </FactList>
+    ) : (
+      <Pending />
+    )}
+  </PageSection>)}
+</Base>

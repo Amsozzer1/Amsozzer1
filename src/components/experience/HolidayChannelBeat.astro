@@ -1,0 +1,116 @@
+---
+import Band from '@src/components/Band.astro';
+import BeatKicker from '@src/components/experience/BeatKicker.astro';
+import RoleLine from '@src/components/experience/RoleLine.astro';
+import type resume from '@src/data/resume.json';
+
+interface Props {
+  job: (typeof resume.work)[number];
+  number: string;
+}
+
+const { job, number } = Astro.props;
+const id = `job-${number}`;
+---
+
+<Band ground="ink" labelledby={id} class="beat">
+  <div class="container">
+    <hgroup class="heading">
+      <BeatKicker number={number} place={job.location} start={job.startDate} end={job.endDate} />
+      <h2 id={id} class="headline">
+        <span class="vh">{`${job.name}: `}</span>Checkout had to hold on the busiest week of the
+        year.
+      </h2>
+    </hgroup>
+
+    <div class="columns">
+      <p class="lede">
+        An e-commerce platform built end to end at Holiday Channel — checkout flow through order
+        fulfillment — with the service architecture designed to absorb holiday-season traffic peaks
+        without degrading the one path that is not allowed to degrade.
+      </p>
+      <div class="more">
+        <p>
+          Google Ads integrated on the acquisition side; interfaces built responsively from Figma
+          with Shadcn and Framer Motion, and the customer-facing app shipped to iOS in React Native.
+        </p>
+        <p>
+          Those five months were also my last five months of coursework at Illinois. The degree
+          finished in May; so did the platform.
+        </p>
+      </div>
+    </div>
+
+    <RoleLine
+      class="role"
+      position={job.position}
+      company={job.name}
+      stack={['Next.js', 'Shadcn', 'Framer Motion', 'iOS']}
+    />
+  </div>
+</Band>
+
+<style>
+  .heading {
+    display: grid;
+    gap: var(--space-m);
+  }
+  
+  .headline {
+    max-inline-size: calc(var(--layout-prose-max) * 1.5);
+  }
+  
+  .columns {
+    display: grid;
+    gap: var(--space-s);
+    margin-block-start: var(--space-l);
+    color: var(--fg-body);
+  }
+  
+  .more {
+    font-size: var(--size-small);
+  }
+  
+  .more p + p {
+    margin-block-start: var(--space-s);
+  }
+  
+  .role {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-m);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+  }
+  
+  @media (width >= 64rem) {
+    .columns {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      column-gap: var(--space-2xl);
+    }
+  }
+  
+  @media print {
+    .beat {
+      padding-block: var(--space-s);
+    }
+  
+    .headline {
+      font-size: var(--size-h4);
+    }
+  
+    .columns {
+      display: block;
+      margin-block-start: var(--space-s);
+      font-size: var(--size-small);
+    }
+  
+    .more {
+      margin-block-start: var(--space-s);
+      font-size: inherit;
+    }
+  
+    .role {
+      margin-block-start: var(--space-s);
+      padding-block-start: var(--space-2xs);
+    }
+  }
+</style>

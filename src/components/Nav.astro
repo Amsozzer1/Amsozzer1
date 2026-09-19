@@ -1,0 +1,107 @@
+---
+import { site } from '@src/data/site';
+
+interface Props {
+  path: string;
+  class?: string;
+}
+
+interface NavItem {
+  label: string;
+  href: string;
+  section?: string;
+}
+
+const { path, class: className, ...attrs } = Astro.props;
+
+const items: NavItem[] = [
+  { label: 'projects', href: '/#projects', section: '/projects' },
+  { label: 'writing', href: '/writing', section: '/writing' },
+  { label: 'experience', href: '/experience', section: '/experience' },
+  { label: 'contact', href: `mailto:${site.email}` },
+];
+
+// 'page' marks the exact page; 'true' marks the section a deeper page (a post, a project) belongs to.
+const current = ({ href, section }: NavItem) => {
+  if (path === href) return 'page';
+  if (section && path.startsWith(`${section}/`)) return 'true';
+  return undefined;
+};
+---
+
+<nav class={className} aria-label="Primary" {...attrs}>
+  <ul class="list">
+    {items.map(item => <li>
+      <a class="link" href={item.href} aria-current={current(item)}>
+        {item.label}
+      </a>
+    </li>)}
+    <li>
+      <a
+        class="link resume"
+        href={site.resumePdf}
+        download="ahmed-sozzer-resume.pdf"
+        aria-label="Résumé (PDF)"
+      >
+        resume <span aria-hidden="true">↓</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    column-gap: var(--space-3xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .link {
+    position: relative;
+    isolation: isolate;
+    display: block;
+    padding-block: var(--space-xs);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  
+  .link:hover {
+    color: var(--color-text);
+    text-decoration-line: underline;
+  }
+  
+  /* The weight carries the state on its own; the amber bar is the canvas look and drops out in forced colors. */
+  .link[aria-current] {
+    color: var(--color-text);
+    font-weight: 700;
+  }
+  
+  .link[aria-current]::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset-inline: calc(var(--rule-major) * -1);
+    inset-block-end: var(--space-xs);
+    block-size: calc(var(--rule-major) * 2);
+    background: var(--color-amber);
+  }
+  
+  .resume {
+    color: var(--color-text);
+    border-block-end: var(--rule-figure) solid var(--color-amber);
+  }
+  
+  @media (width >= 64rem) {
+    .list {
+      column-gap: var(--space-l);
+    }
+  }
+</style>

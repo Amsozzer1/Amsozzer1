@@ -1,0 +1,124 @@
+---
+import AmberRule from '@src/components/AmberRule.astro';
+import { projects, type ProjectSlug } from '@src/data/projects';
+
+interface Props {
+  current: ProjectSlug;
+}
+
+const { current } = Astro.props;
+const index = projects.findIndex(project => project.slug === current);
+const previous = projects[index - 1];
+const following = projects[index + 1];
+
+const back = previous
+  ? { label: previous.name, href: previous.path }
+  : { label: 'home', href: '/' };
+
+const next = following
+  ? {
+      kicker: `next — ${following.number}`,
+      label: following.name,
+      href: following.path,
+      description: following.tagline,
+    }
+  : { kicker: 'back to', label: 'all projects', href: '/#projects', description: undefined };
+---
+
+<nav class="band band-ink on-ink" aria-label="Projects">
+  <div class="container inner">
+    <a class="back" href={back.href}><span aria-hidden="true">←</span> {back.label}</a>
+    <div class="next">
+      <a class="next-link" href={next.href}>
+        <span class="kicker">{next.kicker}</span>
+        <span class="label">{next.label} <span aria-hidden="true">→</span></span>
+      </a>
+      {next.description && <p class="description">{next.description}</p>}
+    </div>
+  </div>
+</nav>
+<AmberRule />
+
+<style>
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+  
+  .back {
+    align-self: flex-start;
+    padding-block: var(--space-xs);
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+    text-decoration: none;
+  }
+  
+  .back:hover {
+    color: var(--fg);
+    text-decoration-line: underline;
+  }
+  
+  .next {
+    display: grid;
+    gap: var(--space-xs);
+  }
+  
+  .next-link {
+    display: grid;
+    gap: var(--space-2xs);
+    justify-self: start;
+    text-decoration: none;
+  }
+  
+  .kicker {
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .label {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: var(--size-h3);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-h3);
+  }
+  
+  .next-link:hover .label {
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--rule-figure);
+    text-decoration-color: var(--color-amber);
+  }
+  
+  .description {
+    max-inline-size: var(--layout-prose-max);
+    color: var(--fg-body);
+    font-size: var(--size-small);
+  }
+  
+  @media (width >= 48rem) {
+    .inner {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+  
+    .back {
+      align-self: auto;
+    }
+  
+    .next {
+      justify-items: end;
+      text-align: end;
+    }
+  
+    .next-link {
+      justify-items: end;
+      justify-self: end;
+    }
+  }
+</style>

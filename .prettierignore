@@ -1,0 +1,11 @@
+dist/
+.astro/
+.wrangler/
+build/
+node_modules/
+pnpm-lock.yaml
+README.md
+resume.tex
+public/resume.pdf
+fonts/masters/
+src/assets/fonts/

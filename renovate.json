@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "schedule:weekly"],
+  "timezone": "America/Chicago",
+  "minimumReleaseAge": "3 days",
+  "packageRules": [
+    {
+      "description": "One weekly PR for every minor and patch update.",
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "non-major dependencies"
+    },
+    {
+      "description": "Dev tooling merges itself once CI passes. A separate group, because Renovate only automerges a branch when every update in it may automerge.",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "non-major dev dependencies",
+      "automerge": true
+    },
+    {
+      "description": "TypeScript 7 has no compiler API yet, which breaks astro check and typescript-eslint.",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
+    }
+  ]
+}

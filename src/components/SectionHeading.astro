@@ -1,0 +1,32 @@
+---
+import Kicker from '@src/components/Kicker.astro';
+
+interface Props {
+  kicker?: string;
+  title: string;
+  level?: 2 | 3;
+  id?: string;
+  class?: string;
+}
+
+const { kicker, title, level = 2, id, class: className, ...rest } = Astro.props;
+const Heading = `h${level}` as const;
+---
+
+{kicker ? (
+  <hgroup class:list={['section-heading', className]} {...rest}>
+    <Kicker>{kicker}</Kicker>
+    <Heading id={id}>{title}</Heading>
+  </hgroup>
+) : (
+  <Heading id={id} class:list={[className]} {...rest}>
+    {title}
+  </Heading>
+)}
+
+<style>
+  .section-heading {
+    display: grid;
+    gap: var(--space-s);
+  }
+</style>

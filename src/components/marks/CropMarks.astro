@@ -1,0 +1,43 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['mark-overlay', 'crop-marks', className]} aria-hidden="true" {...rest}></span>
+
+<style>
+  .crop-marks {
+    inset-block-start: var(--layout-mark-crop-inset);
+    inset-inline: var(--layout-mark-crop-inset);
+    block-size: var(--layout-mark-crop);
+  }
+  
+  .crop-marks::before,
+  .crop-marks::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inline-size: var(--layout-mark-crop);
+    block-size: var(--layout-mark-crop);
+    border-block-start: var(--rule-row) solid var(--color-crop);
+  }
+  
+  .crop-marks::before {
+    inset-inline-start: 0;
+    border-inline-start: var(--rule-row) solid var(--color-crop);
+  }
+  
+  .crop-marks::after {
+    inset-inline-end: 0;
+    border-inline-end: var(--rule-row) solid var(--color-crop);
+  }
+  
+  @media (width < 48rem) {
+    .crop-marks {
+      display: none;
+    }
+  }
+</style>

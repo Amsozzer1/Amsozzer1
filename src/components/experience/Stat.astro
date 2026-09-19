@@ -1,0 +1,57 @@
+---
+interface Props {
+  value: string;
+  highlight?: boolean;
+  class?: string;
+}
+
+const { value, highlight = false, class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['stat', className]} {...rest}>
+  <p class="value"><span class:list={['figure', { highlight }]}>{value}</span></p>
+  <p class="caption"><slot /></p>
+</div>
+
+<style>
+  .stat {
+    padding-block-start: var(--space-m);
+    border-block-start: var(--rule-major) solid var(--fg);
+  }
+  
+  .figure {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: var(--size-h2);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+  
+  .highlight {
+    padding-inline: var(--space-2xs);
+    background-color: var(--color-amber);
+    color: var(--color-text);
+  }
+  
+  .caption {
+    margin-block-start: var(--space-s);
+    color: var(--fg-body);
+  }
+  
+  @media print {
+    .stat {
+      padding-block-start: var(--space-2xs);
+      break-inside: avoid;
+    }
+  
+    .figure {
+      font-size: var(--size-h4);
+    }
+  
+    .caption {
+      margin-block-start: var(--space-2xs);
+      font-size: var(--size-small);
+    }
+  }
+</style>

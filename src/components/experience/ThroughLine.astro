@@ -1,0 +1,120 @@
+---
+import Tape from '@src/components/marks/Tape.astro';
+import Terminal from '@src/components/Terminal.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+const shifts = [
+  {
+    before: 'component prices re-calibrated by hand',
+    after: 'an ML pricing system on live supplier data',
+  },
+  {
+    before: 'a checkout path that buckles in December',
+    after: 'an architecture built to absorb the peak',
+  },
+  {
+    before: 'an operations team retyping between systems',
+    after: 'integrations that delete the typing',
+  },
+  {
+    before: 'a filament swap at every material change',
+    after: 'a state machine over MQTT — unpaid, my own time',
+  },
+];
+---
+
+<div class:list={['through-line', className]} {...rest}>
+  <Terminal title="the through-line" meta="three jobs, and one on my own time">
+    <ul class="shifts">
+      {shifts.map(({ before, after }) => <li class="shift">
+        <span class="before">{before}</span>
+        <span class="arrow" aria-hidden="true">→</span><span class="vh">{', replaced by '}</span>
+        <span class="after">{after}</span>
+      </li>)}
+    </ul>
+  </Terminal>
+  <Tape class="tape-corner" />
+  <Tape class="tape-far" />
+</div>
+
+<style>
+  .through-line {
+    position: relative;
+    rotate: -1.2deg;
+  }
+  
+  .shifts {
+    container-type: inline-size;
+    padding: 0;
+    font-family: var(--font-body);
+    font-size: var(--size-small);
+    line-height: var(--leading-tight);
+    list-style: none;
+  }
+  
+  /* Narrow panel: the old way on one line, the arrow and the new way under it. */
+  .shift {
+    display: grid;
+    grid-template-areas:
+      'before before'
+      'arrow after';
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-3xs) var(--space-2xs);
+    padding-block: var(--space-xs);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .shift:last-child {
+    border-block-end: 0;
+  }
+  
+  .before {
+    grid-area: before;
+    color: var(--fg-body);
+  }
+  
+  .arrow {
+    grid-area: arrow;
+    color: var(--color-amber);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+  }
+  
+  .after {
+    grid-area: after;
+    color: var(--fg);
+  }
+  
+  @container (width >= 30rem) {
+    .shift {
+      grid-template-areas: 'before arrow after';
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: var(--space-xs);
+      align-items: baseline;
+    }
+  }
+  
+  .tape-corner {
+    inset-block-start: calc(var(--space-xs) * -1);
+    inset-inline-start: calc(var(--space-s) * -1);
+  }
+  
+  /* The extra class outranks the tape's own default angle. */
+  .through-line .tape-far {
+    display: none;
+    inset-block-start: calc(var(--space-m) * -1);
+    inset-inline-end: calc(var(--space-2xl) * -1);
+    rotate: 25deg;
+  }
+  
+  @media (width >= 64rem) {
+    .through-line .tape-far {
+      display: block;
+    }
+  }
+</style>

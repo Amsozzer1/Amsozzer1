@@ -1,0 +1,56 @@
+---
+import StackList from '@src/components/StackList.astro';
+
+interface Props {
+  position: string;
+  company: string;
+  stack: string[];
+  class?: string;
+}
+
+const { position, company, stack, class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['role-line', className]} {...rest}>
+  <p class="role">
+    <span>{position}</span>
+    <span class="sep" aria-hidden="true">·</span><span class="vh">{' at '}</span>
+    <span>{company}</span>
+  </p>
+  <span class="sep" aria-hidden="true">·</span>
+  <StackList items={stack} />
+</div>
+
+<style>
+  /* Phone: position, company and stack each take a line. From 48rem they share one, split by dots. */
+  .role-line,
+  .role {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .role-line {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-code);
+  }
+  
+  .sep {
+    display: none;
+    color: var(--rule-color);
+  }
+  
+  @media (width >= 48rem) {
+    .role-line,
+    .role {
+      flex-flow: row wrap;
+      align-items: baseline;
+    }
+  
+    .sep {
+      display: inline;
+      padding-inline: var(--space-xs);
+    }
+  }
+</style>

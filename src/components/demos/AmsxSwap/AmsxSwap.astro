@@ -1,0 +1,271 @@
+---
+import { swapSteps } from '@src/components/demos/AmsxSwap/_helpers/amsxSwap.consts';
+import ComingSoon from '@src/components/demos/ComingSoon.astro';
+
+const nodeWidth = 168;
+const nodeGap = 30;
+const nodeHeight = 58;
+const width = swapSteps.length * nodeWidth + (swapSteps.length - 1) * nodeGap;
+
+const nodes = swapSteps.map((step, index) => {
+  const x = index * (nodeWidth + nodeGap);
+  return { key: step.key, actor: step.actor, x, centre: x + nodeWidth / 2 };
+});
+
+const [first] = nodes;
+const last = nodes[nodes.length - 1];
+const arrows = nodes.slice(0, -1).map(node => node.x + nodeWidth);
+const returnPath = `M${last.centre} ${nodeHeight + 8} V88 Q${last.centre} 96 ${last.centre - 8} 96 H${first.centre + 8} Q${first.centre} 96 ${first.centre} 88 V${nodeHeight + 14}`;
+const returnHead = `M${first.centre - 5} ${nodeHeight + 20} L${first.centre} ${nodeHeight + 12} L${first.centre + 5} ${nodeHeight + 20}`;
+const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
+---
+
+{/* @TODO: wire the real AMS-X swap player (step timings, aria-current="step", play and pause) when Ahmed brings the finished demo */}
+<div class="swap">
+  <div class="swap-bar">
+    <button type="button" class="play" disabled aria-describedby="swap-status">
+      Play the swap
+    </button>
+    <ComingSoon id="swap-status">
+      The player arrives with the footage. Every state is written out below, in order.
+    </ComingSoon>
+  </div>
+
+  <svg class="diagram" viewBox={`0 0 ${width} 118`} width={width} height="118" aria-hidden="true">
+    {nodes.map(node => <g>
+      <rect class="node" x={node.x} y="8" width={nodeWidth} height={nodeHeight}></rect>
+      <text class="node-key" x={node.centre} y="32">{node.key}</text>
+      <text class="node-actor" x={node.centre} y="52">{node.actor}</text>
+    </g>)}
+    {arrows.map(x => (
+      <path
+        class="edge"
+        d={`M${x + 6} 37 H${x + nodeGap - 6} M${x + nodeGap - 12} 32.5 L${x + nodeGap - 6} 37 L${x + nodeGap - 12} 41.5`}
+      ></path>
+    ))}
+    <path class="edge" d={returnPath}></path>
+    <path class="edge" d={returnHead}></path>
+    <text class="edge-label" x={width / 2} y="114">the plan’s next material change</text>
+  </svg>
+
+  <ol class="steps">
+    {swapSteps.map((step, position) => <li class="step">
+      <h3 class="step-name">
+        <span class="step-index">{stepNumber(position)}</span>
+        {step.key}
+      </h3>
+      <div class="step-text">
+        <p class="step-title">{step.title}</p>
+        <p class="step-note">{step.note}</p>
+        <dl class="step-facts">
+          <div class="fact">
+            <dt>actor</dt>
+            <dd>{step.actor}</dd>
+          </div>
+          <div class="fact">
+            <dt>guard</dt>
+            <dd><code>{step.guard}</code></dd>
+          </div>
+        </dl>
+      </div>
+      <div class="step-wire on-ink">
+        <p class="wire-topic">{step.topic}</p>
+        <pre class="wire-code"><code>{step.request}</code></pre>
+        <p class="wire-label">expects</p>
+        <pre class="wire-code"><code>{step.expect}</code></pre>
+      </div>
+    </li>)}
+  </ol>
+</div>
+
+<style>
+  .swap {
+    display: grid;
+    gap: var(--space-l);
+  }
+  
+  .swap-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s) var(--space-l);
+    align-items: center;
+  }
+  
+  .play {
+    min-block-size: var(--layout-target-min);
+    padding-inline: var(--space-m);
+    border: var(--rule-row) solid var(--color-text);
+    background: none;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+    cursor: not-allowed;
+  }
+  
+  .diagram {
+    display: none;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+  
+  .node {
+    fill: none;
+    stroke: var(--color-text);
+    stroke-width: var(--rule-row);
+  }
+  
+  .node-key,
+  .node-actor,
+  .edge-label {
+    font-family: var(--font-mono);
+    text-anchor: middle;
+  }
+  
+  .node-key {
+    fill: var(--color-text);
+    font-size: var(--size-mono);
+  }
+  
+  .node-actor,
+  .edge-label {
+    fill: var(--color-text-caption);
+    font-size: var(--size-mono-small);
+  }
+  
+  .edge {
+    fill: none;
+    stroke: var(--color-text-caption);
+    stroke-width: var(--rule-row);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  
+  .steps {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    border-block-start: var(--rule-major) solid var(--color-text);
+    list-style: none;
+  }
+  
+  .step {
+    display: grid;
+    gap: var(--space-m);
+    padding-block: var(--space-l);
+    border-block-end: var(--rule-row) solid var(--color-rule-light);
+  }
+  
+  .step:last-child {
+    border-block-end: 0;
+  }
+  
+  .step-name {
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--size-lead);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: normal;
+  }
+  
+  .step-index {
+    color: var(--color-text-caption);
+    font-weight: 400;
+  }
+  
+  .step-title {
+    max-inline-size: var(--layout-prose-max);
+    color: var(--color-text-body);
+  }
+  
+  .step-note {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-s);
+    color: var(--color-text-secondary);
+    font-size: var(--size-small);
+  }
+  
+  .step-facts {
+    display: grid;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-m);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .fact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+  }
+  
+  .fact dt {
+    flex-shrink: 0;
+    inline-size: var(--space-2xl);
+    color: var(--color-text-caption);
+  }
+  
+  .fact dd {
+    margin: 0;
+    color: var(--color-text);
+    overflow-wrap: anywhere;
+  }
+  
+  .step-wire {
+    padding: var(--space-s) var(--space-m) var(--space-m);
+    background-color: var(--color-ground-ink);
+  }
+  
+  .wire-topic {
+    color: var(--color-amber);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .wire-label {
+    margin-block-start: var(--space-s);
+    padding-block-start: var(--space-s);
+    border-block-start: var(--rule-row) solid var(--rule-color);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .wire-code {
+    margin-block-start: var(--space-2xs);
+    color: var(--fg);
+    font-size: var(--size-code);
+    line-height: var(--leading-code);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  
+  @media (width >= 64rem) {
+    .diagram {
+      display: block;
+    }
+  
+    .step {
+      grid-template-areas: 'name text wire';
+      grid-template-columns: minmax(0, 3fr) minmax(0, 7fr) minmax(0, 6fr);
+      gap: var(--space-l);
+      align-items: start;
+    }
+  
+    .step-name {
+      grid-area: name;
+    }
+  
+    .step-text {
+      grid-area: text;
+    }
+  
+    .step-wire {
+      grid-area: wire;
+    }
+  }
+</style>

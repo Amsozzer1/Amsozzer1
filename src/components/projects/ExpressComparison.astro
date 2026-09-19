@@ -1,0 +1,290 @@
+---
+import ArrowLink from '@src/components/ArrowLink.astro';
+import Footnote from '@src/components/Footnote.astro';
+import { count, spell } from '@src/components/projects/_helpers/projects.functions';
+import { facts } from '@src/data/facts';
+
+const { throughput, box, connections, p99Ms, memoryMb, libuv } = facts.plusweb;
+
+const method = `One ${spell(box.cores)}-core box, identical handlers on both sides, and Express run as ${spell(box.expressProcesses)} processes so it gets every core.`;
+
+const fastest = Math.max(...throughput.map(row => row.plusweb));
+const share = (value: number) => `${((value / fastest) * 100).toFixed(1)}%`;
+
+const others = [
+  {
+    label: 'p99 while it is serving you',
+    plusweb: `${p99Ms.plusweb.toFixed(2)} ms`,
+    express: `${p99Ms.express.toFixed(2)} ms`,
+    ratio: p99Ms.ratio,
+  },
+  {
+    label: `memory, ${count(memoryMb.routes)} routes`,
+    plusweb: `${memoryMb.plusweb} MB`,
+    express: `${memoryMb.express} MB`,
+    ratio: memoryMb.ratio,
+  },
+];
+---
+
+<div class="comparison">
+  <table class="table throughput">
+    <caption class="caption">
+      <span class="caption-title">requests a second, as the route table grows</span>
+      <Footnote id="express-method" label="how it was measured">{method}</Footnote>
+      {/* @TODO: numbers pass - link the published benchmark JSON and env.json from this footnote */}
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col" class="routes">routes</th>
+        <td class="bars" aria-hidden="true">
+          <span class="key key-plusweb">▬</span> PlusWeb <span class="key key-express">▬</span>
+          Express
+        </td>
+        <th scope="col" class="num">PlusWeb</th>
+        <th scope="col" class="num">Express</th>
+        <th scope="col" class="num">ratio</th>
+      </tr>
+    </thead>
+    <tbody>
+      {throughput.map(row => <tr>
+        <th scope="row" class="routes">{count(row.routes)}</th>
+        <td class="bars" aria-hidden="true">
+          <svg class="bar-pair">
+            <rect class="bar-plusweb" width={share(row.plusweb)} height="40%"></rect>
+            <rect class="bar-express" y="60%" width={share(row.express)} height="40%"></rect>
+          </svg>
+        </td>
+        <td class="num plusweb">
+          {count(row.plusweb)}
+          <svg class="cell-bar" aria-hidden="true">
+            <rect class="bar-plusweb" width={share(row.plusweb)} height="100%"></rect>
+          </svg>
+        </td>
+        <td class="num express">
+          {count(row.express)}
+          <svg class="cell-bar" aria-hidden="true">
+            <rect class="bar-express" width={share(row.express)} height="100%"></rect>
+          </svg>
+        </td>
+        <td class="num ratio">{row.ratio}</td>
+      </tr>)}
+    </tbody>
+  </table>
+
+  <div class="more">
+    <table class="table others">
+      <caption class="caption">
+        <span class="caption-title">and everything else, at {spell(connections)} connections</span>
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col"><span class="vh">measure</span></th>
+          <th scope="col" class="num">PlusWeb</th>
+          <th scope="col" class="num">Express</th>
+          <th scope="col" class="num">ratio</th>
+        </tr>
+      </thead>
+      <tbody>
+        {others.map(row => <tr>
+          <th scope="row" class="measure">{row.label}</th>
+          <td class="num plusweb">{row.plusweb}</td>
+          <td class="num express">{row.express}</td>
+          <td class="num ratio">{row.ratio}</td>
+        </tr>)}
+      </tbody>
+    </table>
+
+    <div class="next-work">
+      <p>
+        Express still holds more connections at once, because a worker here is tied up for as long
+        as a client stays connected. That is the next piece of work — libuv underneath the accept
+        loop, so that nobody using PlusWeb has to think about one. The branch already runs:
+        <strong class="bright">
+          {count(libuv.plusweb)} requests a second across {count(libuv.connections)} connections
+          with nobody left waiting</strong
+        >, against {count(libuv.express)} for the Express cluster.
+      </p>
+      {/* @TODO: point at the write-up post once "The bottleneck was not the router" is published */}
+      <ArrowLink class="write-up" href="/writing" label="read the write-up" />
+    </div>
+  </div>
+</div>
+
+<style>
+  .comparison {
+    display: grid;
+    gap: var(--space-xl);
+    margin-block-start: var(--space-xl);
+  }
+  
+  .table {
+    inline-size: 100%;
+    border-block-start: var(--rule-figure) solid var(--color-amber);
+    border-collapse: collapse;
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .caption {
+    padding-block-end: var(--space-xs);
+    text-align: start;
+  }
+  
+  .caption-title {
+    color: var(--fg-caption);
+  }
+  
+  .table th,
+  .table td {
+    padding-block: var(--space-s);
+    padding-inline-start: var(--space-s);
+    text-align: start;
+    vertical-align: baseline;
+  }
+  
+  .table thead th,
+  .table thead td {
+    padding-block: var(--space-xs);
+    color: var(--fg-caption);
+    font-size: var(--size-mono-small);
+    font-weight: 400;
+  }
+  
+  .table tr {
+    border-block-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .table tbody tr:last-child {
+    border-block-end: 0;
+  }
+  
+  .table tbody th {
+    font-weight: 400;
+  }
+  
+  .table th:first-child {
+    padding-inline-start: 0;
+  }
+  
+  .measure {
+    color: var(--fg);
+  }
+  
+  .plusweb {
+    font-weight: 700;
+  }
+  
+  .express {
+    color: var(--fg-secondary);
+  }
+  
+  .ratio {
+    color: var(--color-amber);
+  }
+  
+  .bars {
+    display: none;
+  }
+  
+  .key-plusweb {
+    color: var(--color-amber);
+  }
+  
+  .key-express {
+    color: var(--color-text-on-ink-subtle);
+  }
+  
+  .cell-bar {
+    display: block;
+    inline-size: 100%;
+    block-size: var(--space-2xs);
+    margin-block-start: var(--space-3xs);
+  }
+  
+  .bar-pair {
+    display: block;
+    inline-size: 100%;
+    block-size: calc(var(--space-s) + var(--space-3xs));
+  }
+  
+  .bar-plusweb {
+    fill: var(--color-amber);
+  }
+  
+  .bar-express {
+    fill: var(--color-text-on-ink-subtle);
+  }
+  
+  .more {
+    display: grid;
+    gap: var(--space-l);
+    align-items: start;
+  }
+  
+  .next-work {
+    color: var(--fg-body);
+    font-size: var(--size-small);
+  }
+  
+  .bright {
+    color: var(--fg);
+    font-weight: inherit;
+  }
+  
+  .write-up {
+    margin-block-start: var(--space-m);
+  }
+  
+  /* From tablet up the bars get their own column, as on the canvas; below it they sit under each value. */
+  @media (width >= 48rem) {
+    .table th.num,
+    .table td.num {
+      text-align: end;
+    }
+  
+    .throughput .routes {
+      inline-size: var(--space-3xl);
+    }
+  
+    .throughput .num {
+      inline-size: calc(var(--space-3xl) + var(--space-s));
+    }
+  
+    .throughput .ratio {
+      inline-size: calc(var(--space-2xl) + var(--space-s));
+    }
+  
+    .table .bars {
+      display: table-cell;
+      padding-inline-start: var(--space-l);
+    }
+  
+    .cell-bar {
+      display: none;
+    }
+  }
+  
+  @media (width >= 64rem) {
+    .more {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--space-2xl);
+    }
+  
+    .next-work {
+      padding-block-start: var(--space-l);
+    }
+  }
+  
+  @media (forced-colors: active) {
+    .bar-plusweb {
+      fill: canvastext;
+    }
+  
+    .bar-express {
+      fill: graytext;
+    }
+  }
+</style>

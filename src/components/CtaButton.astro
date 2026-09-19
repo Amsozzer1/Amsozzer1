@@ -1,0 +1,59 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  direction?: 'right' | 'down' | 'up-right';
+  bleed?: boolean;
+}
+
+const arrows = { right: '→', down: '↓', 'up-right': '↗' } as const;
+
+const { href, direction = 'right', bleed = false, class: className, ...rest } = Astro.props;
+---
+
+<a href={href} class:list={['cta-button', { bleed }, className]} {...rest}
+  ><span><slot /></span><span class="arrow" aria-hidden="true">{arrows[direction]}</span></a
+>
+
+<style>
+  /* The transparent border becomes the button's edge in forced-colors mode. */
+  .cta-button {
+    display: inline-flex;
+    gap: var(--space-s);
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: var(--layout-target-min);
+    padding: var(--space-m) var(--space-l);
+    border: var(--rule-figure) solid transparent;
+    background-color: var(--color-ground-ink);
+    color: var(--color-text-on-ink);
+    font-family: var(--font-body);
+    font-size: var(--size-small);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    text-decoration: none;
+  }
+  
+  .cta-button:hover {
+    text-decoration-line: underline;
+  }
+  
+  .arrow {
+    font-family: var(--font-mono);
+    font-size: var(--size-body);
+  }
+  
+  /* Phones: a bar that runs edge to edge. The page pulls it into the gutter; this is the padding that matches. */
+  .bleed {
+    display: flex;
+    padding-inline: var(--layout-gutter);
+  }
+  
+  @media (width >= 64rem) {
+    .bleed {
+      display: inline-flex;
+      padding-inline: var(--space-l);
+    }
+  }
+</style>

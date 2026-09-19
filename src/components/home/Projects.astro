@@ -1,0 +1,96 @@
+---
+import Band from '@src/components/Band.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import Terminal from '@src/components/Terminal.astro';
+import MnistPanel from '@src/components/home/MnistPanel.astro';
+import ProjectRow from '@src/components/home/ProjectRow.astro';
+import TerminalLines from '@src/components/home/TerminalLines.astro';
+import { curlSession, printerReport } from '@src/components/home/_helpers/projects.consts';
+import { facts } from '@src/data/facts';
+import { projects } from '@src/data/projects';
+
+const [plusweb, amsx, mnist] = projects;
+const { mqtt } = facts.amsx;
+---
+
+<Band ground="body" id="projects" labelledby="projects-title" class="projects">
+  <div class="container">
+    <div class="head">
+      <SectionHeading
+        class="heading"
+        kicker="projects"
+        id="projects-title"
+        title="Three things I built. Two run in your browser, one runs a printer."
+      />
+      <ul class="kinds">
+        {projects.map(({ kind }) => <li>{kind}</li>)}
+      </ul>
+    </div>
+
+    <ProjectRow
+      project={plusweb}
+      mark="tape"
+      note="the timing on that page is measured in your browser, on a port of the same trie — not typed in by me."
+    >
+      <Terminal title={`curl — localhost:${facts.plusweb.port}`} meta="keep-alive">
+        <TerminalLines lines={curlSession} />
+      </Terminal>
+    </ProjectRow>
+
+    <ProjectRow
+      project={amsx}
+      mark="tape"
+      flip
+      note="nothing moves until the printer’s own report agrees with the plan."
+    >
+      <Terminal title={mqtt.topic} meta={`mqtt · tls ${mqtt.port}`}>
+        <TerminalLines lines={printerReport} />
+      </Terminal>
+    </ProjectRow>
+
+    <ProjectRow
+      project={mnist}
+      mark="tack"
+      note="and no, numpy doesn’t count — there isn’t any in a browser anyway."
+    >
+      <MnistPanel />
+    </ProjectRow>
+  </div>
+</Band>
+
+<style>
+  .projects {
+    padding-block-end: 0;
+  }
+  
+  .head {
+    display: grid;
+    gap: var(--space-m);
+    margin-block-end: var(--space-xl);
+  }
+  
+  .heading {
+    max-inline-size: var(--layout-prose-max);
+  }
+  
+  .kinds {
+    padding: 0;
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+    list-style: none;
+  }
+  
+  @media (width >= 64rem) {
+    .head {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: var(--space-xl);
+      align-items: end;
+    }
+  
+    .kinds {
+      text-align: end;
+    }
+  }
+</style>

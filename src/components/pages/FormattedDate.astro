@@ -1,0 +1,10 @@
+---
+interface Props {
+  date: Date | string;
+}
+
+const date = new Date(Astro.props.date);
+const month = date.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' }).toLowerCase();
+---
+
+<time datetime={date.toISOString()}>{date.getUTCDate()} {month} {date.getUTCFullYear()}</time>

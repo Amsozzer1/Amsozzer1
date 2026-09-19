@@ -1,0 +1,15 @@
+{
+  "prefetch": [
+    {
+      "source": "document",
+      "where": {
+        "and": [
+          { "href_matches": "/*" },
+          { "not": { "href_matches": "/resume.pdf" } },
+          { "not": { "href_matches": "/r/*" } }
+        ]
+      },
+      "eagerness": "moderate"
+    }
+  ]
+}

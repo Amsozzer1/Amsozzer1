@@ -1,0 +1,63 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  class?: string;
+}
+
+const { id, label, class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['footnote', className]} {...rest}>
+  <button type="button" class="footnote-ref" popovertarget={id}>
+    <span class="vh">Note: </span>{label}
+  </button>
+  <span id={id} class="footnote-note on-ink" popover>
+    <slot />
+  </span>
+</span>
+
+<style>
+  .footnote-ref {
+    padding: 0 var(--space-3xs);
+    border: 0;
+    background: none;
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: inherit;
+    text-decoration: underline dotted;
+    text-underline-offset: 0.25em;
+  }
+  
+  .footnote-note {
+    max-inline-size: min(var(--layout-footnote-max), calc(100vw - 2 * var(--layout-gutter)));
+    padding: var(--space-s) var(--space-m);
+    border: 0;
+    border-block-start: var(--rule-figure) solid var(--color-amber);
+    background-color: var(--color-ground-ink);
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  /* anchor-scope keeps each footnote's anchor name to itself; without it the note stays centred. */
+  @supports (anchor-scope: all) {
+    .footnote {
+      anchor-scope: --footnote;
+    }
+  
+    .footnote-ref {
+      anchor-name: --footnote;
+    }
+  
+    .footnote-note {
+      position-anchor: --footnote;
+      position-area: block-end span-inline-end;
+      position-try-fallbacks: flip-block, flip-inline;
+      inset: auto;
+      margin: var(--space-2xs) 0 0;
+    }
+  }
+</style>

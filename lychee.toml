@@ -1,0 +1,24 @@
+# The workflows pick the mode: ci.yml adds --offline (internal links on every push),
+# weekly.yml runs online to catch external links that went dead.
+
+no_progress = true
+max_retries = 3
+retry_wait_time = 2
+timeout = 20
+max_concurrency = 16
+accept = ["100..=103", "200..=299", "429"]
+
+# dist/ is gitignored, and lychee skips ignored files by default.
+no_ignore = true
+
+# build.format is 'file': /experience is served from dist/experience.html.
+fallback_extensions = ["html"]
+index_files = ["index.html"]
+
+exclude = [
+  '^mailto:',
+  # /r/<company> only exists in the Worker, never in dist.
+  '/r/',
+  # LinkedIn answers every bot with status 999.
+  '^https://(www\.)?linkedin\.com/',
+]
