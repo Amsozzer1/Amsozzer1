@@ -1,6 +1,11 @@
 {
-  "commit": null,
-  "measuredAt": null,
-  "url": null,
-  "scores": {}
+  "commit": "5daa0cd",
+  "measuredAt": "2026-09-20",
+  "url": "https://amsozzer.com/",
+  "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100
+  }
 }
