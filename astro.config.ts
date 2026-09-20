@@ -5,7 +5,7 @@ export default defineConfig({
   trailingSlash: 'never',
   compressHTML: true,
   build: {
-    format: 'file',
+    format: 'preserve',
     inlineStylesheets: 'never',
   },
   vite: {
