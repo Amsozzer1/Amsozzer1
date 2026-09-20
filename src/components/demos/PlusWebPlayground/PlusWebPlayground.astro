@@ -1,93 +1,53 @@
 ---
 import {
-  BENCH_ITERATIONS,
-  boilerplateBottom,
-  boilerplateTop,
-  handlers,
+  examples,
   methodTone,
   methods,
   sampleRequest,
-  suggestions,
+  source,
 } from '@src/components/demos/PlusWebPlayground/_helpers/plusWebPlayground.consts';
-import {
-  highlight,
-  routesFrom,
-} from '@src/components/demos/PlusWebPlayground/_helpers/plusWebPlayground.functions';
-import plusweb from '@src/data/plusweb.json';
+import { routesFrom } from '@src/components/demos/PlusWebPlayground/_helpers/plusWebPlayground.functions';
 
-const blocks = [
-  { lines: boilerplateTop.map(highlight), editable: false },
-  { lines: handlers.map(highlight), editable: true },
-  { lines: boilerplateBottom.map(highlight), editable: false },
-];
-const routes = routesFrom(handlers.join('\n'));
+const routes = routesFrom(source);
 ---
 
 <plusweb-playground class="playground">
-  <p class="status" data-pw="status" role="status">
-    The router is compiled to WebAssembly and loads when this section comes into view. Without
-    JavaScript the route table below is still correct — it is read from the same source.
-  </p>
-
-  <div class="workbench">
-    <figure class="editor">
-      <figcaption class="panel-bar">
-        <span class="panel-title">main.cpp</span>
-        <span>the routes are live, the bodies are not compiled</span>
-      </figcaption>
-      <div class="editor-code on-ink">
-        {blocks.map(block => <pre
-          class:list={['code', { editable: block.editable }]}
-          data-pw={block.editable ? 'source' : undefined}
-        ><code>{block.lines.map((line, index) => <>{index > 0 && '\n'}{line.map(token => <span class={token.kind}>{token.text}</span>)}</>)}</code></pre>)}
-      </div>
-      <p class="lint on-ink" data-pw="count">{routes.length} routes compiled</p>
-    </figure>
-
-    <div class="routes">
-      <table class="route-table">
-        <caption>
-          <span class="panel-bar">
-            <span class="panel-title">the route table</span>
-            <span>{routes.length} routes</span>
-          </span>
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">method</th>
-            <th scope="col">path</th>
-            <th scope="col" class="status-column">status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {routes.map(route => <tr>
-            <td class:list={['verb', `tone-${methodTone[route.method]}`]}>{route.method}</td>
-            <td class="pattern">{route.pattern}</td>
-            <td class="status-column">{route.status}</td>
-          </tr>)}
-        </tbody>
-      </table>
-
-      <figure class="trie">
-        <figcaption class="panel-bar">
-          <span class="panel-title">the segment trie</span>
-          <span>as the router holds it</span>
-        </figcaption>
-        <div class="trie-body" data-pw="trie">
-          <p class="routes-note">Drawn once the module loads.</p>
-        </div>
-      </figure>
+  <div class="panes">
+    <div class="pane">
+      <label class="bar" for="playground-source">
+        <span>routes</span>
+        <span class="count" data-pw="count">{routes.length} routes</span>
+      </label>
+      <textarea
+        id="playground-source"
+        class="source on-ink"
+        rows="6"
+        spellcheck="false"
+        data-pw="source"
+      >{source}</textarea>
     </div>
+
+    <figure class="pane">
+      <figcaption class="bar"><span>the trie they build</span></figcaption>
+      <div class="trie" data-pw="trie">
+        <ul>
+          {routes.map(route => <li>
+            <span class:list={['node', `tone-${methodTone[route.method]}`]}>{route.method}</span>
+            <span class="node">{route.pattern}</span>
+          </li>)}
+        </ul>
+      </div>
+    </figure>
   </div>
 
   <form class="request" data-pw="form">
     <label class="vh" for="playground-method">Method</label>
-    <select id="playground-method" class="verb-button" data-pw="method">
+    <select id="playground-method" class="method" data-pw="method">
       {methods.map(method => <option value={method} selected={method === sampleRequest.method}>
         {method}
       </option>)}
     </select>
-    <label class="vh" for="playground-path">Request path</label>
+    <label class="vh" for="playground-path">Path</label>
     <input
       id="playground-path"
       class="path"
@@ -96,35 +56,23 @@ const routes = routesFrom(handlers.join('\n'));
       data-pw="path"
     />
     <button type="submit" class="send">Send</button>
-    <button type="button" class="send bench" data-pw="bench">Time it</button>
   </form>
 
-  <ul class="suggestions">
-    {suggestions.map(({ method, path, why }) => <li>
-      <button type="button" class="suggestion" data-method={method} data-path={path}>
-        <span class:list={['verb', `tone-${methodTone[method]}`]}>{method}</span>
-        <span class="pattern">{path}</span>
-        <span class="why">{why}</span>
-      </button>
-    </li>)}
-  </ul>
+  <p class="result" data-pw="result">Edit a route, or send a path.</p>
 
-  <figure class="response on-ink">
-    <figcaption class="response-label">what the router returned</figcaption>
-    <dl class="result-list" data-pw="result">
-      <dt>status</dt>
-      <dd>send a request</dd>
-    </dl>
-    <p class="bench-line" data-pw="bench-result">
-      Time it runs {BENCH_ITERATIONS.toLocaleString('en-US')} lookups inside the module and reports
-      nanoseconds each.
-    </p>
-    <p class="note">
-      Built from PlusWeb {plusweb.commit}. The trie, the matching and the timing are the real
-      library compiled to WebAssembly; only the handler bodies are illustrative. Timings are this
-      browser, not the native benchmark.
-    </p>
-  </figure>
+  <p class="examples">
+    try
+    {examples.map(({ method, path }, index) => (
+      <>
+        {index > 0 && ', '}
+        <button type="button" class="example" data-method={method} data-path={path}>{path}</button>
+      </>
+    ))}
+  </p>
+
+  <p class="note" data-pw="note">
+    The route lines are compiled by the real router; handler names are decoration.
+  </p>
 </plusweb-playground>
 
 <script>
@@ -134,132 +82,81 @@ const routes = routesFrom(handlers.join('\n'));
 <style>
   .playground {
     display: grid;
-    gap: var(--space-xl);
+    gap: var(--space-m);
   }
   
-  .status {
-    color: var(--color-text-caption);
-    font-family: var(--font-mono);
-    font-size: var(--size-mono-small);
-    line-height: var(--leading-mono);
-  }
-  
-  .workbench {
+  .panes {
     display: grid;
-    gap: var(--space-xl);
+    gap: var(--space-m);
     align-items: start;
   }
   
-  .panel-bar {
+  .pane {
+    min-inline-size: 0;
+    margin: 0;
+  }
+  
+  .bar {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs) var(--space-s);
+    gap: var(--space-s);
     align-items: baseline;
     justify-content: space-between;
-    padding-block-end: var(--space-s);
-    border-block-end: var(--rule-figure) solid var(--color-text);
+    padding-block-end: var(--space-2xs);
     color: var(--color-text-caption);
     font-family: var(--font-mono);
-    font-size: var(--size-mono);
-    line-height: var(--leading-mono);
-  }
-  
-  .panel-title {
-    color: var(--color-text);
-  }
-  
-  .editor-code {
-    padding-block: var(--space-m);
-    background-color: var(--color-ground-ink);
-  }
-  
-  .code {
-    padding-inline: var(--space-m);
-    color: var(--fg-secondary);
-    font-size: var(--size-code);
-    line-height: var(--leading-code);
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
-  
-  .code.editable {
-    margin-block: var(--space-s);
-    padding-block: var(--space-2xs);
-    border-inline-start: var(--rule-figure) solid var(--color-amber);
-    color: var(--fg);
-  }
-  
-  .keyword,
-  .type {
-    color: var(--fg);
-    font-weight: 700;
-  }
-  
-  .object {
-    color: var(--fg-secondary);
-  }
-  
-  .string {
-    color: var(--color-amber);
-  }
-  
-  .number {
-    color: var(--color-error-on-ink);
-  }
-  
-  .comment {
-    color: var(--color-text-on-ink-subtle);
-  }
-  
-  .lint {
-    padding: var(--space-s) var(--space-m);
-    background-color: var(--color-ground-ink-raised);
-    color: var(--fg-secondary);
-    font-family: var(--font-mono);
-    font-size: var(--size-mono);
-    line-height: var(--leading-mono);
-  }
-  
-  .route-table {
-    inline-size: 100%;
-    border-collapse: collapse;
-    font-family: var(--font-mono);
-    line-height: var(--leading-mono);
-  }
-  
-  .route-table caption {
-    text-align: start;
-  }
-  
-  .route-table th {
-    padding-block: var(--space-xs) var(--space-2xs);
-    color: var(--color-text-caption);
     font-size: var(--size-mono-small);
-    font-weight: 400;
-    text-align: start;
+    line-height: var(--leading-mono);
   }
   
-  .route-table td {
-    padding-block: var(--space-xs);
-    border-block-end: var(--rule-row) solid var(--color-rule-light);
-    font-size: var(--size-mono);
-    vertical-align: baseline;
+  .count[data-problem='true'] {
+    color: var(--color-error);
   }
   
-  .verb {
-    padding-inline-end: var(--space-s);
-    font-weight: 700;
-  }
-  
-  .pattern {
+  .source {
+    display: block;
     inline-size: 100%;
-    color: var(--color-text);
-    overflow-wrap: anywhere;
+    padding: var(--space-m);
+    border: 0;
+    background-color: var(--color-ground-ink);
+    color: var(--fg);
+    font-family: var(--font-mono);
+  
+    /* 16px minimum, so iOS does not zoom when the field takes focus. */
+    font-size: var(--size-body);
+    line-height: var(--leading-code);
+    resize: vertical;
   }
   
-  .status-column {
-    color: var(--color-text-caption);
-    text-align: end;
+  .trie {
+    padding: var(--space-m) 0;
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
+  }
+  
+  .trie :global(ul) {
+    margin: 0;
+    padding-inline-start: var(--space-m);
+    border-inline-start: var(--rule-row) solid var(--color-rule-light);
+    list-style: none;
+  }
+  
+  .trie > :global(ul) {
+    padding-inline-start: 0;
+    border-inline-start: 0;
+  }
+  
+  .trie :global(li) {
+    padding-block: var(--space-3xs);
+  }
+  
+  .trie :global(.node) {
+    color: var(--color-text);
+  }
+  
+  .trie :global(.param) {
+    color: var(--color-method-post);
+    font-weight: 700;
   }
   
   .tone-get {
@@ -274,76 +171,29 @@ const routes = routesFrom(handlers.join('\n'));
     color: var(--color-method-delete);
   }
   
-  .routes-note {
-    margin-block-start: var(--space-s);
-    color: var(--color-text-caption);
-    font-family: var(--font-mono);
-    font-size: var(--size-mono-small);
-    line-height: var(--leading-mono);
-  }
-  
-  .trie {
-    margin: var(--space-xl) 0 0;
-  }
-  
-  .trie-body {
-    padding-block-start: var(--space-s);
-    font-family: var(--font-mono);
-    font-size: var(--size-mono-small);
-    line-height: var(--leading-mono);
-  }
-  
-  .trie-body :global(ul) {
-    margin: 0;
-    padding-inline-start: var(--space-m);
-    border-inline-start: var(--rule-row) solid var(--color-rule-light);
-    list-style: none;
-  }
-  
-  .trie-body :global(li) {
-    padding-block: var(--space-3xs);
-  }
-  
-  .trie-body :global(.node) {
-    color: var(--color-text);
-  }
-  
-  .trie-body :global(.param) {
-    color: var(--color-method-post);
-    font-weight: 700;
-  }
-  
-  .trie-body :global(.handler) {
-    color: var(--color-text-caption);
-  }
-  
   .request {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2xs);
     min-inline-size: 0;
-    margin: 0;
-    padding: var(--space-m) 0 0;
-    border-block-start: var(--rule-major) solid var(--color-text);
   }
   
-  .verb-button,
+  .method,
   .path,
   .send {
     min-block-size: var(--layout-target-min);
     font-family: var(--font-mono);
+    font-size: var(--size-body);
     line-height: var(--leading-mono);
   }
   
-  .verb-button {
+  .method {
     padding-inline: var(--space-s);
     border: var(--rule-row) solid var(--color-rule-light);
     background: none;
     color: var(--color-text);
-    font-size: var(--size-mono);
   }
   
-  /* At least 16px, so iOS does not zoom into the field. */
   .path {
     flex: 1 1 calc(var(--space-4xl) + var(--space-2xl));
     min-inline-size: 0;
@@ -351,7 +201,6 @@ const routes = routesFrom(handlers.join('\n'));
     border: var(--rule-row) solid var(--color-text);
     background-color: var(--color-ground-paper);
     color: var(--color-text);
-    font-size: var(--size-body);
   }
   
   .send {
@@ -364,91 +213,39 @@ const routes = routesFrom(handlers.join('\n'));
     font-weight: 600;
   }
   
-  .bench {
-    border-color: var(--color-text);
-    background: none;
+  .result {
+    padding-block: var(--space-s);
+    border-block-start: var(--rule-figure) solid var(--color-amber);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
   }
   
-  .suggestions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  .result[data-matched='false'] {
+    border-block-start-color: var(--color-rule-light);
+    color: var(--color-text-caption);
   }
   
-  .suggestion {
-    display: inline-flex;
-    gap: var(--space-2xs);
-    align-items: baseline;
-    min-block-size: var(--layout-target-min);
-    padding-inline: var(--space-s);
-    border: var(--rule-row) solid var(--color-rule-light);
-    background: none;
+  .examples,
+  .note {
+    color: var(--color-text-caption);
     font-family: var(--font-mono);
     font-size: var(--size-mono-small);
     line-height: var(--leading-mono);
   }
   
-  .suggestion .pattern {
-    inline-size: auto;
+  .example {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-text);
+    font: inherit;
+    text-decoration: underline;
   }
   
-  .why {
-    color: var(--color-text-caption);
-  }
-  
-  .response {
-    padding: var(--space-l);
-    background-color: var(--color-ground-ink);
-  }
-  
-  .response-label {
-    color: var(--fg-label);
-    font-family: var(--font-mono);
-    font-size: var(--size-mono);
-    line-height: var(--leading-mono);
-  }
-  
-  .result-list {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--space-2xs) var(--space-l);
-    margin-block: var(--space-m);
-    padding-block-end: var(--space-m);
-    border-block-end: var(--rule-figure) solid var(--color-amber);
-    color: var(--fg);
-    font-family: var(--font-mono);
-    font-size: var(--size-mono);
-    line-height: var(--leading-mono);
-  }
-  
-  .result-list dt {
-    color: var(--fg-label);
-  }
-  
-  .result-list dd {
-    margin: 0;
-    overflow-wrap: anywhere;
-  }
-  
-  .bench-line {
-    color: var(--fg-secondary);
-    font-family: var(--font-mono);
-    font-size: var(--size-mono);
-    line-height: var(--leading-mono);
-  }
-  
-  .note {
-    margin-block-start: var(--space-m);
-    color: var(--color-text-on-ink-subtle);
-    font-size: var(--size-small);
-  }
-  
-  @media (width >= 60rem) {
-    .workbench {
-      grid-template-columns: 3fr 2fr;
+  @media (width >= 48rem) {
+    .panes {
+      grid-template-columns: 1fr 1fr;
     }
   }
 </style>
