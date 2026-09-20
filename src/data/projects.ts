@@ -62,7 +62,7 @@ export const projects: Project[] = [
     repo: 'https://github.com/Amsozzer1/AMS',
     stack: ['Python', 'FastAPI', 'MQTT', 'ESP32', '3MF'],
     programmingLanguage: ['Python'],
-    // @TODO: add a LICENSE to the AMS repo, then set its SPDX id here
+    license: 'MIT',
     runtimePlatform: ['Python', 'ESP32'],
   },
   {

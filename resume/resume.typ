@@ -15,9 +15,9 @@
 #show title: set text(size: 14.4pt)
 #show title: set block(below: gap + 3pt)
 #show heading: set text(size: 10pt)
-// The rule and its spacing were measured against the LaTeX \titlerule and \titlespacing.
+// Section spacing is what holds the résumé to a single page; at gap + 8pt the last two bullets spill.
 #show heading: set block(
-  above: gap + 9pt,
+  above: gap + 5pt,
   below: 3.6pt,
   width: 100%,
   inset: (bottom: 3.4pt),
