@@ -1,6 +1,6 @@
 # Ahmed M. Sozzer
 
-**Forward Deployed Engineer | Full-Stack Engineer | Systems & Automation**
+**Full Stack Engineer | Systems & Automation**
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-amsozzer.com-blue)](https://amsozzer.com) [![LinkedIn](https://img.shields.io/badge/LinkedIn-amsozzer1-0077B5)](https://linkedin.com/in/amsozzer1) [![Email](https://img.shields.io/badge/Email-ahmed@amsozzer.com-red)](mailto:ahmed@amsozzer.com)
 

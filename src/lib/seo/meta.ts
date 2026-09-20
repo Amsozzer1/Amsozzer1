@@ -16,7 +16,7 @@ export const cardSlug = (path: string) => (path === '/' ? 'index' : path.slice(1
 
 export const cardPath = (path: string) => `/og/${cardSlug(path)}.png`;
 
-export const cardAlt = (headline: string) => `“${headline}” — ${site.name}, ${site.role}`;
+export const cardAlt = (headline: string) => `“${headline}” — ${site.name}, ${site.jobTitle}`;
 
 export const ogImage = (seo: PageSeo) => {
   const route = findRoute(seo.path);

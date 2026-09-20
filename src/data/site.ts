@@ -4,10 +4,9 @@ export const site = {
   givenName: 'Ahmed',
   familyName: 'Sozzer',
   alternateNames: ['Ahmed M. Sozzer', 'amsozzer'],
-  role: 'Forward Deployed Engineer',
   jobTitle: 'Full Stack Engineer',
   description:
-    'Forward deployed engineer in Austin, TX. I sit with the client, find the step a person is doing by hand, and build whatever it takes to delete it, product or systems.',
+    'Full stack engineer in Austin, TX. I sit with the client, find the step a person is doing by hand, and build whatever it takes to delete it, product or systems.',
   email: 'ahmed@amsozzer.com',
   location: {
     city: 'Austin',

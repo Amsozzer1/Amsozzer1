@@ -58,7 +58,7 @@ export const renderCard = async ({ kicker, headline }: Card, { width, height } =
     ),
     h(
       { fontFamily: 'Uncut Sans', fontSize: 28, color: colors.textBody },
-      `${site.name} · ${site.role}`,
+      `${site.name} · ${site.jobTitle}`,
     ),
     h({
       position: 'absolute',
