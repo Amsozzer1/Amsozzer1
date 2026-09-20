@@ -36,14 +36,12 @@ export interface Router {
   dumpTrie: () => TrieDump;
 }
 
-// Vendored from the PlusWeb release by scripts/fetch-plusweb.ts. The path is held in a variable
-// so the bundler leaves it alone: these files ship from public/, not through the build.
-const WRAPPER = '/demos/plusweb/plusweb.mjs';
-
+// Vendored from the PlusWeb release by scripts/fetch-plusweb.ts, under a directory named for the
+// build. The path is computed so the bundler leaves it alone: these files ship from public/.
 let router: Promise<Router> | undefined;
 
-export const loadRouter = () => {
-  router ??= import(/* @vite-ignore */ WRAPPER).then(
+export const loadRouter = (base: string) => {
+  router ??= import(/* @vite-ignore */ `${base}/plusweb.mjs`).then(
     (module: { loadPlusWeb: () => Promise<Router> }) => module.loadPlusWeb(),
   );
   return router;
