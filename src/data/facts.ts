@@ -4,10 +4,9 @@ export const facts = {
     threads: { acceptors: 1, workers: 8 },
     port: 8080,
     dependencies: 1,
-    // @TODO: numbers pass - the 93.6k headline is higher than the table's best run (93,269)
     stats: {
       speedup: '242×',
-      requestsPerSecond: '93.6k',
+      requestsPerSecond: '93.3k',
       memory: '5.3 MB',
       libuv: '154k',
     },
@@ -17,8 +16,7 @@ export const facts = {
       { routes: 10_000, plusweb: 91_138, express: 376, ratio: '242×' },
     ],
     connections: 4,
-    // @TODO: numbers pass - p99 ratio is printed 20× but 2.19 / 0.10 = 21.9×
-    p99Ms: { plusweb: 0.1, express: 2.19, ratio: '20×' },
+    p99Ms: { plusweb: 0.1, express: 2.19, ratio: '21.9×' },
     memoryMb: { routes: 1_000, plusweb: 5.3, express: 573, ratio: '108×' },
     libuv: { connections: 128, plusweb: 154_620, express: 8_024 },
     resolveNs: { hit: 493, hitAt10kRoutes: 532, miss: 363, missAt10kRoutes: 146_431 },
