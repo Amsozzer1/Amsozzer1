@@ -51,9 +51,9 @@ export const routes = {
   },
   '/projects/ams-x': {
     name: 'AMS-X',
-    title: 'AMS-X — a modular filament system driven over MQTT · Ahmed Sozzer',
+    title: 'More than four spools on a Bambu Lab printer · Ahmed Sozzer',
     description:
-      'AMS-X lifts the four-spool limit on Bambu Lab printers: a Python server reads the sliced job and drives every filament swap over reverse-engineered MQTT.',
+      'Bambu Lab printers cap multi-material at four spools. AMS-X is an open alternative to the stock AMS: a Python server reads the sliced job and drives every filament swap over the printer\u2019s own local MQTT, no cloud and no AMS protocol.',
     schema: 'WebPage',
     card: { kicker: '02 — ams-x', headline: 'An open modular filament system, driven over MQTT.' },
     sources: ['src/pages/projects/ams-x.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
