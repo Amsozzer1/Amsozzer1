@@ -22,15 +22,24 @@ export const markdownResponse = async (request: Request, assets: Fetcher) => {
       // The scanner asks for a count rather than an exact tokenisation; four characters per
       // token is the usual approximation.
       'X-Markdown-Tokens': String(Math.ceil(body.length / 4)),
+      // The page, not its markdown twin, is the address worth indexing and citing.
+      Link: `<${url.origin}${url.pathname}>; rel="canonical"`,
     },
   });
 };
 
-// The same URL now answers with HTML or markdown, so caches have to key on Accept.
-export const varyOnAccept = (response: Response) => {
+// Announce the markdown twin on the page itself, so an agent finds it without guessing the
+// .md path or reading llms.txt first. Vary is here too: the same URL now answers with either
+// representation, so caches have to key on Accept.
+export const documentHeaders = (request: Request, response: Response) => {
   if (!response.headers.get('Content-Type')?.includes('text/html')) return response;
 
-  const varied = new Response(response.body, response);
-  varied.headers.append('Vary', 'Accept');
-  return varied;
+  const { pathname } = new URL(request.url);
+  const announced = new Response(response.body, response);
+  announced.headers.append('Vary', 'Accept');
+  announced.headers.append(
+    'Link',
+    `<${markdownPath(pathname)}>; rel="alternate"; type="${MARKDOWN}"`,
+  );
+  return announced;
 };
