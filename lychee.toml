@@ -21,4 +21,7 @@ exclude = [
   '/r/',
   # LinkedIn answers every bot with status 999.
   '^https://(www\.)?linkedin\.com/',
+  # A path on a 3D printer's SD card, quoted in a post. Offline mode resolves real internal
+  # links through file:, so this exclusion has to stay this specific.
+  '^file:///sdcard',
 ]
