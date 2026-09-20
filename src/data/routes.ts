@@ -76,21 +76,11 @@ export const routes = {
     card: { kicker: 'writing', headline: 'Write-ups, and the threads still open.' },
     sources: ['src/pages/writing/index.astro', 'src/content/writing'],
   },
-  // @TODO: revisit the /now and /uses descriptions once Ahmed has written those pages
-  '/now': {
-    name: 'Now',
-    title: 'Now — what I am working on this month · Ahmed Sozzer',
-    description:
-      'What Ahmed Sozzer is working on this month, at FYCLabs and on his own projects, and his availability for full-time roles, with the date it was last updated.',
-    schema: 'WebPage',
-    card: { kicker: 'now', headline: 'What I am working on this month.' },
-    sources: ['src/pages/now.astro'],
-  },
   '/about': {
     name: 'About',
     title: 'About — the route here, and the habit behind it · Ahmed Sozzer',
     description:
-      'How Ahmed Sozzer got here: community college to the University of Illinois, mentor-matching research, a reselling and 3D printing operation, and the habit of noticing when a person is doing a machine\u2019s job.',
+      'How Ahmed Sozzer got here: Pakistan to Chicago at eighteen, community college to the University of Illinois, tutoring and mentor-matching research, and a printing business acquired by accident.',
     schema: 'ProfilePage',
     card: { kicker: 'about', headline: 'Noticing when a person is doing a machine\u2019s job.' },
     sources: ['src/pages/about.astro'],
@@ -99,7 +89,7 @@ export const routes = {
     name: 'Uses',
     title: 'Uses — the hardware and software I work with · Ahmed Sozzer',
     description:
-      'The hardware, editor, terminal and everyday software Ahmed Sozzer uses for client work, C++ systems projects and 3D printing, kept current as things change.',
+      'The machine, editor, terminal and everyday software Ahmed Sozzer works on, and the four Bambu Lab printers AMS-X is developed against.',
     schema: 'WebPage',
     card: { kicker: 'uses', headline: 'The hardware and software I work with.' },
     sources: ['src/pages/uses.astro'],
@@ -117,9 +107,9 @@ export const routes = {
     name: 'Accessibility',
     title: 'Accessibility — WCAG 2.2 AA statement · Ahmed Sozzer',
     description:
-      'Accessibility statement for amsozzer.com: the WCAG 2.2 AA target, how pages are tested with keyboard, VoiceOver and zoom, known limits, and how to report one.',
+      'Accessibility statement for amsozzer.com: the WCAG 2.2 AA target, what the build checks automatically, what has not been tested by hand yet, and how to report a problem.',
     schema: 'WebPage',
-    card: { kicker: 'accessibility', headline: 'WCAG 2.2 AA, and how it is tested.' },
+    card: { kicker: 'accessibility', headline: 'What is checked, and what is not.' },
     sources: ['src/pages/accessibility.astro'],
   },
 } as const satisfies Record<string, Route>;

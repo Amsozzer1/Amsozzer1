@@ -2,7 +2,6 @@
 import FactList from '@src/components/pages/FactList.astro';
 import PageHero from '@src/components/pages/PageHero.astro';
 import PageSection from '@src/components/pages/PageSection.astro';
-import Pending from '@src/components/pages/Pending.astro';
 import { routes } from '@src/data/routes';
 import Base from '@src/layouts/Base.astro';
 import { lastModified } from '@src/lib/dates';
@@ -19,13 +18,53 @@ interface Group {
   tools: Tool[];
 }
 
-// @TODO: Ahmed fills these in — the machine and monitors, the editor and terminal, the everyday
-// software, and the printer AMS-X drives (make and model)
 const groups: Group[] = [
-  { id: 'hardware', title: 'Hardware', tools: [] },
-  { id: 'editor', title: 'Editor and terminal', tools: [] },
-  { id: 'software', title: 'Everyday software', tools: [] },
-  { id: 'printing', title: '3D printing', tools: [] },
+  {
+    id: 'hardware',
+    title: 'Hardware',
+    tools: [
+      { name: 'MacBook, M4, 16 GB', note: 'Everything is built and profiled on it.' },
+      {
+        name: 'Samsung 34-inch ultrawide',
+        note: 'One screen. Editor on the left, whatever it is talking to on the right.',
+      },
+    ],
+  },
+  {
+    id: 'editor',
+    title: 'Editor and terminal',
+    tools: [
+      { name: 'VS Code', note: 'No strong opinions about it, which is the point.' },
+      { name: 'kitty', note: 'Fast, and it gets out of the way.' },
+      { name: 'zsh', note: 'The default, largely unmodified.' },
+    ],
+  },
+  {
+    id: 'software',
+    title: 'Everyday software',
+    tools: [
+      {
+        name: 'Woven',
+        note: 'Speech to text. I think out loud faster than I type, so the first draft of most things is dictated and then cut down.',
+      },
+    ],
+  },
+  {
+    id: 'printing',
+    title: '3D printing',
+    tools: [
+      {
+        name: 'Bambu Lab P1S ×2',
+        note: 'The two that do most of the work, and the pair AMS-X is developed against.',
+      },
+      { name: 'Bambu Lab A1', note: 'Bed slinger, better with larger single-colour parts.' },
+      { name: 'Bambu Lab A1 Mini', note: 'Small prototypes and test prints.' },
+      {
+        name: 'PLA and PETG',
+        note: 'PLA for most things, PETG when a part has to survive heat or a drop. Both need drying more often than you would expect.',
+      },
+    ],
+  },
 ];
 
 const updated = lastModified(...routes['/uses'].sources);
@@ -34,8 +73,8 @@ const updated = lastModified(...routes['/uses'].sources);
 <Base seo={routeSeo('/uses')}>
   <PageHero kicker="uses" title="The hardware and software I work with." updated={updated}>
     <p>
-      The machine the client work runs on, the tools the C++ and Python projects need, and the
-      printer AMS-X talks to. Kept current as things change.
+      One machine, one screen, and four printers acquired by accident. The printing section is the
+      one worth reading, because it is what <a href="/projects/ams-x">AMS-X</a> is built against.
     </p>
   </PageHero>
 
@@ -44,15 +83,11 @@ const updated = lastModified(...routes['/uses'].sources);
     title={title}
     ground={index % 2 === 0 ? 'body' : 'paper'}
   >
-    {tools.length > 0 ? (
-      <FactList>
-        {tools.map(({ name, note }) => <div>
-          <dt>{name}</dt>
-          <dd>{note}</dd>
-        </div>)}
-      </FactList>
-    ) : (
-      <Pending />
-    )}
+    <FactList>
+      {tools.map(({ name, note }) => <div>
+        <dt>{name}</dt>
+        <dd>{note}</dd>
+      </div>)}
+    </FactList>
   </PageSection>)}
 </Base>
