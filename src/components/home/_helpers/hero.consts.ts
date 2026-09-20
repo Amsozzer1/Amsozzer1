@@ -18,7 +18,7 @@ export const serverLog: Line[] = [
     return [
       method.padEnd(7),
       accent(path),
-      `${' '.repeat(18 - path.length)}${status}   ${ms.toFixed(1)}${nbsp}ms`,
+      `${' '.repeat(18 - path.length)}${status}   ${ms.toFixed(3)}${nbsp}ms`,
       id ? muted(`   :id${nbsp}=${nbsp}"${id}"`) : '',
     ];
   }),

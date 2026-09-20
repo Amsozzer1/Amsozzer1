@@ -33,7 +33,7 @@ export const projects: Project[] = [
     summary:
       'Everything above the socket is mine: the accept loop, the parser, the router, the middleware machinery. A literal path segment always beats a parameter, whatever order you registered them in.',
     specs: [
-      { label: 'dependencies', value: 'one — nlohmann/json, for response bodies' },
+      { label: 'dependencies', value: 'three — libuv, llhttp, nlohmann/json' },
       { label: 'tested', value: 'GoogleTest, ASan + UBSan in CI' },
       { label: 'license', value: 'MIT, installable via CMake' },
     ],

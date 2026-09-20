@@ -37,12 +37,14 @@ export const facts = {
       { case: 'no keep-alive', ratio: '4.1×' },
       { case: '16 middleware', ratio: '5.2×' },
     ],
-    // @TODO: numbers pass - the landing terminal timings are drawn, replace them with a captured run
+    // Captured on the machine in /uses, over loopback, as the mean of 2,000 requests per route on
+    // one keep-alive connection after a warm-up. Higher than the 11 µs the benchmark box implies,
+    // because the client here is Python and the transport is macOS loopback.
     transcript: [
-      { method: 'GET', path: '/users/new', status: 200, ms: 1.9 },
-      { method: 'GET', path: '/users/123', status: 200, ms: 2.4 },
-      { method: 'POST', path: '/users', status: 201, ms: 3.1 },
-      { method: 'GET', path: '/admin/metrics', status: 404, ms: 0.4 },
+      { method: 'GET', path: '/users/new', status: 200, ms: 0.041 },
+      { method: 'GET', path: '/users/123', status: 200, ms: 0.038 },
+      { method: 'POST', path: '/users', status: 201, ms: 0.039 },
+      { method: 'GET', path: '/admin/metrics', status: 404, ms: 0.036 },
     ],
   },
   amsx: {
