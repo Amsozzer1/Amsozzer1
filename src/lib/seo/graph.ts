@@ -180,7 +180,10 @@ export const buildGraph = (seo: PageSeo): Graph => {
     '@context': 'https://schema.org',
     '@graph': [
       person(seo.path === '/experience'),
-      ...(isHome ? [website()] : [breadcrumbList(seo)]),
+      // The site node rides on every page: each one is crawled on its own, and the
+      // WebPage nodes point at it with isPartOf.
+      website(),
+      ...(isHome ? [] : [breadcrumbList(seo)]),
       webPage(seo),
       ...(project ? [softwareSourceCode(project)] : []),
       ...(seo.graph ?? []),

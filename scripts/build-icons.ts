@@ -11,18 +11,29 @@ const png = (size: number) =>
     .png()
     .toBuffer();
 
-// An ICO file is a 6-byte header plus one 16-byte directory entry per image; modern ICO allows the image itself to be a PNG.
-const ico = (image: Buffer, size: number) => {
-  const header = Buffer.alloc(22);
+// An ICO file is a 6-byte header plus one 16-byte directory entry per image; modern ICO allows each image to be a PNG.
+// Google renders favicons at 48px, so the file carries 16, 32 and 48 and lets each client pick.
+const ico = (images: { size: number; data: Buffer }[]) => {
+  const header = Buffer.alloc(6);
   header.writeUInt16LE(1, 2);
-  header.writeUInt16LE(1, 4);
-  header.writeUInt8(size, 6);
-  header.writeUInt8(size, 7);
-  header.writeUInt16LE(1, 10);
-  header.writeUInt16LE(32, 12);
-  header.writeUInt32LE(image.length, 14);
-  header.writeUInt32LE(header.length, 18);
-  return Buffer.concat([header, image]);
+  header.writeUInt16LE(images.length, 4);
+
+  let offset = header.length + images.length * 16;
+  const entries: Buffer[] = [];
+
+  for (const { size, data } of images) {
+    const entry = Buffer.alloc(16);
+    entry.writeUInt8(size === 256 ? 0 : size, 0);
+    entry.writeUInt8(size === 256 ? 0 : size, 1);
+    entry.writeUInt16LE(1, 4);
+    entry.writeUInt16LE(32, 6);
+    entry.writeUInt32LE(data.length, 8);
+    entry.writeUInt32LE(offset, 12);
+    entries.push(entry);
+    offset += data.length;
+  }
+
+  return Buffer.concat([header, ...entries, ...images.map(image => image.data)]);
 };
 
 const outputs: [string, number][] = [
@@ -35,4 +46,9 @@ for (const [file, size] of outputs) {
   writeFileSync(new URL(file, publicDir), await png(size));
 }
 
-writeFileSync(new URL('favicon.ico', publicDir), ico(await png(32), 32));
+const faviconSizes = [16, 32, 48];
+const faviconImages = await Promise.all(
+  faviconSizes.map(async size => ({ size, data: await png(size) })),
+);
+
+writeFileSync(new URL('favicon.ico', publicDir), ico(faviconImages));
