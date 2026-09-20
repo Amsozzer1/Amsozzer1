@@ -1,24 +1,12 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [
-    ".astro/types.d.ts",
-    "**/*"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "worker",
-    "public/demos"
-  ],
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist", "node_modules", "worker", "public/demos"],
   "compilerOptions": {
     "paths": {
-      "@src/*": [
-        "./src/*"
-      ]
+      "@src/*": ["./src/*"]
     },
     "allowImportingTsExtensions": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   }
 }
