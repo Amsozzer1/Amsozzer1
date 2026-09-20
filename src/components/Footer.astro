@@ -6,9 +6,13 @@ import { monthYearLong } from '@src/lib/dates';
 const { since } = site.availability;
 const sinceLabel = monthYearLong(since);
 
-const profiles = [site.links.github, site.links.linkedin, site.links.devto, site.links.orcid].map(
-  href => ({ href, label: href.replace(/^https:\/\/(www\.)?/, '') }),
-);
+const profiles = [
+  site.links.github,
+  site.links.linkedin,
+  site.links.devto,
+  site.links.bluesky,
+  site.links.orcid,
+].map(href => ({ href, label: href.replace(/^https:\/\/(www\.)?/, '') }));
 ---
 
 <footer class="site-footer on-ink">
