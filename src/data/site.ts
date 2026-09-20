@@ -40,6 +40,7 @@ export const site = {
   language: 'en',
   locale: 'en_US',
   resumePdf: '/resume.pdf',
+  analyticsToken: '4604d8b7c03d4752b27d5baed3752359',
   knowsAbout: [
     'C++17',
     'HTTP servers',
