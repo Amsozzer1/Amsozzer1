@@ -861,7 +861,7 @@ Each phase ends when its "done when" holds and CI is green.
 | Motion window: 0.18 (notes) vs 0.20 (prototype)                                               | Ahmed                            | Phase 2 tuning only |
 | Uncut Sans second weight: 600 vs 700                                                          | Ahmed                            | Phase 2             |
 | AMS-X step names (retract/select/feed/sense/resume vs the canvas timeline) and real durations | Ahmed                            | 7c durations only   |
-| All published figures (93.6k vs 93,269, 20× vs 21.9×, MNIST accuracy)                         | Ahmed, later                     | Phase 12            |
+| Published figures still unmeasured (MNIST accuracy, AMS-X durations, landing transcript)      | Ahmed, later                     | Phase 12            |
 | Holiday Channel title "Full Stack & iOS Developer" with no iOS bullet                         | Ahmed                            | Phase 3             |
 | `/uses`, `/now`, first post text                                                              | Ahmed (drafts from the canvases) | Phase 4 content     |
 | Registrar transfer (Squarespace → Cloudflare)                                                 | later                            | nothing             |
