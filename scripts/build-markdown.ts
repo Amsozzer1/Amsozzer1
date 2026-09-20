@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { basename, dirname, join, relative } from 'node:path';
 import TurndownService from 'turndown';
 
 const DIST = 'dist';
@@ -58,10 +58,19 @@ const markdown = (html: string) => {
   return `---\n${frontMatter.join('\n')}\n---\n\n${turndown.turndown(main).trim()}\n`;
 };
 
-const written = htmlFiles(DIST).map(file => {
+const written = htmlFiles(DIST).flatMap(file => {
+  const body = markdown(readFileSync(file, 'utf8'));
   const target = `${file.slice(0, -'.html'.length)}.md`;
-  writeFileSync(target, markdown(readFileSync(file, 'utf8')));
-  return relative(DIST, target);
+  writeFileSync(target, body);
+
+  // A section index is written as <section>/index.md. The worker asks for <path>.md for every
+  // page, so the same markdown is written under that name too.
+  if (basename(target) === 'index.md' && dirname(target) !== DIST) {
+    const alias = `${dirname(target)}.md`;
+    writeFileSync(alias, body);
+    return [relative(DIST, target), relative(DIST, alias)];
+  }
+  return [relative(DIST, target)];
 });
 
 process.stdout.write(`markdown: ${written.length} page(s)\n`);
