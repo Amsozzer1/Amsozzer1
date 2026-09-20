@@ -18,11 +18,13 @@ const links = [
     noindex: true,
   }}
 >
-  <div class="graph-paper not-found">
+  <div class="graph-paper not-found" data-motion-hero data-motion-stagger>
     <div class="container inner">
-      <p class="mono kicker">404 <span aria-hidden="true">·</span> not found</p>
-      <h1 class="title">This page was redacted.</h1>
-      <p class="line">Nothing is filed at this address. The link may be old, or mistyped.</p>
+      <p class="mono kicker" data-motion="slide">404 <span aria-hidden="true">·</span> not found</p>
+      <h1 class="title" data-motion="wipe">This page was redacted.</h1>
+      <p class="line" data-motion="slide">
+        Nothing is filed at this address. The link may be old, or mistyped.
+      </p>
       <ul class="links">
         {links.map(({ label, href }) => <li>
           <a href={href}>{label}</a>

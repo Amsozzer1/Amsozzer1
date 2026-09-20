@@ -21,31 +21,33 @@ const contents = [
 ];
 ---
 
-<Band ground="paper" graph labelledby="hero-title" class="hero">
+<Band ground="paper" graph labelledby="hero-title" class="hero" data-motion-hero>
   <div class="container layout">
     <div class="copy">
       <h1 id="hero-title" class="vh">{site.name} — {site.role}</h1>
-      <p class="display tagline">
-        <span class="line">I write</span>
-        <span class="line">the layer</span>
-        <span class="line">most people</span>
-        <span class="line fill">import.</span>
+      <p class="display tagline" data-motion-stagger>
+        <span class="line" data-motion="wipe">I write</span>
+        <span class="line" data-motion="wipe">the layer</span>
+        <span class="line" data-motion="wipe">most people</span>
+        <span class="line fill" data-motion="wipe">import.</span>
       </p>
-      <p class="lead">
+      <p class="lead" data-motion="slide">
         Forward deployed engineer at {site.employer.name}. I sit with the client, find the step a
         person is doing by hand, and build whatever it takes to delete it — the product in Next.js,
         React Native and Postgres on GCP, and the systems underneath it in C++ and Python when the
         product needs them.
       </p>
-      <ul class="profiles">
+      <ul class="profiles" data-motion="slide">
         <li><a class="profile" href={site.links.github}>github</a></li>
         <li><a class="profile" href={site.links.linkedin}>linkedin</a></li>
       </ul>
     </div>
 
     <div class="art">
-      <p class="note">started PlusWeb because I wanted to know what Express was actually doing.</p>
-      <div class="pinned">
+      <p class="note" data-motion="slide" data-motion-from="right">
+        started PlusWeb because I wanted to know what Express was actually doing.
+      </p>
+      <div class="pinned" data-motion="slap">
         <Terminal
           class="panel"
           title={`plusweb — 0.0.0.0:${facts.plusweb.port}`}
@@ -53,10 +55,10 @@ const contents = [
         >
           <TerminalLines lines={serverLog} />
         </Terminal>
-        <Tape class="tape-start" />
-        <Tape class="tape-end" />
+        <Tape class="tape-start" data-motion="mark" />
+        <Tape class="tape-end" data-motion="mark" />
       </div>
-      <div class="stamped">
+      <div class="stamped" data-motion="mark">
         <Stamp>one dependency, coffee</Stamp>
         <Scribble
           class="arrow"
@@ -67,7 +69,12 @@ const contents = [
       </div>
     </div>
 
-    <nav class="contents" aria-labelledby="contents-title">
+    <nav
+      class="contents"
+      aria-labelledby="contents-title"
+      data-motion="slide"
+      data-motion-from="right"
+    >
       <p id="contents-title" class="contents-title">further down</p>
       <ul class="contents-list">
         {contents.map(({ href, label }) => <li>
@@ -76,7 +83,7 @@ const contents = [
       </ul>
     </nav>
 
-    <CtaButton class="cta" href="#projects" bleed>See the work</CtaButton>
+    <CtaButton class="cta" href="#projects" bleed data-motion="slide">See the work</CtaButton>
   </div>
 </Band>
 

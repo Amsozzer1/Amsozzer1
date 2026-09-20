@@ -76,8 +76,8 @@
   --space-2xl: 4rem;
   --space-3xl: 6rem;
   --space-4xl: 8rem;
-  --layout-gutter: clamp(1.5rem, -0.1714rem + 6.8571vw, 6rem);
-  --layout-content-max: 78rem;
+  --layout-gutter: clamp(1.5rem, 0.5714rem + 3.8095vw, 4rem);
+  --layout-content-max: 92rem;
   --layout-prose-max: 40rem;
   --layout-header-height: 5.25rem;
   --layout-hero-max: 50.125rem;

@@ -28,7 +28,7 @@ const others = [
 ---
 
 <div class="comparison">
-  <table class="table throughput">
+  <table class="table throughput" data-motion="slide">
     <caption class="caption">
       <span class="caption-title">requests a second, as the route table grows</span>
       <Footnote id="express-method" label="how it was measured">{method}</Footnote>
@@ -72,7 +72,7 @@ const others = [
     </tbody>
   </table>
 
-  <div class="more">
+  <div class="more" data-motion="slide" data-motion-from="right">
     <table class="table others">
       <caption class="caption">
         <span class="caption-title">and everything else, at {spell(connections)} connections</span>

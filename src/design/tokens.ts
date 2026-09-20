@@ -89,8 +89,8 @@ export const space = {
 } as const;
 
 export const layout = {
-  gutter: { min: 24, max: 96 },
-  contentMax: '78rem',
+  gutter: { min: 24, max: 64 },
+  contentMax: '92rem',
   proseMax: '40rem',
   headerHeight: '5.25rem',
   heroMax: '50.125rem',

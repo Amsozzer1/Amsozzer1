@@ -13,9 +13,9 @@ interface Props {
 const { kicker, title, updated } = Astro.props;
 ---
 
-<Band ground="paper" graph class="page-hero">
+<Band ground="paper" graph class="page-hero" data-motion-hero data-motion-stagger>
   <div class="container">
-    <Kicker>
+    <Kicker data-motion="slide">
       {kicker}
       {updated && (
         <>
@@ -24,8 +24,8 @@ const { kicker, title, updated } = Astro.props;
         </>
       )}
     </Kicker>
-    <h1 class="title">{title}</h1>
-    <div class="lead prose">
+    <h1 class="title" data-motion="wipe">{title}</h1>
+    <div class="lead prose" data-motion="slide">
       <slot />
     </div>
   </div>

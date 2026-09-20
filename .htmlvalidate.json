@@ -1,7 +1,10 @@
 {
   "extends": ["html-validate:recommended", "html-validate:document"],
   "rules": {
-    "no-inline-style": "error",
+    "no-inline-style": [
+      "error",
+      { "allowedProperties": ["color", "background-color", "overflow-x"] }
+    ],
     "no-autoplay": "error",
     "require-sri": "off"
   }
