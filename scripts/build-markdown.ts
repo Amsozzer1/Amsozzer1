@@ -73,4 +73,26 @@ const written = htmlFiles(DIST).flatMap(file => {
   return [relative(DIST, target)];
 });
 
-process.stdout.write(`markdown: ${written.length} page(s)\n`);
+// llms-full.txt: every page's markdown in one file, for clients that fetch the whole site at
+// once rather than following llms.txt. Ordered so the pages that answer who and what come first.
+const ORDER = ['index.md', 'about.md', 'experience.md', 'writing.md'];
+const rank = (path: string) => {
+  const index = ORDER.indexOf(path);
+  return index === -1 ? ORDER.length : index;
+};
+
+const pages = written
+  .filter(path => path !== '404.md' && !path.endsWith('/index.md'))
+  .sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+
+writeFileSync(
+  join(DIST, 'llms-full.txt'),
+  pages
+    .map(path => readFileSync(join(DIST, path), 'utf8'))
+    .join('\n---\n\n')
+    .concat('\n'),
+);
+
+process.stdout.write(
+  `markdown: ${written.length} file(s), ${pages.length} page(s) in llms-full.txt\n`,
+);
