@@ -1,5 +1,5 @@
 import { handleLink } from './links.ts';
-import { markdownResponse, varyOnAccept, wantsMarkdown } from './markdown.ts';
+import { documentHeaders, markdownResponse, wantsMarkdown } from './markdown.ts';
 
 interface Env {
   ASSETS: Fetcher;
@@ -17,6 +17,6 @@ export default {
       if (markdown) return markdown;
     }
 
-    return varyOnAccept(await env.ASSETS.fetch(request));
+    return documentHeaders(request, await env.ASSETS.fetch(request));
   },
 } satisfies ExportedHandler<Env>;
