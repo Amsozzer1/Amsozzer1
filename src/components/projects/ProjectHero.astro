@@ -19,22 +19,24 @@ const { project, lead, highlight, intro } = Astro.props;
 const at = lead.indexOf(highlight);
 ---
 
-<Band ground="paper" graph labelledby="project-title" class="project-hero">
+<Band ground="paper" graph labelledby="project-title" class="project-hero" data-motion-hero>
   <div class="container hero-inner">
-    <div class="hero-text">
-      <a class="back-link" href="/#projects"><span aria-hidden="true">←</span> back to projects</a>
-      <h1 id="project-title" class="title">{project.name}</h1>
-      <p class="lead">
+    <div class="hero-text" data-motion-stagger>
+      <a class="back-link" href="/#projects" data-motion="slide"
+        ><span aria-hidden="true">←</span> back to projects</a
+      >
+      <h1 id="project-title" class="title" data-shared-title={project.slug}>{project.name}</h1>
+      <p class="lead" data-motion="slide">
         {lead.slice(0, at)}<span class="highlight">{highlight}</span
         >{lead.slice(at + highlight.length)}
       </p>
-      <p class="intro">{intro}</p>
-      <StackList class="stack" items={project.stack} />
+      <p class="intro" data-motion="slide">{intro}</p>
+      <StackList class="stack" items={project.stack} data-motion="slide" />
     </div>
-    <div class="hero-figure">
+    <div class="hero-figure" data-motion="slap">
       <slot name="figure" />
     </div>
-    <div class="hero-foot">
+    <div class="hero-foot" data-motion="slide">
       <div class="cta-anchor">
         <CtaButton href={project.repo} direction="up-right" bleed
           ><span class="vh">{project.name} </span>Source on GitHub</CtaButton

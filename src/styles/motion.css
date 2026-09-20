@@ -1,1 +1,205 @@
-/* @TODO: scroll-driven motion (slap, slide, wipe, tape lands last) and cross-document page transitions — later phase */
+/* Scroll-tied arrivals. Each element runs its own view() timeline, so it animates as it enters.
+   Everything sits behind @supports and prefers-reduced-motion: without support the page is simply
+   finished, which is also what Firefox gets until it ships scroll-driven animations. */
+
+@keyframes motion-slide {
+  from {
+    opacity: 0;
+    translate: calc(var(--motion-from, -1) * 4rem) 0;
+  }
+}
+
+@keyframes motion-slap {
+  from {
+    opacity: 0;
+    scale: 1.055;
+    translate: 0 1.625rem;
+  }
+}
+
+@keyframes motion-mark {
+  from {
+    opacity: 0;
+    scale: 1.14;
+  }
+}
+
+@keyframes motion-wipe {
+  from {
+    opacity: 0;
+    translate: -1.375rem 0;
+    clip-path: inset(-0.3em 100% -0.3em -0.2em);
+  }
+
+  to {
+    clip-path: inset(-0.3em -0.2em -0.3em -0.2em);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-motion] {
+      animation-timeline: view();
+      animation-fill-mode: both;
+      animation-duration: 1ms; /* Firefox's pref build needs a duration; the timeline drives it. */
+    }
+
+    [data-motion='slide'] {
+      animation-name: motion-slide;
+      animation-timing-function: var(--motion-ease-slide);
+      animation-range: entry 0% cover 45%;
+    }
+
+    [data-motion='wipe'] {
+      animation-name: motion-wipe;
+      animation-timing-function: var(--motion-ease-slide);
+      animation-range: entry 0% cover 42%;
+    }
+
+    [data-motion='slap'] {
+      animation-name: motion-slap;
+      animation-timing-function: var(--motion-ease-slap);
+      animation-range: entry 5% cover 38%;
+    }
+
+    /* The mark is taped down after the thing it marks has landed. */
+    [data-motion='mark'] {
+      animation-name: motion-mark;
+      animation-timing-function: var(--motion-ease-mark);
+      animation-range: cover 22% cover 52%;
+    }
+
+    [data-motion-from='right'] {
+      --motion-from: 1;
+    }
+
+    /* Lines and rows arrive one after another. */
+    [data-motion-stagger] > * {
+      --i: 0;
+
+      animation-range: entry calc(var(--i) * 9%) cover calc(45% + var(--i) * 9%);
+    }
+
+    [data-motion-stagger] > :nth-child(2) {
+      --i: 1;
+    }
+
+    [data-motion-stagger] > :nth-child(3) {
+      --i: 2;
+    }
+
+    [data-motion-stagger] > :nth-child(4) {
+      --i: 3;
+    }
+
+    [data-motion-stagger] > :nth-child(5) {
+      --i: 4;
+    }
+
+    [data-motion-stagger] > :nth-child(6) {
+      --i: 5;
+    }
+
+    /* Anything focused, targeted or printed is shown finished, never mid-arrival. */
+    [data-motion]:focus-within,
+    [data-motion]:target {
+      animation-name: none;
+    }
+  }
+
+  /* The hero is already on screen at load, so it runs on a clock instead of the scroll. */
+  [data-motion-hero] {
+    --hero-clock: 1400ms;
+  }
+
+  /* A hero is on screen at load, so it runs on a clock rather than the scroll. */
+  [data-motion-hero] [data-motion] {
+    animation-timeline: auto;
+    animation-duration: var(--hero-clock);
+    animation-delay: calc(var(--i, 0) * 140ms);
+    animation-range: normal;
+  }
+
+  [data-motion-hero] [data-motion='slap'] {
+    animation-duration: calc(var(--hero-clock) * 0.5);
+    animation-delay: calc(var(--hero-clock) * 0.2);
+  }
+
+  [data-motion-hero] [data-motion='mark'] {
+    animation-duration: calc(var(--hero-clock) * 0.35);
+    animation-delay: calc(var(--hero-clock) * 0.62);
+  }
+}
+
+@media print {
+  [data-motion] {
+    animation: none;
+  }
+}
+
+/* Cross-document page transitions (Chrome/Edge 126+, Safari 18.2+). Firefox navigates normally. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: var(--motion-page-transition);
+    animation-timing-function: var(--motion-ease-transition);
+  }
+
+  /* The old page slides out under the amber band, the new one arrives from the other side. */
+  ::view-transition-old(root) {
+    animation-name: motion-page-out;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: motion-page-in;
+  }
+
+  /* Each project's name is the one element shared across the navigation, so it morphs in place.
+     The names have to be unique per page, hence one per project rather than a single name. */
+  [data-shared-title='plusweb'] {
+    view-transition-name: title-plusweb;
+  }
+
+  [data-shared-title='ams-x'] {
+    view-transition-name: title-ams-x;
+  }
+
+  [data-shared-title='mnist'] {
+    view-transition-name: title-mnist;
+  }
+
+  ::view-transition-group(title-plusweb),
+  ::view-transition-group(title-ams-x),
+  ::view-transition-group(title-mnist) {
+    animation-duration: calc(var(--motion-page-transition) * 0.85);
+    z-index: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: 120ms;
+    animation-timing-function: linear;
+  }
+}
+
+@keyframes motion-page-out {
+  to {
+    opacity: 0;
+    translate: 0 -1.5rem;
+  }
+}
+
+@keyframes motion-page-in {
+  from {
+    opacity: 0;
+    translate: 0 2rem;
+  }
+}

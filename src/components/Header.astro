@@ -24,8 +24,9 @@ const { path } = Astro.props;
     background: var(--color-ground-paper);
   }
   
-  /* Phone: wordmark and availability share a row, the nav rail sits under them. */
+  /* Phone: wordmark and availability share a row; the bar itself spans the full width. */
   .bar {
+    max-inline-size: none;
     display: grid;
     grid-template-areas:
       'mark status'

@@ -60,6 +60,13 @@ table {
   border-collapse: collapse;
 }
 
-:target {
+:target,
+[id] {
   scroll-margin-block-start: var(--space-l);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }

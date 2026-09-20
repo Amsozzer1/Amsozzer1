@@ -6,15 +6,15 @@ import { toolkit } from '@src/components/home/_helpers/toolkit.consts';
 
 <Band ground="body" id="toolkit" labelledby="toolkit-title">
   <div class="container">
-    <div class="head">
+    <div class="head" data-motion="slide">
       <SectionHeading class="title" id="toolkit-title" title="The tech stack" />
       <p class="aside">
         most days it is the top row; the rest of the list is what the problem asked for
       </p>
     </div>
 
-    <dl class="rows">
-      {toolkit.map(({ label, items, link }) => <div class="row">
+    <dl class="rows" data-motion-stagger>
+      {toolkit.map(({ label, items, link }) => <div class="row" data-motion="slide">
         <dt class="label">{label}</dt>
         <dd class="items">
           <ul class="list">

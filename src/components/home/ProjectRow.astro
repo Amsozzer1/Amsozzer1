@@ -16,11 +16,11 @@ interface Props {
 const { project, note, mark, flip = false } = Astro.props;
 ---
 
-<article class:list={['row', { 'row-flip': flip }]}>
+<article class:list={['row', { 'row-flip': flip }]} data-motion="slide">
   <div class="text">
     <hgroup>
       <p class="number">{project.number}</p>
-      <h3 class="name">{project.name}</h3>
+      <h3 class="name" data-shared-title={project.slug}>{project.name}</h3>
       <p class="tagline">{project.tagline}</p>
     </hgroup>
     <p class="summary">{project.summary}</p>

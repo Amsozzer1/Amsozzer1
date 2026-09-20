@@ -17,12 +17,12 @@ const year = (date: string) => date.slice(0, 4);
 
 <Band ground="paper" id="education" labelledby="education-title">
   <div class="container layout">
-    <div class="intro">
+    <div class="intro" data-motion="slide">
       <SectionHeading class="title" id="education-title" title="Education" />
       <p class="summary">A CS degree, and the research that came out of it.</p>
     </div>
 
-    <div class="school">
+    <div class="school" data-motion="slide" data-motion-from="right">
       <div class="head">
         <h3 class="name">{degree.institution}</h3>
         <p class="degree">

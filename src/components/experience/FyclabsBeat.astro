@@ -59,7 +59,7 @@ const highlights = [
 <section class="job" aria-labelledby={id}>
   <Band ground="body" class="beat">
     <div class="container">
-      <div class="head">
+      <div class="head" data-motion="slide">
         <hgroup class="heading">
           <BeatKicker
             number={number}
@@ -73,7 +73,7 @@ const highlights = [
         <StackList items={stack} class="stack" />
       </div>
 
-      <div class="body">
+      <div class="body" data-motion="slide" data-motion-from="right">
         <Stat value={facts.experience.fyclabs.growth} highlight>
           The users that one backend carries, after query and schema work — then scaled out
           horizontally on GCP. Same product, same codebase: seven times the traffic through it.

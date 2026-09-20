@@ -11,13 +11,13 @@ const posts = await getPosts();
 ---
 
 <Base seo={routeSeo('/writing')}>
-  <Band ground="paper" graph class="hero">
+  <Band ground="paper" graph class="hero" data-motion-hero data-motion-stagger>
     <div class="container">
-      <h1 class="title">
+      <h1 class="title" data-motion="wipe">
         <span class="line">Things I was</span>
         <span class="line highlight">wrong about.</span>
       </h1>
-      <p class="lead">
+      <p class="lead" data-motion="slide">
         The long write-ups, kept off the project pages on purpose. A project page should say what a
         thing is and let you use it. This is where the measurements go — including the ones that
         contradicted what I believed when I wrote the code.

@@ -19,7 +19,7 @@ const jobs = resume.work.map(job => ({
 
 <Band ground="stone" id="experience" labelledby="experience-title">
   <div class="container layout">
-    <div class="intro">
+    <div class="intro" data-motion="slide">
       <SectionHeading class="title" id="experience-title" title="Experience" />
       <p class="summary">
         Three roles since {facts.experience.since}, all of them client-facing. I scope with the
@@ -29,8 +29,8 @@ const jobs = resume.work.map(job => ({
       <ArrowLink class="more" href="/experience" label="every role, in detail" />
     </div>
 
-    <ol class="jobs">
-      {jobs.map(job => <li class="job">
+    <ol class="jobs" data-motion-stagger>
+      {jobs.map(job => <li class="job" data-motion="slide" data-motion-from="right">
         <div class="head">
           <h3 class:list={['company', { current: !job.end }]}>{job.company}</h3>
           <p class="role">{job.role}</p>

@@ -15,17 +15,17 @@ const contacts = [
 const arrow = 'M152,60 C116,66 66,56 30,18 M48,22 C40,18 30,13 24,10 C25,18 27,28 29,36';
 ---
 
-<Band ground="paper" graph class="hero">
+<Band ground="paper" graph class="hero" data-motion-hero>
   <div class="container grid">
-    <div class="intro">
+    <div class="intro" data-motion-stagger>
       <h1 class="vh">{site.name} — Experience</h1>
-      <p class="display">
+      <p class="display" data-motion="wipe">
         <span class="line">I get paid</span>
         <span class="line">to delete</span>
         <span class="line">the manual</span>
         <span class="line step">step.</span>
       </p>
-      <p class="lead">
+      <p class="lead" data-motion="slide">
         Forward deployed engineer at {site.employer.name} — in the room with the client first, then
         frontend, backend and the CI/CD in between. Three roles since 2024: different companies,
         different stacks, and the same shape of problem underneath every one of them.
@@ -38,15 +38,16 @@ const arrow = 'M152,60 C116,66 66,56 30,18 M48,22 C40,18 30,13 24,10 C25,18 27,2
       </ul>
     </div>
 
-    <div class="exhibit">
+    <div class="exhibit" data-motion="slap">
       <ThroughLine />
-      <p class="note">
+      <p class="note" data-motion="slide" data-motion-from="right">
         <span class="note-text">I noticed it late — the same problem, four times over.</span>
         <Scribble class="note-arrow" d={arrow} width={160} height={72} />
       </p>
     </div>
 
     <CtaButton
+      data-motion="slide"
       class="cta"
       href={site.resumePdf}
       direction="down"

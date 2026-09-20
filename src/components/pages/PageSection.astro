@@ -15,11 +15,11 @@ const { id, title, kicker, ground = 'body', wide = false } = Astro.props;
 
 <Band ground={ground} labelledby={id} class="page-section">
   <div class="container grid">
-    <hgroup class="heading">
+    <hgroup class="heading" data-motion="slide">
       {kicker && <Kicker>{kicker}</Kicker>}
       <h2 id={id} class="title">{title}</h2>
     </hgroup>
-    <div class:list={['content', 'prose', { wide }]}>
+    <div class:list={['content', 'prose', { wide }]} data-motion="slide" data-motion-from="right">
       <slot />
     </div>
   </div>
