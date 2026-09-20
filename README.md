@@ -109,5 +109,5 @@ Full-stack app with real-time messaging over WebSockets, video calling via Strea
 
 ## Contact
 
-**Website:** [amsozzer.com](https://amsozzer.com) · **Email:** ahmedsozzer9@gmail.com
+**Website:** [amsozzer.com](https://amsozzer.com) · **Email:** ahmed@amsozzer.com
 **LinkedIn:** [linkedin.com/in/amsozzer1](https://linkedin.com/in/amsozzer1) · **GitHub:** [github.com/Amsozzer1](https://github.com/Amsozzer1)
