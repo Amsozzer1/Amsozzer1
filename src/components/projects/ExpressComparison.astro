@@ -4,9 +4,10 @@ import Footnote from '@src/components/Footnote.astro';
 import { count, spell } from '@src/components/projects/_helpers/projects.functions';
 import { facts } from '@src/data/facts';
 
-const { throughput, box, connections, p99Ms, memoryMb, libuv } = facts.plusweb;
+const { throughput, box, connections, p99Ms, memoryMb, starved, worstCaseMs, narrows, ceiling } =
+  facts.plusweb;
 
-const method = `One ${spell(box.cores)}-core box, identical handlers on both sides, and Express run as ${spell(box.expressProcesses)} processes so it gets every core.`;
+const method = `Both servers single-threaded and pinned to one core of a ${spell(box.cores)}-core ${box.cpu} box, identical routes, handlers and payloads. Same event loop, same parser, same I/O model on both sides.`;
 
 const fastest = Math.max(...throughput.map(row => row.plusweb));
 const share = (value: number) => `${((value / fastest) * 100).toFixed(1)}%`;
@@ -97,16 +98,23 @@ const others = [
 
     <div class="next-work">
       <p>
-        Express still holds more connections at once, because a worker here is tied up for as long
-        as a client stays connected. That is the next piece of work — libuv underneath the accept
-        loop, so that nobody using PlusWeb has to think about one. The branch already runs:
-        <strong class="bright">
-          {count(libuv.plusweb)} requests a second across {count(libuv.connections)} connections
-          with nobody left waiting</strong
-        >, against {count(libuv.express)} for the Express cluster.
+        Under load the difference stops being throughput and becomes reliability. At
+        {starved.connections} concurrent connections Express left
+        <strong class="bright">{starved.express} of them with no response at all</strong> and its
+        slowest request took {worstCaseMs.express.toLocaleString('en-US')} ms, against
+        {worstCaseMs.plusweb} ms here. PlusWeb starved no connections at any level tested.
       </p>
-      {/* @TODO: point at the write-up post once "The bottleneck was not the router" is published */}
-      <ArrowLink class="write-up" href="/writing" label="read the write-up" />
+      <p>
+        Where it narrows:
+        {narrows.map(({ case: name, ratio }) => `${name} bring it to ${ratio}`).join(', ')}. And the
+        framework is no longer the cost — at {ceiling.plusweb} of what a bare epoll server reaches
+        on the same box, parsing and routing together are under a tenth of the CPU.
+      </p>
+      <ArrowLink
+        class="write-up"
+        href="/writing/i-could-not-understand-express-so-i-wrote-my-own"
+        label="read the write-up"
+      />
     </div>
   </div>
 </div>

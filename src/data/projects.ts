@@ -39,7 +39,7 @@ export const projects: Project[] = [
     ],
     cta: 'Open the playground',
     repo: 'https://github.com/Amsozzer1/PlusWeb',
-    stack: ['C++17', 'POSIX sockets', 'CMake', 'GoogleTest', 'MIT'],
+    stack: ['C++17', 'libuv', 'llhttp', 'CMake', 'MIT'],
     programmingLanguage: ['C++17'],
     license: 'MIT',
     runtimePlatform: ['Linux', 'macOS'],

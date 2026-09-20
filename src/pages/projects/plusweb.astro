@@ -3,12 +3,7 @@ import Band from '@src/components/Band.astro';
 import PlusWebPlayground from '@src/components/demos/PlusWebPlayground/PlusWebPlayground.astro';
 import Scribble from '@src/components/marks/Scribble.astro';
 import Tape from '@src/components/marks/Tape.astro';
-import {
-  capitalize,
-  count,
-  projectBySlug,
-  spell,
-} from '@src/components/projects/_helpers/projects.functions';
+import { count, projectBySlug, spell } from '@src/components/projects/_helpers/projects.functions';
 import ExpressComparison from '@src/components/projects/ExpressComparison.astro';
 import NextProject from '@src/components/projects/NextProject.astro';
 import ProjectHero from '@src/components/projects/ProjectHero.astro';
@@ -19,7 +14,7 @@ import Base from '@src/layouts/Base.astro';
 import { routeSeo } from '@src/lib/seo/meta';
 
 const project = projectBySlug('plusweb');
-const { stats, throughput, box, memoryMb, libuv, threads, port } = facts.plusweb;
+const { stats, throughput, memoryMb, starved, ceiling, port } = facts.plusweb;
 const [smallest] = throughput;
 const largest = throughput[throughput.length - 1];
 const expressStart = Math.round(smallest.express / 1_000) * 1_000;
@@ -27,19 +22,19 @@ const expressStart = Math.round(smallest.express / 1_000) * 1_000;
 const stat = [
   {
     figure: stats.speedup,
-    caption: `faster than Express at ${count(largest.routes)} routes — its router scans the table, mine walks a trie`,
+    caption: `faster than Express on a ${smallest.routes}-route app — the case Express looks best under, and the number worth quoting`,
   },
   {
     figure: stats.requestsPerSecond,
-    caption: `requests a second on a ${spell(box.cores)}-core box, steady however many routes are loaded`,
+    caption: `requests a second, flat from ${smallest.routes} routes to ${count(largest.routes)} — its router scans the table, mine walks a trie`,
   },
   {
-    figure: stats.memory,
-    caption: `resident with ${count(memoryMb.routes)} routes loaded — the Express cluster on the same box: ${memoryMb.express} MB`,
+    figure: `${memoryMb.plusweb} MB`,
+    caption: `resident with ${count(memoryMb.routes)} routes loaded, against ${memoryMb.express} MB for Express on the same box`,
   },
   {
-    figure: stats.libuv,
-    caption: `requests a second across ${libuv.connections} connections, nobody starved — on the libuv branch, not main`,
+    figure: ceiling.plusweb,
+    caption: `of what a bare epoll server reaches here, while doing full parsing, a ${count(memoryMb.routes)}-route lookup and serialization — Express manages ${ceiling.express}`,
   },
 ];
 
@@ -51,21 +46,21 @@ const scribble =
 <Base page="project" seo={routeSeo('/projects/plusweb')}>
   <ProjectHero
     project={project}
-    lead="An Express-style HTTP framework written on raw POSIX sockets, in C++17."
+    lead="An Express-style HTTP framework in C++17, on a libuv event loop and the llhttp parser."
     highlight="C++17"
-    intro={`${capitalize(spell(threads.acceptors))} acceptor thread feeds a bounded pool of ${threads.workers} workers, connections stay open for keep-alive, and requests resolve through a segment trie keyed on method and path.`}
+    intro={`One event loop handles every connection, requests resolve through a segment trie keyed on method and path, and no connection went unanswered at any concurrency tested — including the ${starved.connections} where Express left ${starved.express} waiting.`}
   >
     <div slot="figure" class="artifact">
       <Terminal class="code-panel" title="examples/users.cpp" meta="C++17">
-        <pre><code>pw::App    app;
-pw::Router users;
+        <pre><code>HttpServer app({port});
+Router     users;
 
 users.GET(<span class="string">"/new"</span>,       newUserForm);
 users.GET(<span class="string">"/:id"</span>,       showUser);
 users.GET(<span class="string">"/:id/posts"</span>, listPosts);
 
-app.mount(<span class="string">"/users"</span>, users);
-app.listen({port});</code></pre>
+app.use(<span class="string">"/users"</span>, users);
+app.serve();</code></pre>
       </Terminal>
       <Tape class="tape-corner" />
       <Tape class="tape-edge" />

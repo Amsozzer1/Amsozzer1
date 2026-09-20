@@ -1,7 +1,7 @@
 import { accent, muted, type Line } from '@src/components/home/_helpers/terminalLines.functions';
 import { facts } from '@src/data/facts';
 
-const { threads, transcript } = facts.plusweb;
+const { transcript } = facts.plusweb;
 
 // PlusWeb matches /users/123 against its /users/:id route, so the log shows the captured param.
 const userRoute = /^\/users\/(\d+)$/;
@@ -11,10 +11,7 @@ const nbsp = '\u00A0';
 
 export const serverLog: Line[] = [
   ['$ cmake --build build -j && ./plusweb'],
-  [
-    'listening ',
-    muted(`— ${threads.acceptors} acceptor, ${threads.workers} workers, keep-alive on`),
-  ],
+  ['listening ', muted('— one libuv loop, keep-alive on')],
   [],
   ...transcript.map(({ method, path, status, ms }) => {
     const id = userRoute.exec(path)?.[1];

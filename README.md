@@ -42,16 +42,16 @@ None of the protocol is documented — the command set and report fields were wo
 
 [Repository](https://github.com/Amsozzer1/PlusWeb)
 
-An HTTP framework written from scratch in C++17 on raw POSIX sockets, built to understand what actually happens between the socket and the handler. Express-style API: `app.GET`, `app.use`, mountable routers.
+An HTTP framework written in C++17 on a libuv event loop and the llhttp parser, built to understand what actually happens between the socket and the handler. Express-style API: `app.GET`, `app.use`, mountable routers.
 
 - **Segment-trie router** keyed by `METHOD:/path/segments` — a lookup costs one step per path segment instead of a scan over every route. Literal segments beat parameters (`/users/new` over `/users/:id`).
 - **Middleware chain** with `next()` continuations that can short-circuit a request, plus path-scoped middleware and nested-router path rewriting.
-- **Concurrency:** one acceptor thread feeding a bounded thread pool, keep-alive by default.
+- **Concurrency:** a single libuv event loop, keep-alive by default. 4.8x Express on a small app, flat from 5 routes to 10,000 where Express degrades 50x, and no connection left unanswered at any concurrency tested.
 - **Tested like a real library:** unit tests plus an integration suite that boots a live server and drives it over loopback. CI builds on Linux and macOS, verifies the install target, and re-runs everything under AddressSanitizer and UBSan with leak detection.
 
-Installable as a CMake package, MIT licensed. The roadmap is public and honest about what's missing — no TLS, no request size limits or timeouts, small read buffer.
+Installable as a CMake package, MIT licensed. The roadmap is public and honest about what's missing — no TLS, no body size limits, no idle timeouts.
 
-**Tech:** C++17, CMake, POSIX sockets, GoogleTest, GitHub Actions
+**Tech:** C++17, libuv, llhttp, CMake, GoogleTest, GitHub Actions
 
 ### Multi-Tenant AI Receptionist System
 
@@ -98,7 +98,7 @@ Full-stack app with real-time messaging over WebSockets, video calling via Strea
 **Languages** TypeScript, JavaScript, Python, C/C++ (C++17), Java
 **Frontend** React, Next.js, React Native, TailwindCSS, Redux
 **Backend** Node.js, Express, FastAPI, PostgreSQL, Prisma, MongoDB, Redis, GraphQL
-**Systems** POSIX sockets, MQTT, multithreading, CMake, ESP32, Linux
+**Systems** libuv, POSIX sockets, MQTT, multithreading, CMake, ESP32, Linux
 **Infra & DevOps** Docker, GCP, CI/CD, GitHub Actions
 **Automation & AI** n8n, GoHighLevel, Zapier, Make, ElevenLabs, Twilio
 

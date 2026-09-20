@@ -1,25 +1,42 @@
 export const facts = {
   plusweb: {
-    box: { cores: 4, expressProcesses: 4 },
-    threads: { acceptors: 1, workers: 8 },
-    port: 8080,
-    dependencies: 1,
+    // Every figure below is from the 2026-09-20 profile: one process, one thread, pinned to CPU 0,
+    // against Express 5.2.1 on Node 25.6.1 pinned the same way, 32 keep-alive connections.
+    box: { cores: 4, cpu: 'Intel i5-7600', os: 'Linux' },
+    port: 3000,
+    dependencies: 3,
     stats: {
-      speedup: '242×',
-      requestsPerSecond: '93.3k',
-      memory: '5.3 MB',
-      libuv: '154k',
+      speedup: '4.8×',
+      requestsPerSecond: '91.9k',
+      memory: '4.6 MB',
+      ceiling: '55%',
     },
     throughput: [
-      { routes: 10, plusweb: 93_269, express: 20_117, ratio: '4.6×' },
-      { routes: 1_000, plusweb: 92_298, express: 6_169, ratio: '15×' },
-      { routes: 10_000, plusweb: 91_138, express: 376, ratio: '242×' },
+      { routes: 5, plusweb: 91_950, express: 19_236, ratio: '4.8×' },
+      { routes: 1_000, plusweb: 90_085, express: 5_639, ratio: '16×' },
+      { routes: 10_000, plusweb: 89_636, express: 355, ratio: '253×' },
     ],
-    connections: 4,
-    p99Ms: { plusweb: 0.1, express: 2.19, ratio: '21.9×' },
-    memoryMb: { routes: 1_000, plusweb: 5.3, express: 573, ratio: '108×' },
-    libuv: { connections: 128, plusweb: 154_620, express: 8_024 },
-    resolveNs: { hit: 493, hitAt10kRoutes: 532, miss: 363, missAt10kRoutes: 146_431 },
+    connections: 32,
+    p99Ms: { plusweb: 0.545, express: 2.329, ratio: '4.3×' },
+    worstCaseMs: { connections: 512, plusweb: 20.67, express: 4804.2, ratio: '232×' },
+    starved: { connections: 512, plusweb: 0, express: 264 },
+    memoryMb: { routes: 1_000, plusweb: 6.5, express: 97.7, ratio: '15×' },
+    miss: { routes: 10_000, plusweb: 76_568, express: 393, ratio: '195×' },
+    // A bare epoll server doing no parsing and no routing on the same box and the same pinning.
+    ceiling: { requestsPerSecond: 164_736, plusweb: '55%', express: '3.9%' },
+    profile: [
+      { symbol: 'socket syscalls', percent: 71 },
+      { symbol: 'llhttp', percent: 3.0 },
+      { symbol: 'onMessageComplete', percent: 1.8 },
+      { symbol: 'serialize', percent: 0.5 },
+      { symbol: 'the routing trie', percent: 0.5 },
+    ],
+    // Where the advantage narrows, from the same profile.
+    narrows: [
+      { case: '100 KB response bodies', ratio: '4.5×' },
+      { case: 'no keep-alive', ratio: '4.1×' },
+      { case: '16 middleware', ratio: '5.2×' },
+    ],
     // @TODO: numbers pass - the landing terminal timings are drawn, replace them with a captured run
     transcript: [
       { method: 'GET', path: '/users/new', status: 200, ms: 1.9 },
