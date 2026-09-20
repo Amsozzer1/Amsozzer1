@@ -14,16 +14,8 @@ export interface Route {
 }
 
 const keywords = new Set(['auto', 'const', 'return', 'true', 'false', 'nullptr', 'include']);
-const types = new Set(['App', 'Router', 'Request', 'Response']);
-const objects = new Set(['app', 'req', 'res', 'pw']);
-
-const verbs: Record<string, Method> = {
-  get: 'GET',
-  post: 'POST',
-  put: 'PUT',
-  patch: 'PATCH',
-  del: 'DELETE',
-};
+const types = new Set(['HttpServer', 'HttpRequest', 'HttpResponse', 'Router', 'json']);
+const objects = new Set(['app', 'req', 'res']);
 
 const tokenPattern =
   /(?<comment>\/\/.*)|(?<string>"(?:[^"\\]|\\.)*"?|<[\w/.]+>)|(?<word>[A-Za-z_]\w*)|(?<number>\d[\d.]*)|[^"\w/<]+|./g;
@@ -44,14 +36,15 @@ export const highlight = (line: string): Token[] =>
     return { kind: 'plain', text };
   });
 
-// Each handler runs from its app.<verb>( call to the next one; its status is the first res.status().
+// Each handler runs from its app.METHOD( call to the next one; its status is the first
+// res.status(). Only the method and the pattern reach the router — the bodies are not compiled.
 export const routesFrom = (code: string): Route[] => {
-  const calls = [...code.matchAll(/app\.(?<verb>get|post|put|patch|del)\("(?<pattern>[^"]*)"/g)];
+  const calls = [...code.matchAll(/app\.(?<verb>GET|POST|PUT|PATCH|DELETE)\("(?<pattern>[^"]*)"/g)];
   return calls.map((call, index) => {
     const handler = code.slice(call.index, calls[index + 1]?.index);
     const status = /res\.status\((?<code>\d{3})\)/.exec(handler)?.groups?.code;
     return {
-      method: verbs[call.groups?.verb ?? 'get'],
+      method: (call.groups?.verb ?? 'GET') as Method,
       pattern: call.groups?.pattern ?? '/',
       status: status ? Number(status) : 200,
     };

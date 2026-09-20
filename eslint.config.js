@@ -5,7 +5,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
-  { ignores: ['dist/', '.astro/', '.wrangler/', 'node_modules/', 'build/'] },
+  { ignores: ['dist/', '.astro/', '.wrangler/', 'node_modules/', 'build/', 'public/demos/'] },
   {
     linterOptions: {
       noInlineConfig: true,
