@@ -16,7 +16,13 @@ const type = seo.type ?? 'website';
 const url = absoluteUrl(seo.path);
 const image = ogImage(seo);
 const feedTitle = `${site.name} — Writing`;
-const profiles = [site.links.github, site.links.linkedin, site.links.orcid, site.links.devto];
+const profiles = [
+  site.links.github,
+  site.links.linkedin,
+  site.links.orcid,
+  site.links.devto,
+  site.links.bluesky,
+];
 ---
 
 <meta charset="utf-8" />
@@ -71,7 +77,7 @@ const profiles = [site.links.github, site.links.linkedin, site.links.orcid, site
 {profiles.map(href => (
   <link rel="me" href={href} />
 ))}
-<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />

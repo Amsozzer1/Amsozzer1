@@ -5,7 +5,10 @@
   "compatibility_date": "2026-09-19",
   "workers_dev": false,
   "preview_urls": true,
-  "routes": [{ "pattern": "amsozzer.com", "custom_domain": true }],
+  "routes": [
+    { "pattern": "amsozzer.com", "custom_domain": true },
+    { "pattern": "www.amsozzer.com", "custom_domain": true },
+  ],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

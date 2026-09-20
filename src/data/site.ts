@@ -33,9 +33,9 @@ export const site = {
     linkedin: 'https://www.linkedin.com/in/amsozzer1',
     orcid: 'https://orcid.org/0009-0005-3599-6156',
     devto: 'https://dev.to/amsozzer',
+    bluesky: 'https://bsky.app/profile/amsozzer.com',
     call: 'https://cal.com/amsozzer',
   },
-  // @TODO: add the Bluesky profile (@amsozzer.com) to links once the handle is claimed
   orcid: '0009-0005-3599-6156',
   language: 'en',
   locale: 'en_US',
