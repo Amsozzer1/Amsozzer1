@@ -29,10 +29,15 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+      - uses: typst-community/setup-typst@v5
+        with:
+          typst-version: '0.15.1'
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm check
+      # The résumé is generated into public/ so the build copies it into dist.
+      - run: pnpm resume
       - run: pnpm build
       - run: pnpm validate:html
       - name: Check internal links
