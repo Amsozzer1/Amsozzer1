@@ -7,13 +7,13 @@ interface Props {
 }
 
 const { class: className, ...attrs } = Astro.props;
-const { label, since } = site.availability;
+const { open, label, since } = site.availability;
 const sinceLabel = monthYear(since);
 ---
 
 <div class:list={['availability', className]} {...attrs}>
   <p class="location">{site.location.label}</p>
-  <p class="open">
+  {open && <p class="open">
     <span class="dot" aria-hidden="true"></span>
     {label}
     <span class="since">
@@ -21,7 +21,7 @@ const sinceLabel = monthYear(since);
       <span class="vh">from</span>
       <time datetime={since}>{sinceLabel}</time>
     </span>
-  </p>
+  </p>}
 </div>
 
 <style>

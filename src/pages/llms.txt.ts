@@ -17,7 +17,7 @@ export const GET: APIRoute = async () => {
     '',
     `> ${site.description}`,
     '',
-    `${site.jobTitle} at ${site.employer.name}, ${site.availability.label} roles. Contact: ${site.email}.`,
+    `${site.jobTitle} at ${site.employer.name}. Contact: ${site.email}.`,
     '',
     'Every page below is also available as markdown: send `Accept: text/markdown`, or add `.md` to the path. All of them concatenated: /llms-full.txt.',
     '',

@@ -15,7 +15,7 @@ export const site = {
     label: 'austin, tx',
   },
   availability: {
-    open: true,
+    open: false,
     label: 'open to full-time',
     since: '2026-09',
   },
