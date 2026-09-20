@@ -76,7 +76,6 @@ export const routes = {
     card: { kicker: 'writing', headline: 'Write-ups, and the threads still open.' },
     sources: ['src/pages/writing/index.astro', 'src/content/writing'],
   },
-  // @TODO: revisit the /uses description once Ahmed has written that page
   '/about': {
     name: 'About',
     title: 'About — the route here, and the habit behind it · Ahmed Sozzer',
@@ -90,7 +89,7 @@ export const routes = {
     name: 'Uses',
     title: 'Uses — the hardware and software I work with · Ahmed Sozzer',
     description:
-      'The hardware, editor, terminal and everyday software Ahmed Sozzer uses for client work, C++ systems projects and 3D printing, kept current as things change.',
+      'The machine, editor, terminal and everyday software Ahmed Sozzer works on, and the four Bambu Lab printers AMS-X is developed against.',
     schema: 'WebPage',
     card: { kicker: 'uses', headline: 'The hardware and software I work with.' },
     sources: ['src/pages/uses.astro'],
@@ -108,9 +107,9 @@ export const routes = {
     name: 'Accessibility',
     title: 'Accessibility — WCAG 2.2 AA statement · Ahmed Sozzer',
     description:
-      'Accessibility statement for amsozzer.com: the WCAG 2.2 AA target, how pages are tested with keyboard, VoiceOver and zoom, known limits, and how to report one.',
+      'Accessibility statement for amsozzer.com: the WCAG 2.2 AA target, what the build checks automatically, what has not been tested by hand yet, and how to report a problem.',
     schema: 'WebPage',
-    card: { kicker: 'accessibility', headline: 'WCAG 2.2 AA, and how it is tested.' },
+    card: { kicker: 'accessibility', headline: 'What is checked, and what is not.' },
     sources: ['src/pages/accessibility.astro'],
   },
 } as const satisfies Record<string, Route>;
