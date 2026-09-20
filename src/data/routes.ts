@@ -86,6 +86,15 @@ export const routes = {
     card: { kicker: 'now', headline: 'What I am working on this month.' },
     sources: ['src/pages/now.astro'],
   },
+  '/about': {
+    name: 'About',
+    title: 'About — the route here, and the habit behind it · Ahmed Sozzer',
+    description:
+      'How Ahmed Sozzer got here: community college to the University of Illinois, mentor-matching research, a reselling and 3D printing operation, and the habit of noticing when a person is doing a machine\u2019s job.',
+    schema: 'ProfilePage',
+    card: { kicker: 'about', headline: 'Noticing when a person is doing a machine\u2019s job.' },
+    sources: ['src/pages/about.astro'],
+  },
   '/uses': {
     name: 'Uses',
     title: 'Uses — the hardware and software I work with · Ahmed Sozzer',

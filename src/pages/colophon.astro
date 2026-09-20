@@ -4,6 +4,7 @@ import FactList from '@src/components/pages/FactList.astro';
 import PageHero from '@src/components/pages/PageHero.astro';
 import PageSection from '@src/components/pages/PageSection.astro';
 import Pending from '@src/components/pages/Pending.astro';
+import lighthouse from '@src/data/lighthouse.json';
 import { routes } from '@src/data/routes';
 import { site } from '@src/data/site';
 import Base from '@src/layouts/Base.astro';
@@ -11,6 +12,17 @@ import { lastModified } from '@src/lib/dates';
 import { routeSeo } from '@src/lib/seo/meta';
 
 const updated = lastModified(...routes['/colophon'].sources);
+const labels: Record<string, string> = {
+  performance: 'Performance',
+  accessibility: 'Accessibility',
+  bestPractices: 'Best practices',
+  seo: 'SEO',
+};
+
+const scores = Object.entries(lighthouse.scores as Record<string, number>).map(
+  ([key, score]) => [labels[key] ?? key, score] as const,
+);
+
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 const repo = `${site.links.github}/Amsozzer1`;
 
@@ -117,8 +129,25 @@ const faces = [
   </PageSection>
 
   <PageSection id="lighthouse" title="Lighthouse" ground="paper">
-    {/* @TODO: the four scores from the last CI run, written in by the deploy */}
-    <Pending />
+    {scores.length ? (
+      <>
+        <dl class="scores">
+          {scores.map(([label, score]) => <div class="score">
+            <dt>{label}</dt>
+            <dd class="tabular">{score}</dd>
+          </div>)}
+        </dl>
+        <p class="measured">
+          Measured on the home page by the CI run for commit{' '}
+          <a href={`${repo}/commit/${lighthouse.commit}`}><code>{lighthouse.commit}</code></a>,
+          {' '}
+          <time datetime={lighthouse.measuredAt}>{lighthouse.measuredAt}</time>. Desktop preset,
+          written in by the build rather than by hand.
+        </p>
+      </>
+    ) : (
+      <Pending />
+    )}
   </PageSection>
 
   <PageSection id="source" title="Source">
@@ -133,6 +162,33 @@ const faces = [
 </Base>
 
 <style>
+  .scores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--space-m);
+    margin: 0 0 var(--space-m);
+    border-block-start: var(--rule-figure) solid var(--rule-color);
+    padding-block-start: var(--space-m);
+  }
+  
+  .score dt {
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    color: var(--fg-caption);
+  }
+  
+  .score dd {
+    margin: var(--space-3xs) 0 0;
+    font-family: var(--font-display);
+    font-size: var(--size-h3);
+    line-height: var(--leading-heading);
+  }
+  
+  .measured {
+    color: var(--fg-caption);
+    font-size: var(--size-small);
+  }
+  
   .build {
     color: var(--fg-caption);
     font-size: var(--size-small);

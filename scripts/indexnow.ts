@@ -1,6 +1,5 @@
 import { readFileSync } from 'node:fs';
 
-// @TODO: generate an IndexNow key and add public/<key>.txt
 const key = process.env.INDEXNOW_KEY;
 if (!key) throw new Error('INDEXNOW_KEY is not set.');
 

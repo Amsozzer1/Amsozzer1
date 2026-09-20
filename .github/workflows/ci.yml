@@ -50,10 +50,10 @@ jobs:
   lighthouse:
     needs: verify
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
       - uses: actions/download-artifact@v8
         with:
           name: dist
@@ -62,6 +62,55 @@ jobs:
         with:
           configPath: ./lighthouserc.json
           uploadArtifacts: true
+
+      # The colophon prints these, so they come from the run rather than from memory.
+      - name: Record the scores
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          node --input-type=module -e '
+            import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+
+            const dir = ".lighthouseci";
+            const report = readdirSync(dir)
+              .filter(name => name.startsWith("lhr-") && name.endsWith(".json"))
+              .map(name => JSON.parse(readFileSync(`${dir}/${name}`, "utf8")))
+              .find(lhr => new URL(lhr.finalDisplayedUrl ?? lhr.finalUrl).pathname.endsWith("index.html"));
+
+            if (!report) throw new Error("no Lighthouse report for the home page");
+
+            const round = category => Math.round(report.categories[category].score * 100);
+
+            writeFileSync(
+              "src/data/lighthouse.json",
+              `${JSON.stringify(
+                {
+                  commit: process.env.GITHUB_SHA.slice(0, 7),
+                  measuredAt: new Date().toISOString().slice(0, 10),
+                  url: "https://amsozzer.com/",
+                  scores: {
+                    performance: round("performance"),
+                    accessibility: round("accessibility"),
+                    bestPractices: round("best-practices"),
+                    seo: round("seo"),
+                  },
+                },
+                null,
+                2,
+              )}\n`,
+            );
+          '
+
+          if git diff --quiet src/data/lighthouse.json; then
+            echo "scores unchanged"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/lighthouse.json
+          git commit -m "Record Lighthouse scores from CI [skip ci]"
+          git pull --rebase
+          git push
 
   deploy:
     if: github.ref == 'refs/heads/main'

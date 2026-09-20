@@ -1,0 +1,67 @@
+name: uptime
+
+# A free check in place of a monitoring service: every 30 minutes, fetch the pages that matter
+# and open an issue if one of them stops answering. Scheduled runs in public repos are disabled
+# after 60 days without activity, so pushes keep this alive.
+on:
+  schedule:
+    - cron: '7,37 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch the pages that matter
+        id: check
+        run: |
+          failures=""
+          for url in \
+            https://amsozzer.com/ \
+            https://amsozzer.com/experience \
+            https://amsozzer.com/projects/plusweb \
+            https://amsozzer.com/resume.pdf \
+            https://amsozzer.com/sitemap.xml
+          do
+            code=$(curl -sS -o /tmp/body -w '%{http_code}' --max-time 20 --retry 2 --retry-delay 5 "$url" || echo 000)
+            if [ "$code" != "200" ]; then
+              failures="$failures- $url answered $code"$'\n'
+            fi
+          done
+
+          # A 200 that no longer contains the name means a broken deploy, which a status check alone would miss.
+          if ! curl -sS --max-time 20 https://amsozzer.com/ | grep -q 'Ahmed Sozzer'; then
+            failures="$failures- the home page no longer contains the name"$'\n'
+          fi
+
+          if [ -n "$failures" ]; then
+            {
+              echo 'failures<<EOF'
+              echo "$failures"
+              echo EOF
+            } >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+      - name: Open an issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FAILURES: ${{ steps.check.outputs.failures }}
+        run: |
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --label uptime --limit 1 --json number --jq '.[0].number')
+          body="amsozzer.com failed its check at $(date -u '+%Y-%m-%d %H:%M UTC').
+
+          $FAILURES
+          Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --repo "$GITHUB_REPOSITORY" --body "$body"
+          else
+            gh label create uptime --repo "$GITHUB_REPOSITORY" --color B60205 --description "Site check failed" 2>/dev/null || true
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "amsozzer.com is not answering" --label uptime --body "$body"
+          fi
