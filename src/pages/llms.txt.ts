@@ -41,7 +41,6 @@ export const GET: APIRoute = async () => {
     '',
     '## Optional',
     '',
-    routeLink('/now'),
     routeLink('/uses'),
     routeLink('/colophon'),
     routeLink('/accessibility'),

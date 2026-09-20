@@ -76,21 +76,12 @@ export const routes = {
     card: { kicker: 'writing', headline: 'Write-ups, and the threads still open.' },
     sources: ['src/pages/writing/index.astro', 'src/content/writing'],
   },
-  // @TODO: revisit the /now and /uses descriptions once Ahmed has written those pages
-  '/now': {
-    name: 'Now',
-    title: 'Now — what I am working on this month · Ahmed Sozzer',
-    description:
-      'What Ahmed Sozzer is working on this month, at FYCLabs and on his own projects, and his availability for full-time roles, with the date it was last updated.',
-    schema: 'WebPage',
-    card: { kicker: 'now', headline: 'What I am working on this month.' },
-    sources: ['src/pages/now.astro'],
-  },
+  // @TODO: revisit the /uses description once Ahmed has written that page
   '/about': {
     name: 'About',
     title: 'About — the route here, and the habit behind it · Ahmed Sozzer',
     description:
-      'How Ahmed Sozzer got here: community college to the University of Illinois, mentor-matching research, a reselling and 3D printing operation, and the habit of noticing when a person is doing a machine\u2019s job.',
+      'How Ahmed Sozzer got here: Pakistan to Chicago at eighteen, community college to the University of Illinois, tutoring and mentor-matching research, and a printing business acquired by accident.',
     schema: 'ProfilePage',
     card: { kicker: 'about', headline: 'Noticing when a person is doing a machine\u2019s job.' },
     sources: ['src/pages/about.astro'],

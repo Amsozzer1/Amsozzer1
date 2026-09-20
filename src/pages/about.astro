@@ -1,7 +1,6 @@
 ---
 import PageHero from '@src/components/pages/PageHero.astro';
 import PageSection from '@src/components/pages/PageSection.astro';
-import Pending from '@src/components/pages/Pending.astro';
 import { routes } from '@src/data/routes';
 import { site } from '@src/data/site';
 import Base from '@src/layouts/Base.astro';
@@ -18,43 +17,47 @@ const updated = lastModified(...routes['/about'].sources);
     updated={updated}
   >
     <p>
-      The short version: community college, then the University of Illinois, then client work in
-      Austin. The longer version is that most of what I have built started as somebody, often me,
-      doing the same thing by hand for the third time.
+      Most of what I have built started as somebody, usually me, doing the same thing by hand for
+      the third time.
     </p>
   </PageHero>
 
-  <PageSection id="route" title="The route here">
+  <PageSection id="story" title="The short version">
     <p>
-      I started at Wilbur Wright College and transferred to the University of Illinois
-      Urbana-Champaign for a computer science degree, finishing in 2025. Along the way I worked on
-      research into mentor–mentee matching, presented it twice, and it was later written up for the
-      American Society for Engineering Education.
+      I was born in the United States, grew up in Pakistan, and came back at eighteen with a plan
+      somebody else had made for me: start at a two-year school. Wilbur Wright College was close to
+      an accident — it was nowhere near where I lived — and it turned out to be the best one I have
+      had. A conversation in a physics class put me onto an engineering pathway, and two and a half
+      years later I transferred to the University of Illinois Urbana-Champaign with a cohort of
+      friends.
     </p>
-    {/* @TODO: replace with your own account of the community college years and the transfer */}
-  </PageSection>
-
-  <PageSection id="operating" title="Running something of my own" ground="body">
     <p>
-      Before the engineering jobs there was a reselling operation, and then a small 3D printing
-      business: intake, production, fulfilment, and the software to keep all three straight. It is
-      where AMS-X comes from. Four spools is a hardware answer to a software problem, and standing
-      at a printer to swap filament is exactly the kind of manual step worth deleting.
+      Along the way I became the first computer science tutor Wright had, teaching calculus,
+      physics, chemistry and two semesters of C. That is how Dr. Espiritu found me, and how I ended
+      up on her research into matching mentors with mentees — students who had made that transfer
+      helping students still trying to, and the question of whether an algorithm can see what makes
+      a pairing work.
     </p>
-    {/* @TODO: how the printing business actually runs day to day, and what it taught you */}
-  </PageSection>
-
-  <PageSection id="work" title="What I do now">
     <p>
-      {site.jobTitle} at {site.employer.name}: I sit with the client, find the step a person is
-      doing by hand, and build whatever it takes to remove it. Sometimes that is product work,
-      sometimes it is the systems underneath. <a href="/experience">The experience page</a> has the
-      roles in detail, and <a href="/#projects">the projects</a> are the work I set myself.
+      I paid for all of it out of pocket: gas stations, busboy shifts, cleaning toilets, tutoring,
+      lab assistant work. I mention it because it is the part of a résumé that a résumé cannot hold.
     </p>
   </PageSection>
 
-  <PageSection id="outside" title="Outside the work" ground="body">
-    <Pending />
-    {/* @TODO: anything you want here, or delete this section */}
+  <PageSection id="work" title="What I do now" ground="body">
+    <p>
+      {site.jobTitle} at {site.employer.name} in Austin, which I moved to for the obvious reason. I
+      sit with the client, find the step a person is doing by hand, and build whatever it takes to
+      remove it — sometimes product work, sometimes the systems underneath.
+      <a href="/experience">The experience page</a> has the roles in detail, and
+      <a href="/#projects">the projects</a> are the work I set myself.
+    </p>
+    <p>
+      Outside it I buy broken hardware and fix it. A lot I picked up last spring came with four
+      Bambu Lab printers, which is how I accidentally acquired a small printing business, and how
+      AMS-X exists: four spools is a hardware answer to a software problem, and standing at a
+      printer to swap filament is exactly the kind of manual step worth deleting.
+    </p>
+    <p>I also watch an unreasonable amount of financial reality television.</p>
   </PageSection>
 </Base>
