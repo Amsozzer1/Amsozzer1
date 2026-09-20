@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/build-markdown.ts",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint . --max-warnings 0 && stylelint \"src/**/*.{css,astro}\"",
@@ -36,6 +36,7 @@
     "@cloudflare/workers-types": "^5.20260916.1",
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.6.1",
+    "@types/turndown": "^5.0.6",
     "astro-eslint-parser": "^3.1.0",
     "eslint": "^10.10.0",
     "eslint-plugin-astro": "^3.2.0",
@@ -48,6 +49,7 @@
     "stylelint": "^17.15.0",
     "stylelint-config-html": "^2.0.0",
     "stylelint-config-standard": "^40.0.0",
+    "turndown": "^7.2.4",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.70.0",
     "wrangler": "^4.132.0"

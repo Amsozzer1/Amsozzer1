@@ -21,5 +21,10 @@
 /resume.pdf
   Content-Disposition: inline; filename="ahmed-sozzer-resume.pdf"
 
+# The markdown twin of each page: same content, so it stays out of the index.
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+  X-Robots-Tag: noindex
+
 https://:version.:subdomain.workers.dev/*
   X-Robots-Tag: noindex
