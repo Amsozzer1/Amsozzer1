@@ -120,7 +120,7 @@ const faces = [
     <p>
       There is no test suite. Every push runs Prettier, ESLint, Stylelint and the TypeScript check,
       builds the site, then validates the HTML and every internal link. Lighthouse CI fails the
-      build if the accessibility score drops below 100, or SEO and best practices below 95.
+      build if the accessibility score drops below 100, best practices below 95, or SEO below 92.
     </p>
     <p>
       <a href="/accessibility">The accessibility statement</a> covers what those checks cannot: the
@@ -143,6 +143,12 @@ const faces = [
           {' '}
           <time datetime={lighthouse.measuredAt}>{lighthouse.measuredAt}</time>. Desktop preset,
           written in by the build rather than by hand.
+        </p>
+        <p class="measured">
+          SEO is not 100 because <code>robots.txt</code> carries a{' '}
+          <a href="https://contentsignals.org">Content Signal</a>, and the Lighthouse bundled with
+          the CI runner predates the release that recognises the directive. The file is valid: RFC
+          9309 requires crawlers to ignore directives they do not know.
         </p>
       </>
     ) : (

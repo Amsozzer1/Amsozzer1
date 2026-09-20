@@ -3,7 +3,9 @@ import { absoluteUrl } from '@src/lib/seo/meta';
 
 export const GET: APIRoute = () =>
   new Response(
-    `User-agent: *
+    `# Content Signals: everything is allowed, training included. https://contentsignals.org
+User-agent: *
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
 Allow: /
 Disallow: /r/
 
