@@ -1,11 +1,11 @@
 {
-  "commit": "5daa0cd",
+  "commit": "4cd49b0",
   "measuredAt": "2026-09-20",
   "url": "https://amsozzer.com/",
   "scores": {
     "performance": 100,
     "accessibility": 100,
-    "bestPractices": 100,
+    "bestPractices": 96,
     "seo": 100
   }
 }
