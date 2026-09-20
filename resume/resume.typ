@@ -53,7 +53,9 @@
   #title(upper(basics.name))
   #(
     link("mailto:" + basics.email, basics.email),
-    link(basics.url, bare(basics.url)),
+    // Reads as the bare domain, but the click goes through /r/cv, so a visit that starts in the
+    // PDF can be told apart from one that starts in a link I sent.
+    link(basics.url + "/r/cv", bare(basics.url)),
     ..basics.profiles.map(profile => link(profile.url, bare(profile.url))),
     basics.location.city + ", " + basics.location.region,
   ).join(" | ")

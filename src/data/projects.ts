@@ -87,7 +87,7 @@ export const projects: Project[] = [
       { label: 'in the browser', value: 'no runtime — the forward pass is hand-written' },
     ],
     cta: 'Draw a digit',
-    repo: 'https://github.com/Amsozzer1/digit_recognition',
+    repo: 'https://github.com/Amsozzer1/MNIST',
     stack: ['Python', 'TensorFlow', 'CNN'],
     programmingLanguage: ['Python'],
     license: 'MIT',
