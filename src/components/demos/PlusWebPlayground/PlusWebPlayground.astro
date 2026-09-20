@@ -1,18 +1,19 @@
 ---
-import ComingSoon from '@src/components/demos/ComingSoon.astro';
 import {
+  BENCH_ITERATIONS,
   boilerplateBottom,
   boilerplateTop,
   handlers,
-  methods,
   methodTone,
+  methods,
   sampleRequest,
-  sampleResponse,
+  suggestions,
 } from '@src/components/demos/PlusWebPlayground/_helpers/plusWebPlayground.consts';
 import {
   highlight,
   routesFrom,
 } from '@src/components/demos/PlusWebPlayground/_helpers/plusWebPlayground.functions';
+import plusweb from '@src/data/plusweb.json';
 
 const blocks = [
   { lines: boilerplateTop.map(highlight), editable: false },
@@ -20,28 +21,27 @@ const blocks = [
   { lines: boilerplateBottom.map(highlight), editable: false },
 ];
 const routes = routesFrom(handlers.join('\n'));
-const body = JSON.stringify(sampleResponse.body, null, 2);
 ---
 
-{/* @TODO: wire the real PlusWeb playground (WASM router, editable handlers, live lint, timing) when Ahmed brings the finished demo */}
-<div class="playground">
-  <ComingSoon id="playground-status">
-    This is a drawing of the playground. The live one will run the real router in your browser;
-    until then nothing here can be edited or sent.
-  </ComingSoon>
+<plusweb-playground class="playground">
+  <p class="status" data-pw="status" role="status">
+    The router is compiled to WebAssembly and loads when this section comes into view. Without
+    JavaScript the route table below is still correct — it is read from the same source.
+  </p>
 
   <div class="workbench">
     <figure class="editor">
       <figcaption class="panel-bar">
         <span class="panel-title">main.cpp</span>
-        <span>read-only for now</span>
+        <span>the routes are live, the bodies are not compiled</span>
       </figcaption>
       <div class="editor-code on-ink">
         {blocks.map(block => <pre
           class:list={['code', { editable: block.editable }]}
+          data-pw={block.editable ? 'source' : undefined}
         ><code>{block.lines.map((line, index) => <>{index > 0 && '\n'}{line.map(token => <span class={token.kind}>{token.text}</span>)}</>)}</code></pre>)}
       </div>
-      <p class="lint on-ink">{routes.length} routes compiled</p>
+      <p class="lint on-ink" data-pw="count">{routes.length} routes compiled</p>
     </figure>
 
     <div class="routes">
@@ -56,72 +56,92 @@ const body = JSON.stringify(sampleResponse.body, null, 2);
           <tr>
             <th scope="col">method</th>
             <th scope="col">path</th>
-            <th scope="col" class="status">status</th>
+            <th scope="col" class="status-column">status</th>
           </tr>
         </thead>
         <tbody>
           {routes.map(route => <tr>
             <td class:list={['verb', `tone-${methodTone[route.method]}`]}>{route.method}</td>
             <td class="pattern">{route.pattern}</td>
-            <td class="status">{route.status}</td>
+            <td class="status-column">{route.status}</td>
           </tr>)}
         </tbody>
       </table>
-      <p class="routes-note">
-        Derived from the handlers. When the playground is live it rebuilds on every keystroke, and a
-        click on a route sends it.
-      </p>
+
+      <figure class="trie">
+        <figcaption class="panel-bar">
+          <span class="panel-title">the segment trie</span>
+          <span>as the router holds it</span>
+        </figcaption>
+        <div class="trie-body" data-pw="trie">
+          <p class="routes-note">Drawn once the module loads.</p>
+        </div>
+      </figure>
     </div>
   </div>
 
-  <fieldset class="request" disabled aria-describedby="playground-status">
-    <legend class="vh">Request</legend>
-    <div class="verbs">
-      {methods.map(method => <button
-        type="button"
-        class:list={['verb-button', `tone-${methodTone[method]}`]}
-        aria-pressed={method === sampleRequest.method ? 'true' : 'false'}
-      >
+  <form class="request" data-pw="form">
+    <label class="vh" for="playground-method">Method</label>
+    <select id="playground-method" class="verb-button" data-pw="method">
+      {methods.map(method => <option value={method} selected={method === sampleRequest.method}>
         {method}
-      </button>)}
-    </div>
+      </option>)}
+    </select>
     <label class="vh" for="playground-path">Request path</label>
-    <input id="playground-path" class="path" type="text" value={sampleRequest.path} />
-    <button type="button" class="send">Send</button>
-  </fieldset>
+    <input
+      id="playground-path"
+      class="path"
+      type="text"
+      value={sampleRequest.path}
+      data-pw="path"
+    />
+    <button type="submit" class="send">Send</button>
+    <button type="button" class="send bench" data-pw="bench">Time it</button>
+  </form>
+
+  <ul class="suggestions">
+    {suggestions.map(({ method, path, why }) => <li>
+      <button type="button" class="suggestion" data-method={method} data-path={path}>
+        <span class:list={['verb', `tone-${methodTone[method]}`]}>{method}</span>
+        <span class="pattern">{path}</span>
+        <span class="why">{why}</span>
+      </button>
+    </li>)}
+  </ul>
 
   <figure class="response on-ink">
-    <figcaption class="response-label">
-      sample response · {sampleRequest.method}
-      {sampleRequest.path}
-    </figcaption>
-    <ol class="walk" aria-label="Trie walk">
-      {sampleResponse.walk.map((step, index) => <li class:list={['walk-step', step.kind]}>
-        {index > 1 && <span class="walk-separator" aria-hidden="true"> / </span>}
-        {step.segment}
-        {step.bound ? (
-          <span class="walk-bound">
-            :{step.bound}
-            <span class="vh">, bound as a parameter</span>
-          </span>
-        ) : (
-          <span class="vh">, matched</span>
-        )}
-      </li>)}
-    </ol>
-    <p class="result">
-      <span class="status-line">{sampleResponse.status}</span>
-      <span class="matched">matched {sampleResponse.matched}</span>
+    <figcaption class="response-label">what the router returned</figcaption>
+    <dl class="result-list" data-pw="result">
+      <dt>status</dt>
+      <dd>send a request</dd>
+    </dl>
+    <p class="bench-line" data-pw="bench-result">
+      Time it runs {BENCH_ITERATIONS.toLocaleString('en-US')} lookups inside the module and reports
+      nanoseconds each.
     </p>
-    <pre class="body"><code>{body}</code></pre>
-    <p class="note">{sampleResponse.note}</p>
+    <p class="note">
+      Built from PlusWeb {plusweb.commit}. The trie, the matching and the timing are the real
+      library compiled to WebAssembly; only the handler bodies are illustrative. Timings are this
+      browser, not the native benchmark.
+    </p>
   </figure>
-</div>
+</plusweb-playground>
+
+<script>
+  import '@src/components/demos/PlusWebPlayground/PlusWebPlayground';
+</script>
 
 <style>
   .playground {
     display: grid;
     gap: var(--space-xl);
+  }
+  
+  .status {
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
   }
   
   .workbench {
@@ -226,18 +246,18 @@ const body = JSON.stringify(sampleResponse.body, null, 2);
     vertical-align: baseline;
   }
   
-  .route-table .verb {
+  .verb {
     padding-inline-end: var(--space-s);
     font-weight: 700;
   }
   
-  .route-table .pattern {
+  .pattern {
     inline-size: 100%;
     color: var(--color-text);
     overflow-wrap: anywhere;
   }
   
-  .route-table .status {
+  .status-column {
     color: var(--color-text-caption);
     text-align: end;
   }
@@ -262,7 +282,41 @@ const body = JSON.stringify(sampleResponse.body, null, 2);
     line-height: var(--leading-mono);
   }
   
-  /* A fieldset keeps min-content width by default, which would overflow a 320px screen. */
+  .trie {
+    margin: var(--space-xl) 0 0;
+  }
+  
+  .trie-body {
+    padding-block-start: var(--space-s);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .trie-body :global(ul) {
+    margin: 0;
+    padding-inline-start: var(--space-m);
+    border-inline-start: var(--rule-row) solid var(--color-rule-light);
+    list-style: none;
+  }
+  
+  .trie-body :global(li) {
+    padding-block: var(--space-3xs);
+  }
+  
+  .trie-body :global(.node) {
+    color: var(--color-text);
+  }
+  
+  .trie-body :global(.param) {
+    color: var(--color-method-post);
+    font-weight: 700;
+  }
+  
+  .trie-body :global(.handler) {
+    color: var(--color-text-caption);
+  }
+  
   .request {
     display: flex;
     flex-wrap: wrap;
@@ -270,14 +324,7 @@ const body = JSON.stringify(sampleResponse.body, null, 2);
     min-inline-size: 0;
     margin: 0;
     padding: var(--space-m) 0 0;
-    border: 0;
     border-block-start: var(--rule-major) solid var(--color-text);
-  }
-  
-  .verbs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs);
   }
   
   .verb-button,
@@ -292,16 +339,11 @@ const body = JSON.stringify(sampleResponse.body, null, 2);
     padding-inline: var(--space-s);
     border: var(--rule-row) solid var(--color-rule-light);
     background: none;
+    color: var(--color-text);
     font-size: var(--size-mono);
   }
   
-  .verb-button[aria-pressed='true'] {
-    border-color: var(--color-text);
-    background-color: var(--color-text);
-    color: var(--color-text-on-ink);
-  }
-  
-  /* At least 16px, so iOS does not zoom into the field once it is live. */
+  /* At least 16px, so iOS does not zoom into the field. */
   .path {
     flex: 1 1 calc(var(--space-4xl) + var(--space-2xl));
     min-inline-size: 0;
@@ -322,9 +364,39 @@ const body = JSON.stringify(sampleResponse.body, null, 2);
     font-weight: 600;
   }
   
-  .request:disabled .verb-button,
-  .request:disabled .send {
-    cursor: not-allowed;
+  .bench {
+    border-color: var(--color-text);
+    background: none;
+  }
+  
+  .suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .suggestion {
+    display: inline-flex;
+    gap: var(--space-2xs);
+    align-items: baseline;
+    min-block-size: var(--layout-target-min);
+    padding-inline: var(--space-s);
+    border: var(--rule-row) solid var(--color-rule-light);
+    background: none;
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .suggestion .pattern {
+    inline-size: auto;
+  }
+  
+  .why {
+    color: var(--color-text-caption);
   }
   
   .response {
@@ -339,100 +411,44 @@ const body = JSON.stringify(sampleResponse.body, null, 2);
     line-height: var(--leading-mono);
   }
   
-  .walk {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs) var(--space-s);
-    align-items: baseline;
-    margin-block-start: var(--space-m);
-    padding: 0 0 var(--space-m);
-    color: var(--fg);
-    font-family: var(--font-mono);
-    font-size: var(--size-body);
-    line-height: var(--leading-mono);
-    list-style: none;
-  }
-  
-  .walk-step {
-    display: inline-flex;
-    gap: var(--space-xs);
-    align-items: baseline;
-  }
-  
-  .walk-step.param {
-    color: var(--color-amber);
-  }
-  
-  .walk-separator {
-    color: var(--fg-secondary);
-  }
-  
-  .walk-bound {
-    color: var(--fg-secondary);
-    font-size: var(--size-mono);
-  }
-  
-  .result {
-    display: flex;
-    flex-wrap: wrap;
+  .result-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
     gap: var(--space-2xs) var(--space-l);
-    align-items: baseline;
+    margin-block: var(--space-m);
     padding-block-end: var(--space-m);
     border-block-end: var(--rule-figure) solid var(--color-amber);
-  }
-  
-  .status-line {
     color: var(--fg);
-    font-family: var(--font-display);
-    font-size: var(--size-h3);
-    line-height: var(--leading-display);
-    letter-spacing: var(--tracking-h3);
-  }
-  
-  .matched {
-    color: var(--fg-secondary);
     font-family: var(--font-mono);
     font-size: var(--size-mono);
+    line-height: var(--leading-mono);
   }
   
-  .body {
-    margin-block-start: var(--space-m);
-    color: var(--fg);
-    font-size: var(--size-code);
-    line-height: var(--leading-code);
-    white-space: pre-wrap;
+  .result-list dt {
+    color: var(--fg-label);
+  }
+  
+  .result-list dd {
+    margin: 0;
     overflow-wrap: anywhere;
   }
   
-  .note {
-    max-inline-size: var(--layout-prose-max);
-    margin-block-start: var(--space-m);
-    padding-block-start: var(--space-s);
-    border-block-start: var(--rule-row) solid var(--rule-color);
+  .bench-line {
     color: var(--fg-secondary);
     font-family: var(--font-mono);
     font-size: var(--size-mono);
-    font-style: italic;
     line-height: var(--leading-mono);
   }
   
-  @media (width >= 64rem) {
-    .workbench {
-      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    }
-  
-    .response {
-      padding: var(--space-l) var(--space-xl) var(--space-xl);
-    }
+  .note {
+    margin-block-start: var(--space-m);
+    color: var(--color-text-on-ink-subtle);
+    font-size: var(--size-small);
   }
   
-  @media (width < 48rem) {
-    .code {
-      padding-inline: var(--space-s);
-    }
-  
-    .response {
-      padding: var(--space-m) var(--space-s);
+  @media (width >= 60rem) {
+    .workbench {
+      grid-template-columns: 3fr 2fr;
     }
   }
 </style>

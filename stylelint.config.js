@@ -6,6 +6,9 @@ export default {
     'declaration-no-important': true,
     'import-notation': 'string',
     'function-disallowed-list': ['rgb', 'rgba', 'hsl', 'hsla'],
+    // Astro's escape hatch for elements a demo builds at runtime, which never carry its
+    // scoping attribute.
+    'selector-pseudo-class-no-unknown': [true, { ignorePseudoClasses: ['global'] }],
   },
   overrides: [
     {

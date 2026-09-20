@@ -10,7 +10,7 @@
     "dev": "astro dev",
     "build": "astro build && node scripts/build-markdown.ts",
     "preview": "astro preview",
-    "check": "astro check",
+    "check": "astro check && tsc -p worker --noEmit",
     "lint": "eslint . --max-warnings 0 && stylelint \"src/**/*.{css,astro}\"",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -18,6 +18,7 @@
     "tokens": "node scripts/build-tokens.ts && prettier --write src/styles/tokens.css",
     "fonts": "sh fonts/subset.sh && node scripts/build-font-fallbacks.ts",
     "resume": "typst compile --root . --ignore-system-fonts resume/resume.typ public/resume.pdf --pdf-standard ua-1",
+    "demo:plusweb": "node scripts/fetch-plusweb.ts",
     "links:report": "node scripts/links-report.ts",
     "indexnow": "node scripts/indexnow.ts",
     "deploy": "wrangler deploy"

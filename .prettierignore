@@ -5,7 +5,8 @@ build/
 node_modules/
 pnpm-lock.yaml
 README.md
-resume.tex
 public/resume.pdf
+# Vendored from the PlusWeb release; reformatting a build artefact changes what shipped.
+public/demos/
 fonts/masters/
 src/assets/fonts/
