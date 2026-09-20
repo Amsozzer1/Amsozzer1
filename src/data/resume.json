@@ -93,7 +93,15 @@
     },
     {
       "name": "Systems",
-      "keywords": ["POSIX sockets", "MQTT", "multithreading", "CMake", "embedded (ESP32)", "Linux"]
+      "keywords": [
+        "POSIX sockets",
+        "libuv",
+        "MQTT",
+        "multithreading",
+        "CMake",
+        "embedded (ESP32)",
+        "Linux"
+      ]
     },
     {
       "name": "Databases & Cloud",
@@ -127,12 +135,12 @@
       "description": "Express-style HTTP Framework in C++",
       "url": "https://github.com/Amsozzer1/PlusWeb",
       "highlights": [
-        "Built an Express-style C++17 HTTP framework (app.GET, app.use) directly on POSIX sockets; one acceptor thread feeding a bounded thread pool with HTTP keep-alive. MIT-licensed and installable via CMake",
+        "Built an Express-style C++17 HTTP framework (app.GET, app.use) on a libuv event loop and the llhttp parser; 4.8x Express on a small app and flat from 5 to 10,000 routes where Express degrades 50x. MIT-licensed and installable via CMake",
         "Designed a segment-trie router keyed by METHOD:/path with parameterized routes (/users/new beats /users/:id), plus mountable sub-routers",
         "Implemented a composable middleware chain with next() continuations, path-scoped middleware, and relative-path rewriting for nested routers",
         "Unit and integration tested (GoogleTest/CTest), the integration suite booting a live server and driving it over loopback; CI covers Linux and macOS, verifies the install target, and re-runs the suite under AddressSanitizer and UBSan with leak detection"
       ],
-      "keywords": ["C++17", "POSIX sockets", "CMake", "GoogleTest"]
+      "keywords": ["C++17", "libuv", "llhttp", "CMake", "GoogleTest"]
     }
   ],
   "publications": [

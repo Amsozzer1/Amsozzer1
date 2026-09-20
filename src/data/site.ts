@@ -42,6 +42,7 @@ export const site = {
     'C++17',
     'HTTP servers',
     'POSIX sockets',
+    'libuv',
     'MQTT',
     'Python',
     'FastAPI',
