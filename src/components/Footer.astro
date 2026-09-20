@@ -3,7 +3,7 @@ import AmberRule from '@src/components/AmberRule.astro';
 import { site } from '@src/data/site';
 import { monthYearLong } from '@src/lib/dates';
 
-const { since } = site.availability;
+const { open, since } = site.availability;
 const sinceLabel = monthYearLong(since);
 
 const profiles = [site.links.github, site.links.linkedin, site.links.orcid].map(href => ({
@@ -15,7 +15,13 @@ const profiles = [site.links.github, site.links.linkedin, site.links.orcid].map(
 <footer class="site-footer on-ink">
   <div class="container inner">
     <div>
-      <h2 class="title">Open to <span class="line">full-time roles.</span></h2>
+      <h2 class="title">
+        {open ? (
+          <>Open to <span class="line">full-time roles.</span></>
+        ) : (
+          <>Get in <span class="line">touch.</span></>
+        )}
+      </h2>
       <p class="note">
         Product and systems work, from <time datetime={since}>{sinceLabel}</time>.
         {site.location.city}, or remote.

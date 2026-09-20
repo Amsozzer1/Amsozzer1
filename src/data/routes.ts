@@ -20,7 +20,7 @@ export const routes = {
       'Ahmed Sozzer, full stack engineer in Austin, TX: client-facing product work in Next.js, React Native and Postgres, plus systems work in C++17 and Python.',
     schema: 'ProfilePage',
     card: {
-      kicker: 'austin, tx · open to full-time',
+      kicker: 'austin, tx',
       headline: 'I write the layer most people import.',
     },
     sources: [
