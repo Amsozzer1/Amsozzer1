@@ -21,6 +21,7 @@ export const GET: APIRoute = async () => {
     '',
     '## Experience',
     '',
+    routeLink('/about'),
     routeLink('/experience'),
     link('Résumé (JSON Resume)', '/resume.json', 'the résumé as JSON Resume 1.3.1'),
     link('Résumé (PDF)', site.resumePdf, 'the same résumé as a PDF'),

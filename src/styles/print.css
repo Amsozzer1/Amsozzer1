@@ -9,7 +9,9 @@
   body,
   .band,
   .graph-paper,
-  .on-ink {
+  .on-ink,
+  .site-header,
+  .site-footer {
     background: none;
   }
 

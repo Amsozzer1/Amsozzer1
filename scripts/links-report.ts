@@ -1,5 +1,4 @@
 import { execFileSync } from 'node:child_process';
-import { companyBySlug } from '../worker/links.consts.ts';
 
 interface Row {
   slug: string;
@@ -42,23 +41,18 @@ const output = execFileSync(
 );
 
 const [{ results }] = JSON.parse(output) as [{ results: Row[] }];
-const visitsBySlug = new Map(results.map(row => [row.slug, row]));
 
-const lines = [...companyBySlug]
-  .map(([slug, company]) => {
-    const row = visitsBySlug.get(slug);
-    return { company, slug, visits: row?.visits ?? 0, lastVisit: row?.last_visit ?? '-' };
-  })
+const lines = results
   .sort((a, b) => b.visits - a.visits)
   .map(
-    ({ company, slug, visits, lastVisit }) =>
-      `${company.padEnd(24)} /r/${slug.padEnd(20)} ${String(visits).padStart(6)}   ${lastVisit}`,
+    ({ slug, visits, last_visit }) =>
+      `/r/${slug.padEnd(24)} ${String(visits).padStart(6)}   ${last_visit}`,
   );
 
 process.stdout.write(
   [
-    `${'company'.padEnd(24)} ${'link'.padEnd(23)} ${'visits'.padStart(6)}   last visit (UTC)`,
-    ...lines,
+    `${'link'.padEnd(28)} ${'visits'.padStart(6)}   last visit (UTC)`,
+    ...(lines.length ? lines : ['no visits recorded yet']),
   ]
     .join('\n')
     .concat('\n'),

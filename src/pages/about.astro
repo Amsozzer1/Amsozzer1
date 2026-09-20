@@ -1,0 +1,60 @@
+---
+import PageHero from '@src/components/pages/PageHero.astro';
+import PageSection from '@src/components/pages/PageSection.astro';
+import Pending from '@src/components/pages/Pending.astro';
+import { routes } from '@src/data/routes';
+import { site } from '@src/data/site';
+import Base from '@src/layouts/Base.astro';
+import { lastModified } from '@src/lib/dates';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const updated = lastModified(...routes['/about'].sources);
+---
+
+<Base seo={routeSeo('/about')}>
+  <PageHero
+    kicker="about"
+    title="Noticing when a person is doing a machine’s job."
+    updated={updated}
+  >
+    <p>
+      The short version: community college, then the University of Illinois, then client work in
+      Austin. The longer version is that most of what I have built started as somebody, often me,
+      doing the same thing by hand for the third time.
+    </p>
+  </PageHero>
+
+  <PageSection id="route" title="The route here">
+    <p>
+      I started at Wilbur Wright College and transferred to the University of Illinois
+      Urbana-Champaign for a computer science degree, finishing in 2025. Along the way I worked on
+      research into mentor–mentee matching, presented it twice, and it was later written up for the
+      American Society for Engineering Education.
+    </p>
+    {/* @TODO: replace with your own account of the community college years and the transfer */}
+  </PageSection>
+
+  <PageSection id="operating" title="Running something of my own" ground="body">
+    <p>
+      Before the engineering jobs there was a reselling operation, and then a small 3D printing
+      business: intake, production, fulfilment, and the software to keep all three straight. It is
+      where AMS-X comes from. Four spools is a hardware answer to a software problem, and standing
+      at a printer to swap filament is exactly the kind of manual step worth deleting.
+    </p>
+    {/* @TODO: how the printing business actually runs day to day, and what it taught you */}
+  </PageSection>
+
+  <PageSection id="work" title="What I do now">
+    <p>
+      {site.role} at {site.employer.name}: I sit with the client, find the step a person is doing by
+      hand, and build whatever it takes to remove it. Sometimes that is product work, sometimes it
+      is the systems underneath. <a href="/experience">The experience page</a> has the roles in
+      detail, and <a href="/#projects">the projects</a> are the work I set myself.
+    </p>
+  </PageSection>
+
+  <PageSection id="outside" title="Outside the work" ground="body">
+    <Pending />
+    {/* @TODO: anything you want here, or delete this section */}
+  </PageSection>
+</Base>
