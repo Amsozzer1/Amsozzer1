@@ -19,6 +19,8 @@ export const GET: APIRoute = async () => {
     '',
     `${site.jobTitle} at ${site.employer.name}, ${site.availability.label} roles. Contact: ${site.email}.`,
     '',
+    'Every page below is also available as markdown: send `Accept: text/markdown`, or add `.md` to the path.',
+    '',
     '## Experience',
     '',
     routeLink('/about'),

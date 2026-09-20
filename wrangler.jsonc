@@ -14,7 +14,21 @@
     "binding": "ASSETS",
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash",
-    "run_worker_first": ["/r/*"],
+    // The worker only needs to see the pages it can answer in markdown, plus the tracking links.
+    // Everything else — fonts, images, the PDF, the .md files themselves — is served directly.
+    "run_worker_first": [
+      "/",
+      "/about",
+      "/experience",
+      "/writing",
+      "/writing/*",
+      "/projects/*",
+      "/now",
+      "/uses",
+      "/colophon",
+      "/accessibility",
+      "/r/*",
+    ],
   },
   "d1_databases": [
     {
