@@ -23,7 +23,7 @@ Every version number and limit below was checked against primary sources on 2026
 | Résumé           | Typst, built from `resume.json`, which `/experience` reads too. Chosen over LaTeX on 2026-09-20: the LaTeX PDF was hand-maintained and had drifted, and XeLaTeX's `ffi` ligatures kept "efficiency" and "traffic" out of its text layer, where an ATS looks. |
 | Job title        | Official "Engineer II"; shown as "Full Stack Engineer". Résumé/LinkedIn: "Full Stack Engineer (Engineer II)".                                                                                                                                                |
 | Positioning      | Full Stack Engineer everywhere (changed 2026-09-20; the earlier Forward Deployed Engineer framing is dropped, and `site.role` with it).                                                                                                                      |
-| Face on the site | No headshot on the site. The photo is only used on external profiles (GitHub, LinkedIn, dev.to, Bluesky, Gravatar), which Ahmed sets himself.                                                                                                                |
+| Face on the site | No headshot on the site. The photo is only used on external profiles (GitHub, LinkedIn, Gravatar), which Ahmed sets himself.                                                                                                                                 |
 | Numbers          | Benchmark and MNIST figures are parked. Pages read them from one data file so the numbers pass is a data edit, not a code change. Content in general comes after the site works.                                                                             |
 | Demos            | Designed as static UI shells only (no WASM build, no model training). Ahmed brings the finished demos later and they get wired in.                                                                                                                           |
 | Tests            | **None.** No Vitest, no Playwright, no axe scripts, no custom check scripts. Quality comes from ESLint, Prettier, Stylelint, `astro check`, html-validate, link checking and Lighthouse CI.                                                                  |
@@ -402,7 +402,7 @@ Header on every page: wordmark · `projects` (`/#projects`) · `writing` · `exp
   - `address` Austin, TX, US (city and region only)
   - `worksFor` FYCLabs, `alumniOf` University of Illinois Urbana-Champaign (with its Wikidata `sameAs`)
   - `knowsAbout`: C++17, HTTP servers, POSIX sockets, MQTT, React, React Native, Next.js, TypeScript, PostgreSQL, GraphQL, GCP
-  - `sameAs`: GitHub, LinkedIn, ORCID `0009-0005-3599-6156`, dev.to, Bluesky once claimed
+  - `sameAs`: GitHub, LinkedIn, ORCID `0009-0005-3599-6156`. dev.to and Bluesky were dropped on 2026-09-20: both profiles were empty, and a sameAs pointing at an abandoned account is worth less than no link.
   - `identifier`: ORCID
   - No `image`, because there's no photo on the site.
 - Projects use **SoftwareSourceCode** (codeRepository, programmingLanguage, license, runtimePlatform, dateModified). No SoftwareApplication: Google requires real ratings for that, and fake ones are penalized.

@@ -75,13 +75,7 @@ export const person = (withWorkHistory = false): Person => ({
   worksFor: organization(site.employer.name),
   alumniOf: school,
   knowsAbout: site.knowsAbout,
-  sameAs: [
-    site.links.github,
-    site.links.linkedin,
-    site.links.orcid,
-    site.links.devto,
-    site.links.bluesky,
-  ],
+  sameAs: [site.links.github, site.links.linkedin, site.links.orcid],
   identifier: { '@type': 'PropertyValue', propertyID: 'ORCID', value: site.orcid },
   ...(withWorkHistory && workHistory()),
 });

@@ -31,8 +31,6 @@ export const site = {
     github: 'https://github.com/Amsozzer1',
     linkedin: 'https://www.linkedin.com/in/amsozzer1',
     orcid: 'https://orcid.org/0009-0005-3599-6156',
-    devto: 'https://dev.to/amsozzer',
-    bluesky: 'https://bsky.app/profile/amsozzer.com',
     call: 'https://cal.com/amsozzer',
   },
   orcid: '0009-0005-3599-6156',
