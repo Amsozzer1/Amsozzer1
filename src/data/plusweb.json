@@ -1,7 +1,8 @@
 {
-  "builtAt": "2026-09-20T18:20:46Z",
-  "commit": "b648ae8",
+  "builtAt": "2026-09-20T18:26:43Z",
+  "commit": "70f8f27",
   "version": "0.1.0",
+  "base": "/demos/plusweb/70f8f27",
   "bytes": {
     "plusweb.js": 14163,
     "plusweb.wasm": 216963,

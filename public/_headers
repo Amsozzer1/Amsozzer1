@@ -21,15 +21,15 @@
 /resume.pdf
   Content-Disposition: inline; filename="ahmed-sozzer-resume.pdf"
 
-# The PlusWeb demo: the worker compiles WebAssembly, and a worker takes its CSP
-# from its own response rather than from the page that started it.
+# The PlusWeb demo. Each build is vendored under a directory named for its commit, so the
+# files inside can never go stale and are cached for a year.
 /demos/plusweb/*
   ! Content-Security-Policy
   Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
-  Cache-Control: public, max-age=3600
+  Cache-Control: public, max-age=31536000, immutable
   X-Robots-Tag: noindex
 
-/demos/plusweb/plusweb.wasm
+/demos/plusweb/*/plusweb.wasm
   Content-Type: application/wasm
 
 # The markdown twin of each page: same content, so it stays out of the index.

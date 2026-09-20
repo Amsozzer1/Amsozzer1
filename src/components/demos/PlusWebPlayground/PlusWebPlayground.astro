@@ -7,39 +7,12 @@ import {
   source,
 } from '@src/components/demos/PlusWebPlayground/_helpers/plusWebPlayground.consts';
 import { routesFrom } from '@src/components/demos/PlusWebPlayground/_helpers/plusWebPlayground.functions';
+import plusweb from '@src/data/plusweb.json';
 
 const routes = routesFrom(source);
 ---
 
-<plusweb-playground class="playground">
-  <div class="panes">
-    <div class="pane">
-      <label class="bar" for="playground-source">
-        <span>routes</span>
-        <span class="count" data-pw="count">{routes.length} routes</span>
-      </label>
-      <textarea
-        id="playground-source"
-        class="source on-ink"
-        rows="6"
-        spellcheck="false"
-        data-pw="source"
-      >{source}</textarea>
-    </div>
-
-    <figure class="pane">
-      <figcaption class="bar"><span>the trie they build</span></figcaption>
-      <div class="trie" data-pw="trie">
-        <ul>
-          {routes.map(route => <li>
-            <span class:list={['node', `tone-${methodTone[route.method]}`]}>{route.method}</span>
-            <span class="node">{route.pattern}</span>
-          </li>)}
-        </ul>
-      </div>
-    </figure>
-  </div>
-
+<plusweb-playground class="playground" data-module={plusweb.base}>
   <form class="request" data-pw="form">
     <label class="vh" for="playground-method">Method</label>
     <select id="playground-method" class="method" data-pw="method">
@@ -55,10 +28,13 @@ const routes = routesFrom(source);
       value={sampleRequest.path}
       data-pw="path"
     />
-    <button type="submit" class="send">Send</button>
+    <button type="submit" class="send">Match</button>
   </form>
 
-  <p class="result" data-pw="result">Edit a route, or send a path.</p>
+  <p class="result" data-pw="result" role="status">
+    <span class="match" data-pw="match">send a path</span>
+    <span class="ns" data-pw="ns"></span>
+  </p>
 
   <p class="examples">
     try
@@ -69,6 +45,32 @@ const routes = routesFrom(source);
       </>
     ))}
   </p>
+
+  <div class="routes">
+    <label class="bar" for="playground-source">
+      <span>routes</span>
+      <span class="count" data-pw="count">{routes.length} routes</span>
+    </label>
+    <textarea
+      id="playground-source"
+      class="source on-ink"
+      rows="6"
+      spellcheck="false"
+      data-pw="source"
+    >{source}</textarea>
+  </div>
+
+  <details class="folded">
+    <summary>the trie these build</summary>
+    <div class="trie" data-pw="trie">
+      <ul>
+        {routes.map(route => <li>
+          <span class:list={['node', `tone-${methodTone[route.method]}`]}>{route.method}</span>
+          <span class="node">{route.pattern}</span>
+        </li>)}
+      </ul>
+    </div>
+  </details>
 
   <p class="note" data-pw="note">
     The route lines are compiled by the real router; handler names are decoration.
@@ -128,7 +130,7 @@ const routes = routesFrom(source);
   }
   
   .trie {
-    padding: var(--space-m) 0;
+    padding-block-start: var(--space-s);
     font-family: var(--font-mono);
     font-size: var(--size-mono);
     line-height: var(--leading-mono);
@@ -214,11 +216,34 @@ const routes = routesFrom(source);
   }
   
   .result {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    align-items: baseline;
+    justify-content: space-between;
     padding-block: var(--space-s);
     border-block-start: var(--rule-figure) solid var(--color-amber);
     font-family: var(--font-mono);
-    font-size: var(--size-mono);
+    font-size: var(--size-h3);
     line-height: var(--leading-mono);
+  }
+  
+  .ns {
+    color: var(--color-text-caption);
+    font-size: var(--size-mono);
+  }
+  
+  .folded {
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .folded summary {
+    min-block-size: var(--layout-target-min);
+    padding-block: var(--space-2xs);
+    cursor: pointer;
   }
   
   .result[data-matched='false'] {
@@ -241,11 +266,5 @@ const routes = routesFrom(source);
     color: var(--color-text);
     font: inherit;
     text-decoration: underline;
-  }
-  
-  @media (width >= 48rem) {
-    .panes {
-      grid-template-columns: 1fr 1fr;
-    }
   }
 </style>
