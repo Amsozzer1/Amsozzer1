@@ -15,9 +15,9 @@ export interface Card {
 export const routes = {
   '/': {
     name: 'Home',
-    title: 'Ahmed Sozzer — Forward Deployed Engineer · Austin, TX',
+    title: 'Ahmed Sozzer — Full Stack Engineer · Austin, TX',
     description:
-      'Ahmed Sozzer, forward deployed engineer in Austin, TX: client-facing product work in Next.js, React Native and Postgres, plus systems work in C++17 and Python.',
+      'Ahmed Sozzer, full stack engineer in Austin, TX: client-facing product work in Next.js, React Native and Postgres, plus systems work in C++17 and Python.',
     schema: 'ProfilePage',
     card: {
       kicker: 'austin, tx · open to full-time',
@@ -128,7 +128,7 @@ export type RoutePath = keyof typeof routes;
 
 export const defaultCard: Card = {
   kicker: 'amsozzer.com',
-  headline: 'Ahmed Sozzer — Forward Deployed Engineer',
+  headline: 'Ahmed Sozzer — Full Stack Engineer',
 };
 
 export const isRoutePath = (path: string): path is RoutePath => Object.hasOwn(routes, path);
