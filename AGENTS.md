@@ -40,6 +40,7 @@ pnpm check              # astro check (types)
 pnpm lint               # ESLint + Stylelint, zero warnings
 pnpm format:check       # Prettier
 pnpm validate:html      # html-validate on dist/
+pnpm resume             # compile the Typst résumé into public/resume.pdf
 pnpm tokens             # regenerate src/styles/tokens.css
 pnpm fonts              # subset fonts and regenerate fallbacks
 ```

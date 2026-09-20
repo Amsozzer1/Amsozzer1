@@ -10,27 +10,27 @@ Every version number and limit below was checked against primary sources on 2026
 
 ## 1. Settled decisions
 
-| Area             | Decision                                                                                                                                                                                                                                           |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Repo             | `Amsozzer1/Amsozzer1` (this repo, public). `README.md` stays the GitHub profile README; the site code sits beside it on purpose, so visitors can see the whole setup.                                                                              |
-| Generator        | Astro 7, fully static output, no adapter. Zero JavaScript by default.                                                                                                                                                                              |
-| Hosting          | Cloudflare Workers with static assets (Cloudflare's recommendation for new projects instead of Pages).                                                                                                                                             |
-| Deploy           | GitHub Actions only. Every push runs the checks; `main` deploys after they pass; pull requests get a preview URL. No Cloudflare git builds.                                                                                                        |
-| Domain           | Nameservers move to Cloudflare (zone already added, DNS imported, AI crawlers set to allow). The registration **stays at Squarespace for now**: Squarespace can't transfer straight to Cloudflare and a 60-day wait isn't worth it. Revisit later. |
-| Email            | iCloud+ custom domain (already paid for) for `ahmed@amsozzer.com`, catch-all on, everything forwarded to Gmail.                                                                                                                                    |
-| Crawlers         | Everything allowed, including AI training bots. All Cloudflare bot/AI blocking off.                                                                                                                                                                |
-| Canonical GitHub | `Amsozzer1`.                                                                                                                                                                                                                                       |
-| Résumé           | LaTeX stays the source for now. A Typst version built from `resume.json` is added as a **trial** to compare side by side; Ahmed decides after seeing both. `/experience` reads `resume.json` either way.                                           |
-| Job title        | Official "Engineer II"; shown as "Full Stack Engineer". Résumé/LinkedIn: "Full Stack Engineer (Engineer II)".                                                                                                                                      |
-| Positioning      | Forward Deployed Engineer (settled on the canvas 18 Sep).                                                                                                                                                                                          |
-| Face on the site | No headshot on the site. The photo is only used on external profiles (GitHub, LinkedIn, dev.to, Bluesky, Gravatar), which Ahmed sets himself.                                                                                                      |
-| Numbers          | Benchmark and MNIST figures are parked. Pages read them from one data file so the numbers pass is a data edit, not a code change. Content in general comes after the site works.                                                                   |
-| Demos            | Designed as static UI shells only (no WASM build, no model training). Ahmed brings the finished demos later and they get wired in.                                                                                                                 |
-| Tests            | **None.** No Vitest, no Playwright, no axe scripts, no custom check scripts. Quality comes from ESLint, Prettier, Stylelint, `astro check`, html-validate, link checking and Lighthouse CI.                                                        |
-| Blog             | Low priority. The collection, post layout and `/writing` index exist; posts come later.                                                                                                                                                            |
-| Scroll motion    | Later. The page is complete and static without it.                                                                                                                                                                                                 |
-| AMS-X footage    | Not filmed yet. The page ships with a "footage coming soon" slot.                                                                                                                                                                                  |
-| Security posture | Sensible, not paranoid: standard security headers, no hardening work that makes the code harder to read.                                                                                                                                           |
+| Area             | Decision                                                                                                                                                                                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Repo             | `Amsozzer1/Amsozzer1` (this repo, public). `README.md` stays the GitHub profile README; the site code sits beside it on purpose, so visitors can see the whole setup.                                                                                        |
+| Generator        | Astro 7, fully static output, no adapter. Zero JavaScript by default.                                                                                                                                                                                        |
+| Hosting          | Cloudflare Workers with static assets (Cloudflare's recommendation for new projects instead of Pages).                                                                                                                                                       |
+| Deploy           | GitHub Actions only. Every push runs the checks; `main` deploys after they pass; pull requests get a preview URL. No Cloudflare git builds.                                                                                                                  |
+| Domain           | Nameservers move to Cloudflare (zone already added, DNS imported, AI crawlers set to allow). The registration **stays at Squarespace for now**: Squarespace can't transfer straight to Cloudflare and a 60-day wait isn't worth it. Revisit later.           |
+| Email            | iCloud+ custom domain (already paid for) for `ahmed@amsozzer.com`, catch-all on, everything forwarded to Gmail.                                                                                                                                              |
+| Crawlers         | Everything allowed, including AI training bots. All Cloudflare bot/AI blocking off.                                                                                                                                                                          |
+| Canonical GitHub | `Amsozzer1`.                                                                                                                                                                                                                                                 |
+| Résumé           | Typst, built from `resume.json`, which `/experience` reads too. Chosen over LaTeX on 2026-09-20: the LaTeX PDF was hand-maintained and had drifted, and XeLaTeX's `ffi` ligatures kept "efficiency" and "traffic" out of its text layer, where an ATS looks. |
+| Job title        | Official "Engineer II"; shown as "Full Stack Engineer". Résumé/LinkedIn: "Full Stack Engineer (Engineer II)".                                                                                                                                                |
+| Positioning      | Forward Deployed Engineer (settled on the canvas 18 Sep).                                                                                                                                                                                                    |
+| Face on the site | No headshot on the site. The photo is only used on external profiles (GitHub, LinkedIn, dev.to, Bluesky, Gravatar), which Ahmed sets himself.                                                                                                                |
+| Numbers          | Benchmark and MNIST figures are parked. Pages read them from one data file so the numbers pass is a data edit, not a code change. Content in general comes after the site works.                                                                             |
+| Demos            | Designed as static UI shells only (no WASM build, no model training). Ahmed brings the finished demos later and they get wired in.                                                                                                                           |
+| Tests            | **None.** No Vitest, no Playwright, no axe scripts, no custom check scripts. Quality comes from ESLint, Prettier, Stylelint, `astro check`, html-validate, link checking and Lighthouse CI.                                                                  |
+| Blog             | Low priority. The collection, post layout and `/writing` index exist; posts come later.                                                                                                                                                                      |
+| Scroll motion    | Later. The page is complete and static without it.                                                                                                                                                                                                           |
+| AMS-X footage    | Not filmed yet. The page ships with a "footage coming soon" slot.                                                                                                                                                                                            |
+| Security posture | Sensible, not paranoid: standard security headers, no hardening work that makes the code harder to read.                                                                                                                                                     |
 
 ---
 
@@ -116,7 +116,7 @@ Taken from the conventions in the Harmony / Nu repos Ahmed works in, adapted to 
 │   ├─ subset.sh                  pyftsubset commands, one per face/weight
 │   └─ rename.py                  renames the Monaspace subset (reserved-name rule)
 ├─ resume/
-│   └─ resume.typ                 Typst trial layout; reads src/data/resume.json
+│   └─ resume.typ                 the résumé layout; reads src/data/resume.json
 ├─ scripts/
 │   ├─ build-tokens.ts            src/design/tokens.ts → src/styles/tokens.css
 │   ├─ build-font-fallbacks.ts    metric-matched fallback @font-face rules
@@ -539,7 +539,7 @@ Now: the three demos are built as static, designed UI shells only. The rest of t
 
 ## 10. Résumé pipeline
 
-Trial first. LaTeX stays until Ahmed has compared both PDFs.
+Typst, from one source of truth. `resume.json` feeds both the PDF and the site.
 
 **Content moves**
 
@@ -556,8 +556,6 @@ Trial first. LaTeX stays until Ahmed has compared both PDFs.
 - Runs on every push inside `ci.yml` (it takes about a second, so there's no "only if changed" logic). Deployed with the site.
 - The PDF is no longer committed back to the repo by a bot: fewer "build: resume.pdf" commits in the history people will read. Every link (site, README, LinkedIn) points at `https://amsozzer.com/resume.pdf`, which is always the latest.
 - The email on the résumé switches to `ahmed@amsozzer.com` once mail is verified working.
-
-**Before Sep 23, 2026 (independent of the site):** `tex.yml` uses `actions/checkout@v4`, which runs on Node 20, and GitHub removes Node 20 from Actions that day. One-line fix: `actions/checkout@v7`. Also its `paths` filter names `resume.yml` but the file is `tex.yml`.
 
 ---
 
@@ -686,7 +684,7 @@ Can happen any time; the only cost is a one-day wait. Today mail flows through S
 | `lighthouse` | Lighthouse CI on `/`, `/experience` and a project page: accessibility = 1, SEO ≥ 0.95, best practices ≥ 0.95, performance ≥ 0.9                                                                                                                      | verify             |
 | `deploy`     | main: `wrangler deploy` the exact built `dist`, then IndexNow ping. PRs: `wrangler versions upload --preview-alias pr-<n>` and a comment with the URL.                                                                                               | verify, lighthouse |
 
-**`.github/workflows/tex.yml`** stays for the LaTeX résumé, fixed for Node 24 actions and its own filename.
+The résumé is compiled inside `ci.yml`'s `verify` job, before `pnpm build`, so it travels to production inside the same `dist` artifact as the rest of the site.
 
 **`.github/workflows/weekly.yml`** (Mondays at an odd minute): lychee on external links; opens an issue on failure.
 
@@ -751,7 +749,6 @@ Each phase ends when its "done when" holds and CI is green.
 **Phase 0 — now (mostly Ahmed, no site code)**
 
 - [ ] Squarespace: domain lock on, auto-renew on.
-- [x] Fix `tex.yml` before Sep 23 (checkout@v7, paths filter).
 - [ ] Claim `cal.com/amsozzer`.
 - [ ] Confirm the iCloud+ plan is active.
 
@@ -797,9 +794,8 @@ Each phase ends when its "done when" holds and CI is green.
 
 **Phase 6 — résumé PDF**
 
-- `resume.typ` (Typst trial) producing `build/resume-typst.pdf` next to the LaTeX PDF.
-- Ahmed compares the two. If Typst wins, `resume.tex`, `Makefile` and `tex.yml` go and CI builds the Typst PDF; if LaTeX wins, the Typst file goes.
-- **Done when:** Ahmed has picked one.
+- `resume.typ` producing `public/resume.pdf`, tagged PDF/UA-1, on one page.
+- **Done:** Typst picked on 2026-09-20; `resume.tex`, `Makefile` and `tex.yml` removed.
 
 **Phase 7 — demos**
 
@@ -865,7 +861,6 @@ Each phase ends when its "done when" holds and CI is green.
 | Holiday Channel title "Full Stack & iOS Developer" with no iOS bullet                         | Ahmed                            | Phase 3             |
 | `/uses`, `/now`, first post text                                                              | Ahmed (drafts from the canvases) | Phase 4 content     |
 | Registrar transfer (Squarespace → Cloudflare)                                                 | later                            | nothing             |
-| LaTeX vs Typst résumé                                                                         | Ahmed, after comparing           | Phase 6             |
 | ASEE paper DOI (a permanent ID for published papers; lets ORCID import it)                    | Claude looks it up               | Phase 11            |
 | Does iCloud forwarding cover custom-domain addresses?                                         | test in Phase 10                 | Phase 10            |
 | Do Workers static assets answer MP4 range requests with 206?                                  | test when footage exists         | Phase 12            |

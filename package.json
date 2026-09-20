@@ -17,7 +17,7 @@
     "validate:html": "html-validate \"dist/**/*.html\"",
     "tokens": "node scripts/build-tokens.ts && prettier --write src/styles/tokens.css",
     "fonts": "sh fonts/subset.sh && node scripts/build-font-fallbacks.ts",
-    "resume:typst": "mkdir -p build && typst compile --root . --ignore-system-fonts resume/resume.typ build/resume-typst.pdf --pdf-standard ua-1",
+    "resume": "typst compile --root . --ignore-system-fonts resume/resume.typ public/resume.pdf --pdf-standard ua-1",
     "links:report": "node scripts/links-report.ts",
     "indexnow": "node scripts/indexnow.ts",
     "deploy": "wrangler deploy"
