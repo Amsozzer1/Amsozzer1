@@ -22,7 +22,8 @@
     "links:report": "node scripts/links-report.ts",
     "indexnow": "node scripts/indexnow.ts",
     "deploy": "wrangler deploy",
-    "links:add": "node scripts/links-add.ts"
+    "links:add": "node scripts/links-add.ts",
+    "links:sync": "node scripts/links-sync.ts"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

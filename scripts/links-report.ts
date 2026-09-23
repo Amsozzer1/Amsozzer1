@@ -53,12 +53,17 @@ const day = (timestamp: string) => timestamp.slice(0, 10);
 const hours = (from: string, to: string) =>
   (Date.parse(`${to}Z`) - Date.parse(`${from}Z`)) / 3_600_000;
 
+// A negative elapsed means the link was opened before the recorded send time, so
+// the send time is wrong rather than the open being early. Say nothing instead of
+// printing a number that cannot be true.
 const describe = (elapsed: number) =>
-  elapsed < 1
-    ? `${Math.round(elapsed * 60)}m`
-    : elapsed < 48
-      ? `${elapsed.toFixed(1)}h`
-      : `${Math.round(elapsed / 24)}d`;
+  elapsed < 0
+    ? '?'
+    : elapsed < 1
+      ? `${Math.round(elapsed * 60)}m`
+      : elapsed < 48
+        ? `${elapsed.toFixed(1)}h`
+        : `${Math.round(elapsed / 24)}d`;
 
 const pct = (part: number, whole: number) => (whole ? `${Math.round((part / whole) * 100)}%` : '-');
 
@@ -125,8 +130,8 @@ const mark = (on: boolean, glyph: string) => (on ? glyph : ' ');
 
 const table = rows.map(row =>
   [
-    `/r/${row.slug}`.padEnd(20),
-    (row.company || '-').slice(0, 16).padEnd(17),
+    `/r/${row.slug}`.padEnd(26),
+    (row.company || '-').slice(0, 18).padEnd(19),
     String(row.opens).padStart(5),
     String(row.people).padStart(7),
     String(row.mine).padStart(5),
@@ -169,7 +174,7 @@ const group = (key: 'channel' | 'type') => {
 
 process.stdout.write(
   [
-    `${'link'.padEnd(20)}${'company'.padEnd(17)}${'opens'.padStart(5)}${'people'.padStart(7)}${'you'.padStart(5)}${'bots'.padStart(5)}${'to 1st'.padStart(8)}  flags`,
+    `${'link'.padEnd(26)}${'company'.padEnd(19)}${'opens'.padStart(5)}${'people'.padStart(7)}${'you'.padStart(5)}${'bots'.padStart(5)}${'to 1st'.padStart(8)}  flags`,
     ...(table.length ? table : ['  nothing recorded yet']),
     '',
     'R = came back on another day   M = more than one person   A = clicked from an ATS',
