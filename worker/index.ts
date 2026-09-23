@@ -1,5 +1,6 @@
 import { handleLink } from './links.ts';
 import { documentHeaders, markdownResponse, wantsMarkdown } from './markdown.ts';
+import { logRead } from './views.ts';
 
 interface Env {
   ASSETS: Fetcher;
@@ -18,6 +19,8 @@ export default {
       if (markdown) return markdown;
     }
 
-    return documentHeaders(request, await env.ASSETS.fetch(request));
+    const document = documentHeaders(request, await env.ASSETS.fetch(request));
+
+    return logRead(request, document, env.DB, env.LINK_SALT, ctx);
   },
 } satisfies ExportedHandler<Env>;
