@@ -1,3 +1,4 @@
+import { isBot } from './bots.ts';
 import { fingerprint, referrerHost, type IncomingRequest } from './visitor.ts';
 
 // Pages and the résumé, nothing else. Assets never reach the Worker, but a markdown
@@ -22,7 +23,7 @@ export const recordView = async (
 
   await db
     .prepare(
-      'INSERT INTO views (path, country, referrer_host, user_agent, visitor) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO views (path, country, referrer_host, user_agent, visitor, is_bot) VALUES (?, ?, ?, ?, ?, ?)',
     )
     .bind(
       pathname,
@@ -30,6 +31,7 @@ export const recordView = async (
       referrerHost(request),
       request.headers.get('User-Agent'),
       await fingerprint(request, salt),
+      isBot(request.headers.get('User-Agent')) ? 1 : 0,
     )
     .run();
 };
