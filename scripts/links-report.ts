@@ -1,5 +1,15 @@
 import { execFileSync } from 'node:child_process';
 
+import { isBot } from '../worker/bots.ts';
+
+interface ViewRow {
+  path: string;
+  viewed_at: string;
+  visitor: string | null;
+  user_agent: string | null;
+  is_bot: number | null;
+}
+
 interface VisitRow {
   slug: string;
   visited_at: string;
@@ -7,6 +17,7 @@ interface VisitRow {
   referrer_host: string | null;
   user_agent: string | null;
   visitor: string | null;
+  is_bot: number | null;
 }
 
 interface LinkRow {
@@ -16,24 +27,6 @@ interface LinkRow {
   channel: string | null;
   sent_at: string | null;
 }
-
-// Link unfurlers. These fire when a URL is pasted into a chat or a post, so they
-// look exactly like an open and are the single biggest source of false positives.
-const PREVIEW_BOTS = [
-  'LinkedInBot',
-  'Slackbot',
-  'Twitterbot',
-  'facebookexternalhit',
-  'Discordbot',
-  'Googlebot',
-  'bingbot',
-  'WhatsApp',
-  'TelegramBot',
-  'Applebot',
-  'curl',
-  'python-requests',
-  'HeadlessChrome',
-];
 
 // Applicant tracking systems. A referrer from one of these means somebody clicked
 // while looking at the application itself, which is the strongest signal here.
@@ -49,8 +42,8 @@ const query = <T>(sql: string, flags: string[]): T[] => {
   return results;
 };
 
-const isBot = (ua: string | null) =>
-  !ua || PREVIEW_BOTS.some(bot => ua.toLowerCase().includes(bot.toLowerCase()));
+const botRow = (row: { is_bot: number | null; user_agent: string | null }) =>
+  row.is_bot === null ? isBot(row.user_agent) : row.is_bot === 1;
 
 const fromAts = (referrer: string | null) =>
   !!referrer && ATS.some(host => referrer.toLowerCase().includes(host));
@@ -81,11 +74,16 @@ const passthrough = argv.filter((_, index) => index !== me && index !== me + 1);
 const wranglerFlags = passthrough.length ? passthrough : ['--remote'];
 
 const visits = query<VisitRow>(
-  'SELECT slug, visited_at, country, referrer_host, user_agent, visitor FROM visits ORDER BY visited_at',
+  'SELECT slug, visited_at, country, referrer_host, user_agent, visitor, is_bot FROM visits ORDER BY visited_at',
   wranglerFlags,
 );
 const links = query<LinkRow>(
   'SELECT slug, company, company_type, channel, sent_at FROM links',
+  wranglerFlags,
+);
+
+const views = query<ViewRow>(
+  'SELECT path, viewed_at, visitor, user_agent, is_bot FROM views ORDER BY viewed_at',
   wranglerFlags,
 );
 
@@ -95,11 +93,11 @@ const slugs = [...new Set([...visits.map(visit => visit.slug), ...linkBySlug.key
 const rows = slugs
   .map(slug => {
     const all = visits.filter(visit => visit.slug === slug);
-    const bots = all.filter(visit => isBot(visit.user_agent));
+    const bots = all.filter(botRow);
     // Yours are neither bot nor stranger, so they get counted on their own rather
     // than quietly inflating either column.
     const mine = all.filter(
-      visit => !isBot(visit.user_agent) && selfVisitor !== '' && visit.visitor === selfVisitor,
+      visit => !botRow(visit) && selfVisitor !== '' && visit.visitor === selfVisitor,
     );
     const real = all.filter(visit => !bots.includes(visit) && !mine.includes(visit));
     const people = new Set(real.map(visit => visit.visitor ?? visit.user_agent));
@@ -145,6 +143,21 @@ const tracked = rows.filter(row => linkBySlug.has(row.slug));
 const opened = tracked.filter(row => row.opens > 0);
 const timed = tracked.filter(row => row.latency !== undefined);
 
+// What people read, and what a tracked click led to. Bots are excluded here rather
+// than shown, because a crawler sweeping every page tells you nothing about a reader.
+const humanViews = views.filter(view => !botRow(view) && view.visitor !== selfVisitor);
+const byPath = [...new Set(humanViews.map(view => view.path))]
+  .map(path => {
+    const seen = humanViews.filter(view => view.path === path);
+    return { path, reads: seen.length, people: new Set(seen.map(view => view.visitor)).size };
+  })
+  .sort((a, b) => b.people - a.people || b.reads - a.reads);
+
+const clickers = new Set(
+  visits.filter(visit => !botRow(visit) && visit.visitor).map(visit => visit.visitor),
+);
+const followed = humanViews.filter(view => clickers.has(view.visitor));
+
 const group = (key: 'channel' | 'type') => {
   const names = [...new Set(rows.map(row => row[key]).filter(Boolean))];
   return names.map(name => {
@@ -165,6 +178,17 @@ process.stdout.write(
     `${timed.length} have a recorded send time, so the rest cannot show time-to-first-open`,
     ...(group('channel').length ? ['', 'by channel', ...group('channel')] : []),
     ...(group('type').length ? ['', 'by company type', ...group('type')] : []),
+    '',
+    `pages read by people  ${humanViews.length} reads, ${new Set(humanViews.map(v => v.visitor)).size} readers, ${views.length - humanViews.length} bot hits ignored`,
+    ...(byPath.length
+      ? byPath.map(
+          row =>
+            `  ${row.path.padEnd(46)}${String(row.reads).padStart(5)}${String(row.people).padStart(8)}`,
+        )
+      : ['  nothing read yet']),
+    ...(followed.length
+      ? ['', `of those, ${followed.length} reads came from someone who had clicked a tracked link`]
+      : []),
     '',
   ].join('\n'),
 );
