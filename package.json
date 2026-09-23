@@ -21,7 +21,8 @@
     "demo:plusweb": "node scripts/fetch-plusweb.ts",
     "links:report": "node scripts/links-report.ts",
     "indexnow": "node scripts/indexnow.ts",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "links:add": "node scripts/links-add.ts"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
