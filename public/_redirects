@@ -4,3 +4,8 @@
 /call      https://cal.com/amsozzer               302
 /projects  /#projects                             301
 /resume    /experience                            301
+
+# The first post was renamed after Google had already indexed the old slug, and
+# /now was deleted when the about page absorbed it. Both still get crawled.
+/writing/i-wrote-an-http-framework-because-i-could-not-understand-express  /writing/i-could-not-understand-express-so-i-wrote-my-own  301
+/now  /about  301
