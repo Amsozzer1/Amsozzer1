@@ -27,6 +27,9 @@
       "/colophon",
       "/accessibility",
       "/r/*",
+      // Opening the PDF is a stronger signal than landing on a page, and it only
+      // counts if the worker sees the request.
+      "/resume.pdf",
     ],
   },
   "d1_databases": [
