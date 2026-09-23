@@ -73,7 +73,7 @@ export const projects: Project[] = [
     kind: 'a convnet in a canvas',
     tagline: 'Convolutional digit recognition, served as a static file.',
     summary:
-      'Two convolution and pooling stages learn the strokes, then a dense head turns them into ten probabilities. Trained with a library, served without one — the weights ship as a plain JSON file and the forward pass is written out by hand in the page. No TensorFlow.js, no ONNX runtime, no WASM blob. Nothing you draw leaves your machine.',
+      'Two convolution and pooling stages learn the strokes, then a dense head turns them into ten probabilities. Written from scratch in Python and NumPy, with no deep learning framework on either side: every convolution, ReLU, softmax and gradient is implemented by hand, the weights ship as plain JSON, and the forward pass is written out again in the page. Nothing you draw leaves your machine.',
     specs: [
       {
         label: 'dataset',
@@ -88,9 +88,9 @@ export const projects: Project[] = [
     ],
     cta: 'Draw a digit',
     repo: 'https://github.com/Amsozzer1/MNIST',
-    stack: ['Python', 'TensorFlow', 'CNN'],
+    stack: ['Python', 'NumPy', 'CNN'],
     programmingLanguage: ['Python'],
     license: 'MIT',
-    runtimePlatform: ['TensorFlow', 'Web browser'],
+    runtimePlatform: ['Python', 'Web browser'],
   },
 ];

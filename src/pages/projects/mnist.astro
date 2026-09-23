@@ -71,7 +71,7 @@ const digits = Array.from({ length: classes }, (_, digit) => digit);
     project={project}
     lead="A convnet that runs with no runtime."
     highlight="no runtime"
-    intro={`${capitalize(spell(filters.length))} convolution and pooling stages learn the strokes, then a dense head turns them into ${spell(classes)} probabilities. Trained with a library, served without one — the forward pass is written out by hand. Nothing you draw leaves your machine.`}
+    intro={`${capitalize(spell(filters.length))} convolution and pooling stages learn the strokes, then a dense head turns them into ${spell(classes)} probabilities. Written from scratch in Python and NumPy, then the forward pass written out again in the page. Nothing you draw leaves your machine.`}
   >
     <div slot="figure" class="artifact">
       <MnistPad />

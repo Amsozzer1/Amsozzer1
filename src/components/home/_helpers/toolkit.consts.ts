@@ -49,7 +49,7 @@ export const toolkit: ToolkitRow[] = [
   },
   {
     label: 'models',
-    items: ['TensorFlow', 'NumPy', 'a forward pass written out by hand'],
+    items: ['Python', 'NumPy', 'every layer and gradient written by hand'],
     link: { href: '/projects/mnist', label: 'MNIST' },
   },
 ];
