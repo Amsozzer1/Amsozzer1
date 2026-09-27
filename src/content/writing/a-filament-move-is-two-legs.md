@@ -12,8 +12,8 @@ already](/writing/driving-a-bambu-lab-printer-over-mqtt). This is the firmware, 
 the interesting failure lives.
 
 Feeding filament sounds like one operation. You turn the motor until the filament arrives. It
-took me a while to see that it is two, and that the difference between them is the only reason
-the thing can tell you what went wrong.
+took me a while to see that it is two, and that the reason has little to do with loading. It is
+that pulling filament back out has nowhere natural to stop.
 
 ## Why a filament move needs two sensors
 
@@ -30,31 +30,32 @@ bool Module::arrived() {
 }
 ```
 
-`crossed()` is the module's own sensor. `arrived()` is the printer's. Unload is the same walk
-backwards: leave the printer's sensor first, then run until the module's own sensor lets go.
+`crossed()` is the module's own sensor. `arrived()` is the printer's. Unload walks the same two
+checkpoints in reverse, which is where this gets interesting.
 
-The two legs get different timeouts, and that is the whole point.
+The two legs get different timeouts. The reason there are two legs at all is easier to see going
+the other way.
 
-## The first leg is a health check
+## Unloading is the direction that needs the module's sensor
 
-If filament does not reach the module's own sensor within `ENGAGE_TIMEOUT_MS`, something is
-wrong at the spool. It is empty, or the path is jammed, or the filament snapped somewhere you
-cannot see. That is a leg you expect to complete in a known, short distance, so a timeout on it
-means something specific.
+Loading has an end I did not have to invent. Push filament forward and the printer's own sensor
+eventually sees it, which is the printer telling me the job is done. Stop there.
 
-The second leg is the one that actually ends the move, and it is bounded by `LOAD_TIMEOUT_MS`
-because the distance from the module to the printer depends on how you routed the tube.
+Pulling has nothing like that. The printer's sensor going quiet says the filament has left the
+printer. It does not say the filament is clear of the module, and that is what I need to know
+before energising a different spool. Without a sensor at the module an unload is a guess:
+retract some number of steps that ought to be enough, and hope nobody re-routed the tube. With
+one it is a condition — run the motor backwards until the module's own sensor lets go.
 
-If I had written this as one operation — turn the motor until the printer says it sees filament
-— a failure would tell me nothing at all. The motor turned for five seconds and no filament
-arrived. Why? Empty spool, jam, bad sensor, tube fell off, wrong module engaged. One timeout,
-five causes, and a human walking over to look.
+So the sensor is there for the pull. What it gives the push is something I did not design for:
+an early checkpoint. If filament has not reached the module's own sensor within
+`ENGAGE_TIMEOUT_MS`, something is wrong at the spool — it is empty, or jammed, or snapped
+somewhere I cannot see. The second leg is bounded by `LOAD_TIMEOUT_MS` instead, because the
+distance from the module to the printer depends on how the tube was routed.
 
-Splitting it means the first timeout says "the problem is at the spool" and the second says "the
-filament left the spool and did not arrive", which are different jobs for whoever has to fix it.
-
-<!-- @TODO: the thing that actually made you split it. Was it a jam you had to diagnose by hand?
-     A spool that ran out mid-print? This is the paragraph the post needs and I do not have it. -->
+One operation with one timeout would have flattened both of those into nothing. The motor turned
+for five seconds and no filament arrived. Why? Empty spool, jam, bad sensor, tube fell off,
+wrong module engaged. One timeout, five causes, and me walking over to look.
 
 ## Keeping MQTT alive while a stepper runs
 
@@ -116,14 +117,18 @@ tell you it would not do the thing.
 
 ## What is not finished
 
-`Module::sensedFilament()` returns `false`. The per-module sensor is configured and pulled up,
-but nothing reads it yet, so today the first leg is a timer rather than a real health check and
-only the printer's sensor ends a move. The design is there and the wire is not.
+`Module::sensedFilament()` returns `false`. The sensor is configured and pulled up, but nothing
+reads it yet, and that costs more going backwards than forwards. On a load it only means the
+first leg is a timer rather than a real check. On an unload `arrived()` is `!sensedFilament()`,
+which is `true` the first time it is evaluated, so `tick()` stops before it pulses once and the
+motor never turns. The direction that needed the sensor is the direction that does not work.
 
-Wi-Fi credentials and the broker address are compile-time constants, which is fine on a bench
-and not fine anywhere else.
+Wi-Fi credentials and the broker address are compile-time constants. They are out of git now, in
+an untracked header, which is not the same as being provisioned — moving the board to another
+network is still a rebuild.
 
-<!-- @TODO: anything you want to say about what is next, or what you would do differently. -->
+What is next is the boring answer: four slots that swap without me touching anything, then
+eight, and a video of it sitting next to this post.
 
 The firmware is [on GitHub](https://github.com/Amsozzer1/AMS-Firmware), MIT licensed. It is
 about a thousand lines of C++17 on PlatformIO, and the half that matters is deciding which
