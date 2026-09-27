@@ -1,5 +1,6 @@
 #let resume = json("../src/data/resume.json")
 #let basics = resume.basics
+#let slug = sys.inputs.at("slug", default: "cv")
 
 // LaTeX sets 10pt type on a 12pt baseline. Typst measures leading from the baseline to the next
 // line's cap height, so the gap is 12pt minus the 6.83pt cap height of 10pt Computer Modern.
@@ -53,9 +54,10 @@
   #title(upper(basics.name))
   #(
     link("mailto:" + basics.email, basics.email),
-    // Reads as the bare domain, but the click goes through /r/cv, so a visit that starts in the
-    // PDF can be told apart from one that starts in a link I sent.
-    link(basics.url + "/r/cv", bare(basics.url)),
+    // Reads as the bare domain, but the click goes through a tracked slug, so a visit that
+    // starts in the PDF can be told apart from one that starts in a link I sent. Pass
+    // --input slug=<company> to give a single application its own.
+    link(basics.url + "/r/" + slug, bare(basics.url)),
     ..basics.profiles.map(profile => link(profile.url, bare(profile.url))),
     basics.location.city + ", " + basics.location.region,
   ).join(" | ")
