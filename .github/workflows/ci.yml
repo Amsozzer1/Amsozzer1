@@ -57,6 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
       - uses: actions/download-artifact@v8
@@ -69,8 +70,13 @@ jobs:
           uploadArtifacts: true
 
       # The colophon prints these, so they come from the run rather than from memory.
+      # Only a moved score earns a commit. Stamping the SHA every run rewrote a file
+      # nobody reads, and once the ruleset closed main that churn failed the deploy
+      # along with it.
       - name: Record the scores
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           node --input-type=module -e '
             import { readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -84,38 +90,52 @@ jobs:
             if (!report) throw new Error("no Lighthouse report for the home page");
 
             const round = category => Math.round(report.categories[category].score * 100);
+            const scores = {
+              performance: round("performance"),
+              accessibility: round("accessibility"),
+              bestPractices: round("best-practices"),
+              seo: round("seo"),
+            };
 
-            writeFileSync(
-              "src/data/lighthouse.json",
-              `${JSON.stringify(
-                {
-                  commit: process.env.GITHUB_SHA.slice(0, 7),
-                  measuredAt: new Date().toISOString().slice(0, 10),
-                  url: "https://amsozzer.com/",
-                  scores: {
-                    performance: round("performance"),
-                    accessibility: round("accessibility"),
-                    bestPractices: round("best-practices"),
-                    seo: round("seo"),
+            const path = "src/data/lighthouse.json";
+            const previous = JSON.parse(readFileSync(path, "utf8"));
+
+            if (JSON.stringify(previous.scores) === JSON.stringify(scores)) {
+              process.stdout.write("scores unchanged\n");
+            } else {
+              writeFileSync(
+                path,
+                `${JSON.stringify(
+                  {
+                    commit: process.env.GITHUB_SHA.slice(0, 7),
+                    measuredAt: new Date().toISOString().slice(0, 10),
+                    url: "https://amsozzer.com/",
+                    scores,
                   },
-                },
-                null,
-                2,
-              )}\n`,
-            );
+                  null,
+                  2,
+                )}\n`,
+              );
+            }
           '
 
           if git diff --quiet src/data/lighthouse.json; then
-            echo "scores unchanged"
             exit 0
           fi
 
+          # main takes pull requests only, so a moved score arrives as one.
+          branch=lighthouse-scores
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
           git add src/data/lighthouse.json
-          git commit -m "Record Lighthouse scores from CI [skip ci]"
-          git pull --rebase
-          git push
+          git commit -m "Record Lighthouse scores from CI"
+          git push --force origin "$branch"
+
+          gh pr list --head "$branch" --state open --json number --jq '.[].number' | grep -q . ||
+            gh pr create --base main --head "$branch" \
+              --title "Record Lighthouse scores from CI" \
+              --body "A Lighthouse category score moved. Opened by the \`lighthouse\` job."
 
   deploy:
     if: github.ref == 'refs/heads/main'
