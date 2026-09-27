@@ -1,5 +1,5 @@
 ---
-title: 'Eight spools, one ESP32, and why a filament move is two legs'
+title: 'One ESP32, eight spools, two legs per filament move'
 description: 'ESP32 firmware driving eight filament spools for a Bambu Lab printer over MQTT: two sensors per move, a shared TMC2209 step bus, and why splitting the move matters.'
 pubDate: 2026-09-27
 tags: ['esp32', 'firmware', 'cpp', '3d-printing', 'bambu-lab', 'mqtt', 'platformio']
