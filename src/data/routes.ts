@@ -44,7 +44,7 @@ export const routes = {
     name: 'PlusWeb',
     title: 'PlusWeb — an Express-style HTTP framework in C++17 · Ahmed Sozzer',
     description:
-      'PlusWeb is an Express-style HTTP framework in C++17, built on a libuv event loop and the llhttp parser, with a segment-trie router, benchmarked against Express on the same machine.',
+      'An Express-style HTTP framework in C++17 on a libuv event loop and the llhttp parser, with a segment-trie router, benchmarked against Express on one machine.',
     schema: 'WebPage',
     card: { kicker: '01 — plusweb', headline: 'An Express-style HTTP framework in C++17.' },
     sources: ['src/pages/projects/plusweb.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
@@ -53,7 +53,7 @@ export const routes = {
     name: 'AMS-X',
     title: 'More than four spools on a Bambu Lab printer · Ahmed Sozzer',
     description:
-      'Bambu Lab printers cap multi-material at four spools. AMS-X is an open alternative to the stock AMS: a Python server reads the sliced job and drives every filament swap over the printer\u2019s own local MQTT, no cloud and no AMS protocol.',
+      'Bambu Lab caps multi-material at four spools. AMS-X is an open alternative to the stock AMS, driving every filament swap over the printer\u2019s own local MQTT.',
     schema: 'WebPage',
     card: { kicker: '02 — ams-x', headline: 'An open modular filament system, driven over MQTT.' },
     sources: ['src/pages/projects/ams-x.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
@@ -80,7 +80,7 @@ export const routes = {
     name: 'About',
     title: 'About — the route here, and the habit behind it · Ahmed Sozzer',
     description:
-      'How Ahmed Sozzer got here: Pakistan to Chicago at eighteen, community college to the University of Illinois, tutoring and mentor-matching research, and a printing business acquired by accident.',
+      'How Ahmed Sozzer got here: Pakistan to Chicago at eighteen, community college to the University of Illinois, and a printing business acquired by accident.',
     schema: 'ProfilePage',
     card: { kicker: 'about', headline: 'Noticing when a person is doing a machine\u2019s job.' },
     sources: ['src/pages/about.astro'],
@@ -107,7 +107,7 @@ export const routes = {
     name: 'Accessibility',
     title: 'Accessibility — WCAG 2.2 AA statement · Ahmed Sozzer',
     description:
-      'Accessibility statement for amsozzer.com: the WCAG 2.2 AA target, what the build checks automatically, what has not been tested by hand yet, and how to report a problem.',
+      'Accessibility statement for amsozzer.com: the WCAG 2.2 AA target, what the build checks automatically, what is untested by hand, and how to report a problem.',
     schema: 'WebPage',
     card: { kicker: 'accessibility', headline: 'What is checked, and what is not.' },
     sources: ['src/pages/accessibility.astro'],
