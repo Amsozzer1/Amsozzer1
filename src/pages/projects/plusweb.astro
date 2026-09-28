@@ -7,6 +7,7 @@ import { count, projectBySlug, spell } from '@src/components/projects/_helpers/p
 import ExpressComparison from '@src/components/projects/ExpressComparison.astro';
 import NextProject from '@src/components/projects/NextProject.astro';
 import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import ProjectWriting from '@src/components/projects/ProjectWriting.astro';
 import SectionHeading from '@src/components/SectionHeading.astro';
 import Terminal from '@src/components/Terminal.astro';
 import { facts } from '@src/data/facts';
@@ -144,6 +145,7 @@ app.serve();</code></pre>
     </div>
   </div>
 
+  <ProjectWriting current="plusweb" />
   <NextProject current="plusweb" />
 </Base>
 

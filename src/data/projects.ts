@@ -12,6 +12,9 @@ export interface Project {
   summary: string;
   specs: { label: string; value: string }[];
   cta: string;
+  // Post ids, newest first. Titles are resolved from the collection so a retitled
+  // post cannot leave a stale label behind here.
+  writing?: string[];
   repo: string;
   stack: string[];
   programmingLanguage: string[];
@@ -39,6 +42,7 @@ export const projects: Project[] = [
       { label: 'license', value: 'MIT' },
     ],
     cta: 'Open the playground',
+    writing: ['i-could-not-understand-express-so-i-wrote-my-own'],
     repo: 'https://github.com/Amsozzer1/PlusWeb',
     stack: ['C++17', 'libuv', 'llhttp', 'CMake', 'MIT'],
     programmingLanguage: ['C++17'],
@@ -60,6 +64,7 @@ export const projects: Project[] = [
       { label: 'spool module', value: 'human now, TMC2209 next' },
     ],
     cta: 'How it works',
+    writing: ['a-filament-move-is-two-legs', 'driving-a-bambu-lab-printer-over-mqtt'],
     repo: 'https://github.com/Amsozzer1/AMS',
     stack: ['Python', 'FastAPI', 'MQTT', 'ESP32', '3MF'],
     programmingLanguage: ['Python'],
