@@ -49,7 +49,7 @@ An HTTP framework written in C++17 on a libuv event loop and the llhttp parser, 
 - **Concurrency:** a single libuv event loop, keep-alive by default. 4.8x Express on a small app, flat from 5 routes to 10,000 where Express degrades 50x, and no connection left unanswered at any concurrency tested.
 - **Tested like a real library:** unit tests plus an integration suite that boots a live server and drives it over loopback. CI builds on Linux and macOS, verifies the install target, and re-runs everything under AddressSanitizer and UBSan with leak detection.
 
-Installable as a CMake package, MIT licensed. The roadmap is public and honest about what's missing — no TLS, no body size limits, no idle timeouts.
+In Microsoft's [vcpkg registry](https://github.com/microsoft/vcpkg/tree/master/ports/amsozzer1-plusweb) — `vcpkg install amsozzer1-plusweb`. MIT licensed. The roadmap is public and honest about what's missing — no TLS, no body size limits, no idle timeouts.
 
 **Tech:** C++17, libuv, llhttp, CMake, GoogleTest, GitHub Actions
 

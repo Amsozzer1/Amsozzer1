@@ -35,7 +35,8 @@ export const projects: Project[] = [
     specs: [
       { label: 'dependencies', value: 'three — libuv, llhttp, nlohmann/json' },
       { label: 'tested', value: 'GoogleTest, ASan + UBSan in CI' },
-      { label: 'license', value: 'MIT, installable via CMake' },
+      { label: 'install', value: 'vcpkg install amsozzer1-plusweb' },
+      { label: 'license', value: 'MIT' },
     ],
     cta: 'Open the playground',
     repo: 'https://github.com/Amsozzer1/PlusWeb',
