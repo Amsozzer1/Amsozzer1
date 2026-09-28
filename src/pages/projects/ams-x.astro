@@ -11,6 +11,7 @@ import {
 } from '@src/components/projects/_helpers/projects.functions';
 import NextProject from '@src/components/projects/NextProject.astro';
 import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import ProjectWriting from '@src/components/projects/ProjectWriting.astro';
 import SectionHeading from '@src/components/SectionHeading.astro';
 import Terminal from '@src/components/Terminal.astro';
 import { facts } from '@src/data/facts';
@@ -164,6 +165,7 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
     </div>
   </Band>
 
+  <ProjectWriting current="ams-x" />
   <NextProject current="ams-x" />
 </Base>
 

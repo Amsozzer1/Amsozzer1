@@ -1,0 +1,73 @@
+---
+import Band from '@src/components/Band.astro';
+import { projectBySlug } from '@src/components/projects/_helpers/projects.functions';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import { getPosts } from '@src/data/posts';
+import type { ProjectSlug } from '@src/data/projects';
+
+interface Props {
+  current: ProjectSlug;
+}
+
+const { current } = Astro.props;
+const project = projectBySlug(current);
+const posts = await getPosts();
+
+// An id matching nothing would render an empty section that nobody would notice, so it
+// fails the build instead. A drafted post fails here too, which is the point.
+const related = (project.writing ?? []).map(id => {
+  const post = posts.find(entry => entry.id === id);
+  if (!post) throw new Error(`${project.name} names a post that does not exist: "${id}"`);
+  return post;
+});
+---
+
+{related.length > 0 && <Band ground="body" labelledby="writing-title">
+  <div class="container">
+    <SectionHeading id="writing-title" class="h3" title="Written up" />
+    <ul class="list">
+      {related.map(post => <li class="item">
+        <a class="link" href={`/writing/${post.id}`}>
+          {post.data.title}
+        </a>
+        <p class="description">{post.data.description}</p>
+      </li>)}
+    </ul>
+  </div>
+</Band>}
+
+<style>
+  .list {
+    display: grid;
+    gap: var(--space-l);
+    margin-block-start: var(--space-m);
+    padding-inline-start: 0;
+    list-style: none;
+  }
+  
+  .item {
+    display: grid;
+    gap: var(--space-2xs);
+    max-inline-size: var(--layout-prose-max);
+  }
+  
+  .link {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: var(--size-h3);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-h3);
+    text-decoration: none;
+  }
+  
+  .link:hover {
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--rule-figure);
+    text-decoration-color: var(--color-amber);
+  }
+  
+  .description {
+    color: var(--fg-body);
+    font-size: var(--size-small);
+  }
+</style>

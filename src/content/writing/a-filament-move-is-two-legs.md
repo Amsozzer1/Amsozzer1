@@ -5,8 +5,8 @@ pubDate: 2026-09-27
 tags: ['esp32', 'firmware', 'cpp', '3d-printing', 'bambu-lab', 'mqtt', 'platformio']
 ---
 
-A Bambu Lab printer will run one spool at a time from its external feed. AMS-X is the box that
-decides which spool that is: eight modules, each with a stepper and a filament sensor, and a
+A Bambu Lab printer will run one spool at a time from its external feed. [AMS-X](/projects/ams-x) is the box
+that decides which spool that is: eight modules, each with a stepper and a filament sensor, and a
 server that tells them when to swap. [The protocol side I wrote up
 already](/writing/driving-a-bambu-lab-printer-over-mqtt). This is the firmware, which is where
 the interesting failure lives.

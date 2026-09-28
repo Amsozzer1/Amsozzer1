@@ -154,4 +154,8 @@ your way into. Separating them costs a column and saves the argument with yourse
 
 The A1 is real. The rest is a hypothesis with a test plan attached.
 
+The other half is the board that does the moving. [One ESP32, eight spools, two legs per
+filament move](/writing/a-filament-move-is-two-legs) covers the firmware: why a filament move
+is split in two, and how the MQTT connection survives a stepper running for seconds at a time.
+
 [AMS-X is on GitHub](https://github.com/Amsozzer1/AMS) under MIT, design documents and all.
