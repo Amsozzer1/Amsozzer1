@@ -1,6 +1,6 @@
 ---
 title: 'I could not understand Express, so I wrote my own'
-description: 'Middleware chaining made no sense to me, so I rebuilt it in C++. A year later the profile said the slowest thing in my server was a map I rebuilt on every response.'
+description: 'Middleware chaining made no sense to me, so I rebuilt it in C++. A year later the profile said the slowest thing was a map I rebuilt on every response.'
 pubDate: 2026-09-20
 tags: ['c++', 'http', 'performance', 'libuv']
 ---

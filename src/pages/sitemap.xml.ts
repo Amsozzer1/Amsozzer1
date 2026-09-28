@@ -15,6 +15,9 @@ export const GET: APIRoute = async () => {
       path: postPath(post.id),
       lastmod: lastModified(post.filePath ?? 'src/content/writing'),
     })),
+    // The PDF is the one asset a recruiter searching the name should land on, and it is
+    // indexable, so it is listed. It is generated, so its date tracks what generates it.
+    { path: '/resume.pdf', lastmod: lastModified('src/data/resume.json', 'resume/resume.typ') },
   ];
   const urls = pages.map(
     ({ path, lastmod }) =>

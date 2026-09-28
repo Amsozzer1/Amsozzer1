@@ -13,7 +13,7 @@ import type {
 } from 'schema-dts';
 import { projects, type Project } from '@src/data/projects';
 import resume from '@src/data/resume.json';
-import { findRoute } from '@src/data/routes';
+import { findRoute, postPath } from '@src/data/routes';
 import { site } from '@src/data/site';
 import { lastModified } from '@src/lib/dates';
 import { absoluteUrl, breadcrumbsFor, cardPath, postCrops } from '@src/lib/seo/meta';
@@ -23,6 +23,12 @@ export const personId = `${site.url}/#person`;
 export const websiteId = `${site.url}/#website`;
 
 const pageId = (path: string) => `${absoluteUrl(path)}#webpage`;
+const codeId = (path: string) => `${absoluteUrl(path)}#code`;
+const articleId = (path: string) => `${absoluteUrl(path)}#article`;
+
+// The project a post is about, so the two nodes can point at each other across pages.
+const projectForPost = (path: string) =>
+  projects.find(project => project.writing?.some(id => postPath(id) === path));
 
 const organization = (name: string): Organization => ({ '@type': 'Organization', name });
 
@@ -128,7 +134,7 @@ export const breadcrumbList = (seo: PageSeo): BreadcrumbList => {
 // @TODO: add dateModified from each repo's latest release once the demos are vendored with a build-info.json
 export const softwareSourceCode = (project: Project): SoftwareSourceCode => ({
   '@type': 'SoftwareSourceCode',
-  '@id': `${absoluteUrl(project.path)}#code`,
+  '@id': codeId(project.path),
   name: project.name,
   description: project.tagline,
   url: absoluteUrl(project.path),
@@ -139,6 +145,9 @@ export const softwareSourceCode = (project: Project): SoftwareSourceCode => ({
   ...(project.license && { license: `https://spdx.org/licenses/${project.license}.html` }),
   author: { '@id': personId },
   mainEntityOfPage: { '@id': pageId(project.path) },
+  ...(project.writing?.length && {
+    subjectOf: project.writing.map(id => ({ '@id': articleId(postPath(id)) })),
+  }),
 });
 
 export interface PostSummary {
@@ -152,7 +161,7 @@ export interface PostSummary {
 
 export const blogPosting = (post: PostSummary): BlogPosting => ({
   '@type': 'BlogPosting',
-  '@id': `${absoluteUrl(post.path)}#article`,
+  '@id': articleId(post.path),
   headline: post.title,
   description: post.description,
   url: absoluteUrl(post.path),
@@ -165,6 +174,10 @@ export const blogPosting = (post: PostSummary): BlogPosting => ({
   publisher: { '@id': personId },
   isPartOf: { '@id': websiteId },
   mainEntityOfPage: { '@id': pageId(post.path) },
+  ...(() => {
+    const project = projectForPost(post.path);
+    return project ? { about: { '@id': codeId(project.path) } } : {};
+  })(),
 });
 
 export const buildGraph = (seo: PageSeo): Graph => {
