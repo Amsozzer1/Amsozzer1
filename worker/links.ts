@@ -1,4 +1,5 @@
 import { isBot } from './bots.ts';
+import { safePath } from './paths.ts';
 import { fingerprint, referrerHost, type IncomingRequest } from './visitor.ts';
 
 const PREFIX = '/r/';
@@ -25,7 +26,24 @@ const recordVisit = async (
     .run();
 };
 
-export const handleLink = (
+// One primary-key lookup, awaited because the redirect cannot be written without it. A link
+// whose row is missing or unreadable still has to go somewhere.
+const destinationFor = async (db: D1Database, slug: string) => {
+  try {
+    const row = await db.prepare('SELECT destination FROM links WHERE slug = ?').bind(slug).first();
+    return safePath(row?.destination);
+  } catch {
+    return '/';
+  }
+};
+
+const redirect = (location: string) =>
+  new Response(null, {
+    status: 302,
+    headers: { Location: location, 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' },
+  });
+
+export const handleLink = async (
   request: IncomingRequest,
   db: D1Database,
   salt: string | undefined,
@@ -33,11 +51,8 @@ export const handleLink = (
 ) => {
   const slug = new URL(request.url).pathname.slice(PREFIX.length).replace(/\/$/, '').toLowerCase();
 
-  if (SLUG.test(slug)) ctx.waitUntil(recordVisit(db, slug, request, salt));
+  if (!SLUG.test(slug)) return redirect('/');
 
-  // Every slug lands on the home page, so /r/ can never become an open redirect.
-  return new Response(null, {
-    status: 302,
-    headers: { Location: '/', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' },
-  });
+  ctx.waitUntil(recordVisit(db, slug, request, salt));
+  return redirect(await destinationFor(db, slug));
 };

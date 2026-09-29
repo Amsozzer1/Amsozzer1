@@ -1,6 +1,8 @@
 # Ahmed M. Sozzer
 
-**Full Stack Engineer | Systems & Automation**
+**Full Stack Engineer | Systems & Automation** — Austin, TX · [amsozzer.com](https://amsozzer.com)
+
+My C++17 HTTP framework **PlusWeb** is published in [Microsoft's vcpkg registry](https://github.com/microsoft/vcpkg/tree/master/ports/amsozzer1-plusweb): `vcpkg install amsozzer1-plusweb`.
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-amsozzer.com-blue)](https://amsozzer.com) [![LinkedIn](https://img.shields.io/badge/LinkedIn-amsozzer1-0077B5)](https://linkedin.com/in/amsozzer1) [![Email](https://img.shields.io/badge/Email-ahmed@amsozzer.com-red)](mailto:ahmed@amsozzer.com)
 

@@ -44,7 +44,7 @@ export const routes = {
     name: 'PlusWeb',
     title: 'PlusWeb — an Express-style HTTP framework in C++17 · Ahmed Sozzer',
     description:
-      'An Express-style HTTP framework in C++17 on a libuv event loop and the llhttp parser, with a segment-trie router, benchmarked against Express on one machine.',
+      'An Express-style HTTP framework in C++17 on libuv and llhttp, benchmarked against Express on one machine. In Microsoft\u2019s vcpkg registry.',
     schema: 'WebPage',
     card: { kicker: '01 — plusweb', headline: 'An Express-style HTTP framework in C++17.' },
     sources: ['src/pages/projects/plusweb.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
