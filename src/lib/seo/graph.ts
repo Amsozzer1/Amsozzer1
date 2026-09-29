@@ -48,20 +48,14 @@ const employeeRole = (job: Job): EmployeeRole => ({
   ...(job.endDate && { endDate: job.endDate }),
 });
 
-// schema.org Roles carry the dates of each job: the current one under worksFor, past ones under alumniOf.
-const workHistory = (): Pick<PersonLeaf, 'worksFor' | 'alumniOf'> => ({
-  worksFor: resume.work
-    .filter(job => !job.endDate)
-    .map(job => ({ ...employeeRole(job), worksFor: organization(job.name) })),
-  alumniOf: [
-    school,
-    ...resume.work
-      .filter(job => job.endDate)
-      .map(job => ({ ...employeeRole(job), alumniOf: organization(job.name) })),
-  ],
+// Every job is a worksFor Role and carries its own dates; a finished one just has an endDate.
+// Past employers used to sit under alumniOf, which asserts he studied at them. alumniOf is the
+// school and nothing else.
+const workHistory = (): Pick<PersonLeaf, 'worksFor'> => ({
+  worksFor: resume.work.map(job => ({ ...employeeRole(job), worksFor: organization(job.name) })),
 });
 
-export const person = (withWorkHistory = false): Person => ({
+export const person = (): Person => ({
   '@type': 'Person',
   '@id': personId,
   name: site.name,
@@ -78,12 +72,11 @@ export const person = (withWorkHistory = false): Person => ({
     addressRegion: site.location.region,
     addressCountry: site.location.country,
   },
-  worksFor: organization(site.employer.name),
+  ...workHistory(),
   alumniOf: school,
   knowsAbout: site.knowsAbout,
   sameAs: [site.links.github, site.links.linkedin, site.links.orcid],
   identifier: { '@type': 'PropertyValue', propertyID: 'ORCID', value: site.orcid },
-  ...(withWorkHistory && workHistory()),
 });
 
 export const website = (): WebSite => ({
@@ -145,6 +138,7 @@ export const softwareSourceCode = (project: Project): SoftwareSourceCode => ({
   ...(project.license && { license: `https://spdx.org/licenses/${project.license}.html` }),
   author: { '@id': personId },
   mainEntityOfPage: { '@id': pageId(project.path) },
+  ...(project.registry && { sameAs: project.registry.url }),
   ...(project.writing?.length && {
     subjectOf: project.writing.map(id => ({ '@id': articleId(postPath(id)) })),
   }),
@@ -186,7 +180,7 @@ export const buildGraph = (seo: PageSeo): Graph => {
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      person(seo.path === '/experience'),
+      person(),
       // The site node rides on every page: each one is crawled on its own, and the
       // WebPage nodes point at it with isPartOf.
       website(),

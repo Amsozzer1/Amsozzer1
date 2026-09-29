@@ -12,6 +12,9 @@ export interface Project {
   summary: string;
   specs: { label: string; value: string }[];
   cta: string;
+  // Where it is published, if anywhere. The page and the JSON-LD both read this, so the
+  // install line cannot drift from the one in the graph.
+  registry?: { name: string; install: string; url: string };
   // Post ids, newest first. Titles are resolved from the collection so a retitled
   // post cannot leave a stale label behind here.
   writing?: string[];
@@ -42,6 +45,11 @@ export const projects: Project[] = [
       { label: 'license', value: 'MIT' },
     ],
     cta: 'Open the playground',
+    registry: {
+      name: 'vcpkg',
+      install: 'vcpkg install amsozzer1-plusweb',
+      url: 'https://github.com/microsoft/vcpkg/tree/master/ports/amsozzer1-plusweb',
+    },
     writing: ['i-could-not-understand-express-so-i-wrote-my-own'],
     repo: 'https://github.com/Amsozzer1/PlusWeb',
     stack: ['C++17', 'libuv', 'llhttp', 'CMake', 'MIT'],

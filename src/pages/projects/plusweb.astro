@@ -49,7 +49,7 @@ const scribble =
     project={project}
     lead="An Express-style HTTP framework in C++17, on a libuv event loop and the llhttp parser."
     highlight="C++17"
-    intro={`One event loop handles every connection, requests resolve through a segment trie keyed on method and path, and no connection went unanswered at any concurrency tested — including the ${starved.connections} where Express left ${starved.express} waiting.`}
+    intro={`${project.registry ? `In Microsoft's ${project.registry.name} registry — ${project.registry.install}. ` : ''}One event loop handles every connection, requests resolve through a segment trie keyed on method and path, and no connection went unanswered at any concurrency tested — including the ${starved.connections} where Express left ${starved.express} waiting.`}
   >
     <div slot="figure" class="artifact">
       <Terminal class="code-panel" title="examples/users.cpp" meta="C++17">
