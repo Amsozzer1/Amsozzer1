@@ -1,4 +1,5 @@
 import { isBot } from './bots.ts';
+import { safePath } from './paths.ts';
 import { fingerprint, referrerHost, type IncomingRequest } from './visitor.ts';
 
 const PREFIX = '/r/';
@@ -24,12 +25,6 @@ const recordVisit = async (
     )
     .run();
 };
-
-// A destination is only ever a path on this site. A scheme, a protocol-relative host or a
-// backslash would turn /r/ into an open redirect, so anything that is not a plain path falls
-// back to the home page.
-const safePath = (value: unknown) =>
-  typeof value === 'string' && /^\/[^/\\\s]/.test(value) && !value.includes('://') ? value : '/';
 
 // One primary-key lookup, awaited because the redirect cannot be written without it. A link
 // whose row is missing or unreadable still has to go somewhere.

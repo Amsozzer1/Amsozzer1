@@ -48,11 +48,14 @@ const employeeRole = (job: Job): EmployeeRole => ({
   ...(job.endDate && { endDate: job.endDate }),
 });
 
-// Every job is a worksFor Role and carries its own dates; a finished one just has an endDate.
-// Past employers used to sit under alumniOf, which asserts he studied at them. alumniOf is the
-// school and nothing else.
+// Only the current job. schema.org says to express a past profession as a Role with an endDate,
+// and that is valid, but consumers flatten worksFor and drop the qualifiers — so a finished job
+// in there answers "where does he work?" with three employers. /experience carries the history
+// as text, which is what extractors read anyway.
 const workHistory = (): Pick<PersonLeaf, 'worksFor'> => ({
-  worksFor: resume.work.map(job => ({ ...employeeRole(job), worksFor: organization(job.name) })),
+  worksFor: resume.work
+    .filter(job => !job.endDate)
+    .map(job => ({ ...employeeRole(job), worksFor: organization(job.name) })),
 });
 
 export const person = (): Person => ({

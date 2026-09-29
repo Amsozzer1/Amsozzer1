@@ -1,5 +1,7 @@
 import { execFileSync } from 'node:child_process';
 
+import { safePath } from '../worker/paths.ts';
+
 // Recording a link by hand meant writing SQL, which meant sent_at usually never
 // got written, which meant time-to-first-open could never be computed. This exists
 // so the moment you send something is the moment it gets recorded.
@@ -41,10 +43,10 @@ if (!SLUG.test(slug)) {
   process.exit(1);
 }
 
-// The worker refuses anything that is not a plain path, so catch it here where there is
-// somebody to tell rather than silently sending them to the home page.
+// The same predicate the worker redirects through, so a destination the CLI accepts cannot
+// be one the worker quietly drops on the floor.
 const destination = flag('to');
-if (destination !== null && !/^\/[^/\\\s]/.test(destination)) {
+if (destination !== null && safePath(destination) !== destination) {
   process.stdout.write(
     `"${destination}" is not a path on the site. It has to start with a single /.\n`,
   );
