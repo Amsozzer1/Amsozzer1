@@ -3,6 +3,8 @@ import { facts } from '@src/data/facts';
 
 const { port } = facts.plusweb;
 const { sampleReport, states } = facts.amsx;
+const { ladder, links } = facts.emberlink;
+const [deep] = links;
 
 export const curlSession: Line[] = [
   ['$ curl -i ', accent(`http://localhost:${port}/users/123`)],
@@ -33,4 +35,14 @@ export const printerReport: Line[] = [
   ['} }'],
   [],
   states.map((state, index) => (index < states.length - 1 ? `${state} → ` : accent(state))),
+];
+
+export const linkReport: Line[] = [
+  ['$ scripts/link.sh ', accent(deep.name), muted(`   # ${deep.detail}`)],
+  [],
+  ['stepping down on queueing delay'],
+  ['  ', accent(ladder.join(' → ')), ' strips/s'],
+  [],
+  ['picture age  ', accent(deep.rows[0].age), muted('   p50 / p95')],
+  ['alert        ', accent(deep.rows[0].alert)],
 ];

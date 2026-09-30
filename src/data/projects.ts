@@ -1,6 +1,6 @@
 import { facts } from '@src/data/facts';
 
-export type ProjectSlug = 'plusweb' | 'ams-x' | 'mnist';
+export type ProjectSlug = 'plusweb' | 'ams-x' | 'mnist' | 'emberlink';
 
 export interface Project {
   slug: ProjectSlug;
@@ -25,7 +25,7 @@ export interface Project {
   runtimePlatform: string[];
 }
 
-const { mnist } = facts;
+const { mnist, emberlink } = facts;
 const count = (value: number) => value.toLocaleString('en-US');
 
 export const projects: Project[] = [
@@ -106,5 +106,30 @@ export const projects: Project[] = [
     programmingLanguage: ['Python'],
     license: 'MIT',
     runtimePlatform: ['Python', 'Web browser'],
+  },
+  {
+    slug: 'emberlink',
+    path: '/projects/emberlink',
+    number: '04',
+    name: 'Emberlink',
+    kind: 'a link for bad radio',
+    tagline: 'A robot-to-operator video link that stays fresh when the radio does not.',
+    summary:
+      'A frozen frame that looks live is the worst thing you can put in front of an operator. So when the link degrades this one sends less rather than falling behind: a frame is four independently decodable strips, the pacer always sends from the newest one, alerts and telemetry go ahead of pixels, and every part of the picture shows its own age.',
+    specs: [
+      { label: 'sender', value: `C++20 on Linux, ${emberlink.strip.perFrame} strips a frame` },
+      {
+        label: 'rate ladder',
+        value: `${emberlink.ladder[0]} to ${emberlink.ladder[emberlink.ladder.length - 1]} strips a second`,
+      },
+      { label: 'steps down on', value: 'queueing delay, never on loss' },
+      { label: 'measured with', value: 'netem, two namespaces, one clock' },
+    ],
+    cta: 'See what it costs',
+    repo: 'https://github.com/Amsozzer1/emberlink',
+    stack: ['C++20', 'UDP', 'Linux', 'netem', 'Node'],
+    programmingLanguage: ['C++20', 'Python', 'TypeScript'],
+    license: 'MIT',
+    runtimePlatform: ['Linux'],
   },
 ];

@@ -100,6 +100,51 @@ export const facts = {
       ],
     },
   },
+  emberlink: {
+    // One seeded 90 s walkthrough replayed on every link preset, for Emberlink and two
+    // baselines, in two network namespaces on one Linux host so both ends read the same
+    // clock, with netem shaping both directions.
+    scene: { width: 80, height: 60, hz: 9 },
+    strip: { perFrame: 4, bytes: 1_200 },
+    ladder: [36, 24, 16, 8, 4],
+    kbps: { min: 40, max: 363 },
+    alert: { repeats: 3, spacingMs: 50 },
+    // If the operator's reports stop for this long, the sender drops to the lowest rung.
+    stallMs: 600,
+    // Picture age is the age of the oldest part of what the operator is looking at, sampled
+    // every 100 ms. Both columns are p50 / p95.
+    links: [
+      {
+        name: 'deep',
+        detail: '100 kbps, 10% loss',
+        rows: [
+          { sender: 'Emberlink', age: '0.75 s / 1.27 s', alert: '125 ms / 140 ms' },
+          { sender: 'TCP', age: '5.0 s / 6.9 s', alert: '4.3 s / 5.5 s' },
+          { sender: 'naive UDP', age: 'never complete', alert: '768 ms / 890 ms' },
+        ],
+      },
+      {
+        name: 'blackout',
+        detail: 'deep, plus two 3 s outages',
+        rows: [
+          { sender: 'Emberlink', age: '0.75 s / 2.6 s', alert: '159 ms / 1.9 s' },
+          { sender: 'TCP', age: '5.0 s / 10.2 s', alert: '5.6 s / 8.9 s' },
+          { sender: 'naive UDP', age: '15.9 s / 30.2 s', alert: '761 ms / 2.8 s' },
+        ],
+      },
+      {
+        name: 'wall',
+        detail: '500 kbps, 3% loss',
+        rows: [
+          { sender: 'Emberlink', age: '206 ms / 339 ms', alert: '39 ms / 42 ms' },
+          { sender: 'TCP', age: '340 ms / 514 ms', alert: '66 ms / 166 ms' },
+          { sender: 'naive UDP', age: '3.0 s / 8.5 s', alert: '878 ms / 913 ms' },
+        ],
+      },
+    ],
+    recovery: { emberlink: '2.3 s and 0.6 s', tcp: 'never' },
+  },
+
   experience: {
     since: 2024,
     roles: 3,

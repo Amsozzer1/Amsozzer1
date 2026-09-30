@@ -1,0 +1,201 @@
+---
+import Band from '@src/components/Band.astro';
+import Tape from '@src/components/marks/Tape.astro';
+import { projectBySlug, spell } from '@src/components/projects/_helpers/projects.functions';
+import NextProject from '@src/components/projects/NextProject.astro';
+import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import Terminal from '@src/components/Terminal.astro';
+import { facts } from '@src/data/facts';
+import Base from '@src/layouts/Base.astro';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const project = projectBySlug('emberlink');
+const { scene, strip, ladder, kbps, alert, stallMs, links, recovery } = facts.emberlink;
+
+const [top] = ladder;
+const bottom = ladder[ladder.length - 1];
+const deep = links[0];
+---
+
+<Base page="project" seo={routeSeo('/projects/emberlink')}>
+  <ProjectHero
+    project={project}
+    lead="A robot-to-operator link that keeps the useful picture alive when the radio gets bad."
+    highlight="useful picture"
+    intro={`A frozen frame that looks live is the worst thing you can put in front of an operator. So as the link degrades this one sends less rather than falling behind: on a ${deep.detail} link the oldest thing on screen is ${deep.rows[0].age.split(' / ')[0]} old, where TCP is ${deep.rows[1].age.split(' / ')[0]} behind and still climbing.`}
+  >
+    <div slot="figure" class="artifact">
+      <Terminal class="code-panel" title="operator — udp/47001" meta="C++20">
+        <pre><code>$ scripts/link.sh deep      <span class="muted"># {deep.detail}</span>
+
+stepping down on queueing delay, never on loss
+  {ladder.join(' → ')} strips/s
+
+picture age   {deep.rows[0].age}   <span class="muted">p50 / p95</span>
+alert         {deep.rows[0].alert}</code></pre>
+      </Terminal>
+      <Tape class="tape-corner" />
+      <Tape class="tape-edge" />
+    </div>
+  </ProjectHero>
+
+  <Band ground="body" labelledby="design-title">
+    <div class="container">
+      <SectionHeading id="design-title" class="h3" title="Freshness beats completeness" />
+      <p class="section-lead">
+        The sender never queues. A frame is {spell(strip.perFrame)} independently decodable
+        {strip.bytes.toLocaleString('en-US')}-byte strips, and the pacer sends one strip per token,
+        always from the newest frame. A lost packet costs exactly its own strip — the old pixels
+        stay on screen, visibly ageing, instead of the whole picture stalling.
+      </p>
+      <ul class="points">
+        <li>
+          <strong>Alerts and telemetry go before pixels.</strong> They come off the robot's
+          full-precision frame, before any quantization, and are sent {spell(alert.repeats)} times
+          {alert.spacingMs} ms apart, then retried until the operator acks. An empty send queue is
+          what makes that ordering mean anything.
+        </li>
+        <li>
+          <strong>The ladder steps down on queueing delay, never on random loss.</strong> {top} down
+          to {bottom} strips a second, about {kbps.max} to {kbps.min} kbps. Loss on a radio is
+          noise; a growing queue is the signal that you are sending faster than the link can carry.
+        </li>
+        <li>
+          <strong>Silence is treated as failure.</strong> If the operator's reports stop for
+          {stallMs} ms the sender drops to the lowest rung rather than keep spending a link that may
+          not be there.
+        </li>
+        <li>
+          <strong>Every part of the picture carries its own age.</strong> The operator sees which
+          strips are stale rather than a uniform image that might be seconds old.
+        </li>
+      </ul>
+    </div>
+  </Band>
+
+  <Band ground="paper" graph labelledby="results-title">
+    <div class="container">
+      <SectionHeading id="results-title" class="h3" title="What it costs when the link is bad" />
+      <p class="section-lead">
+        One seeded {scene.width}×{scene.height} walkthrough at {scene.hz} Hz, replayed on every link
+        preset for Emberlink and two baselines, in two network namespaces on one Linux host so both
+        ends read the same clock. <strong>Picture age</strong> is the age of the oldest part of what
+        the operator is looking at — the number that says how stale the worst of it is.
+      </p>
+
+      {links.map(link => <table class="table">
+        <caption class="caption">
+          <span class="caption-title">{link.name}</span>
+          <span class="caption-detail">{link.detail}</span>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">sender</th>
+            <th scope="col" class="num">picture age</th>
+            <th scope="col" class="num">alert latency</th>
+          </tr>
+        </thead>
+        <tbody>
+          {link.rows.map(row => <tr class={row.sender === 'Emberlink' ? 'mine' : undefined}>
+            <th scope="row">{row.sender}</th>
+            <td class="num">{row.age}</td>
+            <td class="num">{row.alert}</td>
+          </tr>)}
+        </tbody>
+      </table>)}
+
+      <p class="section-lead">
+        After each of the two three-second outages, Emberlink is showing a current picture again in
+        {' '}{recovery.emberlink}. TCP {recovery.tcp} recovers inside the run. CI reruns the deep
+        and blackout presets on every push and fails the build if Emberlink misses those bounds —
+        which it did on the first real run, because the controller had only ever been tested against
+        a simulator.
+      </p>
+    </div>
+  </Band>
+
+  <NextProject current="emberlink" />
+</Base>
+
+<style>
+  .artifact {
+    position: relative;
+  }
+  
+  .muted {
+    color: var(--fg-secondary);
+  }
+  
+  .section-lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-body);
+  }
+  
+  .points {
+    display: grid;
+    gap: var(--space-m);
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-l);
+    padding-inline-start: 0;
+    list-style: none;
+    color: var(--fg-body);
+  }
+  
+  .points strong {
+    color: var(--fg);
+  }
+  
+  .table {
+    inline-size: 100%;
+    margin-block-start: var(--space-l);
+    border-collapse: collapse;
+    font-size: var(--size-small);
+  }
+  
+  .caption {
+    padding-block-end: var(--space-2xs);
+    text-align: start;
+  }
+  
+  .caption-title {
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+  }
+  
+  .caption-detail {
+    margin-inline-start: var(--space-2xs);
+    color: var(--fg-secondary);
+  }
+  
+  .table th,
+  .table td {
+    padding-block: var(--space-2xs);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+    text-align: start;
+    font-weight: 400;
+  }
+  
+  .table thead th {
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+  }
+  
+  .table .num {
+    font-family: var(--font-mono);
+    text-align: end;
+  }
+  
+  .table tbody th {
+    color: var(--fg-body);
+  }
+  
+  .table .mine th,
+  .table .mine td {
+    color: var(--fg);
+    font-weight: 700;
+  }
+</style>

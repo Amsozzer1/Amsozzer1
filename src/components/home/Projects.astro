@@ -5,11 +5,15 @@ import Terminal from '@src/components/Terminal.astro';
 import MnistPanel from '@src/components/home/MnistPanel.astro';
 import ProjectRow from '@src/components/home/ProjectRow.astro';
 import TerminalLines from '@src/components/home/TerminalLines.astro';
-import { curlSession, printerReport } from '@src/components/home/_helpers/projects.consts';
+import {
+  curlSession,
+  linkReport,
+  printerReport,
+} from '@src/components/home/_helpers/projects.consts';
 import { facts } from '@src/data/facts';
 import { projects } from '@src/data/projects';
 
-const [plusweb, amsx, mnist] = projects;
+const [plusweb, amsx, mnist, emberlink] = projects;
 const { mqtt } = facts.amsx;
 ---
 
@@ -20,7 +24,7 @@ const { mqtt } = facts.amsx;
         class="heading"
         kicker="projects"
         id="projects-title"
-        title="Three things I built. Two run in your browser, one runs a printer."
+        title="Four things I built. Two run in your browser, one runs a printer, one holds a picture together on a failing radio."
       />
       <ul class="kinds">
         {projects.map(({ kind }) => <li>{kind}</li>)}
@@ -54,6 +58,17 @@ const { mqtt } = facts.amsx;
       note="and no, numpy doesn’t count — there isn’t any in a browser anyway."
     >
       <MnistPanel />
+    </ProjectRow>
+
+    <ProjectRow
+      project={emberlink}
+      mark="tape"
+      flip
+      note="it steps down on a growing queue, not on lost packets — loss on a radio tells you nothing."
+    >
+      <Terminal title="operator — udp/47001" meta="C++20 · netem">
+        <TerminalLines lines={linkReport} />
+      </Terminal>
     </ProjectRow>
   </div>
 </Band>
