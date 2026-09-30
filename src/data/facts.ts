@@ -141,7 +141,20 @@ export const facts = {
           { sender: 'naive UDP', age: '3.0 s / 8.5 s', alert: '878 ms / 913 ms' },
         ],
       },
+      {
+        name: 'good',
+        detail: '10 Mbps, the case it is not for',
+        rows: [
+          { sender: 'Emberlink', age: '85 ms / 261 ms', alert: '13 ms / 14 ms' },
+          { sender: 'TCP', age: '206 ms / 334 ms', alert: '18 ms / 20 ms' },
+          { sender: 'naive UDP', age: '82 ms / 129 ms', alert: '14 ms / 18 ms' },
+        ],
+      },
     ],
+    // On a link with headroom, sending everything immediately is the right answer and naive UDP
+    // gets there. Emberlink opens at the second-lowest rung and takes about six seconds to climb,
+    // which is what the p95 is showing.
+    rampSeconds: 6,
     recovery: { emberlink: '2.3 s and 0.6 s', tcp: 'never' },
   },
 

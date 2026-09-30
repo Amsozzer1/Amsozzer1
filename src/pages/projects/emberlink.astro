@@ -11,7 +11,8 @@ import Base from '@src/layouts/Base.astro';
 import { routeSeo } from '@src/lib/seo/meta';
 
 const project = projectBySlug('emberlink');
-const { scene, strip, ladder, kbps, alert, stallMs, links, recovery } = facts.emberlink;
+const { scene, strip, ladder, kbps, alert, stallMs, links, recovery, rampSeconds } =
+  facts.emberlink;
 
 const [top] = ladder;
 const bottom = ladder[ladder.length - 1];
@@ -78,10 +79,11 @@ alert         {deep.rows[0].alert}</code></pre>
     <div class="container">
       <SectionHeading id="results-title" class="h3" title="What it costs when the link is bad" />
       <p class="section-lead">
-        One seeded {scene.width}×{scene.height} walkthrough at {scene.hz} Hz, replayed on every link
-        preset for Emberlink and two baselines, in two network namespaces on one Linux host so both
-        ends read the same clock. <strong>Picture age</strong> is the age of the oldest part of what
-        the operator is looking at — the number that says how stale the worst of it is.
+        One seeded {scene.width}×{scene.height} walkthrough at {scene.hz} Hz, replayed on all{' '}
+        {links.length} link presets for Emberlink and two baselines, in two network namespaces on
+        one Linux host so both ends read the same clock. <strong>Picture age</strong> is the age of
+        the oldest part of what the operator is looking at — the number that says how stale the
+        worst of it is.
       </p>
 
       {links.map(link => <table class="table">
@@ -107,10 +109,19 @@ alert         {deep.rows[0].alert}</code></pre>
 
       <p class="section-lead">
         After each of the two three-second outages, Emberlink is showing a current picture again in
-        {' '}{recovery.emberlink}. TCP {recovery.tcp} recovers inside the run. CI reruns the deep
-        and blackout presets on every push and fails the build if Emberlink misses those bounds —
-        which it did on the first real run, because the controller had only ever been tested against
-        a simulator.
+        {' '}{recovery.emberlink}. TCP {recovery.tcp} recovers inside the run.
+      </p>
+      <p class="section-lead">
+        On the good link it loses, and the last table says so. With 10 Mbps of headroom the right
+        answer is to send everything the moment it is captured, which is what naive UDP does.
+        Emberlink opens at the second-lowest rung and takes about {spell(rampSeconds)} seconds to
+        climb, and that climb is the whole of its p95. Starting cautiously is what stops it drowning
+        a bad link, and a good link is not the one it is for.
+      </p>
+      <p class="section-lead">
+        CI reruns the deep and blackout presets on every push and fails the build if Emberlink
+        misses its bounds — which it did on the first real run, because the controller had only ever
+        been tested against a simulator.
       </p>
     </div>
   </Band>
