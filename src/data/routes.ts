@@ -67,6 +67,15 @@ export const routes = {
     card: { kicker: '03 — mnist', headline: 'A convnet that runs with no runtime.' },
     sources: ['src/pages/projects/mnist.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
+  '/projects/emberlink': {
+    name: 'Emberlink',
+    title: 'Emberlink \u2014 a robot video link for bad radio \u00b7 Ahmed Sozzer',
+    description:
+      'A robot-to-operator thermal link that sends less instead of falling behind when the radio degrades: strips, not frames, and alerts ahead of pixels.',
+    schema: 'WebPage',
+    card: { kicker: '04 \u2014 emberlink', headline: 'Freshness beats completeness.' },
+    sources: ['src/pages/projects/emberlink.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
+  },
   '/writing': {
     name: 'Writing',
     title: 'Writing — engineering posts and open threads · Ahmed Sozzer',
