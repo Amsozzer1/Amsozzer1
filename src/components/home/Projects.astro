@@ -7,13 +7,15 @@ import ProjectRow from '@src/components/home/ProjectRow.astro';
 import TerminalLines from '@src/components/home/TerminalLines.astro';
 import {
   curlSession,
+  holdfastEval,
   linkReport,
   printerReport,
+  seamPipeline,
 } from '@src/components/home/_helpers/projects.consts';
 import { facts } from '@src/data/facts';
 import { projects } from '@src/data/projects';
 
-const [plusweb, amsx, mnist, emberlink] = projects;
+const [plusweb, amsx, mnist, emberlink, holdfast, seamline] = projects;
 const { mqtt } = facts.amsx;
 ---
 
@@ -24,7 +26,7 @@ const { mqtt } = facts.amsx;
         class="heading"
         kicker="projects"
         id="projects-title"
-        title="Four things I built. Two run in your browser, one runs a printer, one holds a picture together on a failing radio."
+        title="Six things I built. Four of them you can open right now."
       />
       <ul class="kinds">
         {projects.map(({ kind }) => <li>{kind}</li>)}
@@ -68,6 +70,27 @@ const { mqtt } = facts.amsx;
     >
       <Terminal title="operator — udp/47001" meta="C++20 · netem">
         <TerminalLines lines={linkReport} />
+      </Terminal>
+    </ProjectRow>
+
+    <ProjectRow
+      project={holdfast}
+      mark="tack"
+      note="tuned on three sequences, scored once on four it had never seen."
+    >
+      <Terminal title="eval — VisDrone2019-MOT val" meta="TrackEval">
+        <TerminalLines lines={holdfastEval} />
+      </Terminal>
+    </ProjectRow>
+
+    <ProjectRow
+      project={seamline}
+      mark="tape"
+      flip
+      note="the browser and the server run the same compiled core, so they cannot disagree about what a valid plan is."
+    >
+      <Terminal title="seamcore" meta="rust → wasm">
+        <TerminalLines lines={seamPipeline} />
       </Terminal>
     </ProjectRow>
   </div>

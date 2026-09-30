@@ -1,0 +1,216 @@
+---
+import Band from '@src/components/Band.astro';
+import Tape from '@src/components/marks/Tape.astro';
+import { projectBySlug, spell } from '@src/components/projects/_helpers/projects.functions';
+import NextProject from '@src/components/projects/NextProject.astro';
+import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import ProjectWriting from '@src/components/projects/ProjectWriting.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import Terminal from '@src/components/Terminal.astro';
+import { facts } from '@src/data/facts';
+import Base from '@src/layouts/Base.astro';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const project = projectBySlug('holdfast');
+const { dev, heldOut, runs, ablation, trackerMs, fps, gateCost } = facts.holdfast;
+
+const heavy = runs[runs.length - 1];
+const signed = (value: number) => (value > 0 ? `+${value.toFixed(1)}` : value.toFixed(1));
+---
+
+<Base page="project" seo={routeSeo('/projects/holdfast')}>
+  <ProjectHero
+    project={project}
+    lead="A tracker that keeps each object's identity when the picture breaks up."
+    highlight="identity"
+    intro={`Frames go missing, the feed freezes on a stale image, detections drop out, and the camera is moving the whole time. A tracker that trusts the picture hands out new IDs every time that happens. This one does not: on the worst input tested it holds ${heavy.holdfast} HOTA where the baseline manages ${heavy.baseline}.`}
+  >
+    <div slot="figure" class="artifact">
+      <Terminal class="code-panel" title="eval — VisDrone2019-MOT val" meta="TrackEval">
+        <pre><code>$ ./holdfast --eval heavy   <span class="muted"># {heavy.detail}</span>
+
+           HOTA
+baseline   {heavy.baseline.toFixed(1)}
+OC-SORT    {heavy.ocsort.toFixed(1)}
+holdfast   {heavy.holdfast.toFixed(1)}
+
+tracker    {trackerMs} ms/frame   <span class="muted">the detector is the cost</span></code></pre>
+      </Terminal>
+      <Tape class="tape-corner" />
+      <Tape class="tape-edge" />
+    </div>
+    <a slot="foot" class="demo-hint" href={project.demo}>
+      Cut the video yourself, in the browser
+    </a>
+  </ProjectHero>
+
+  <Band ground="body" labelledby="results-title">
+    <div class="container">
+      <SectionHeading id="results-title" class="h3" title="What it holds on to" />
+      <p class="section-lead">
+        VisDrone2019-MOT val, {spell(dev + heldOut)} sequences from a moving drone camera, scored
+        with TrackEval. Detections are ground truth plus seeded noise, so the table measures the
+        tracker rather than the detector. HOTA, higher is better.
+      </p>
+
+      <table class="table">
+        <caption class="caption">
+          <span class="caption-title">HOTA by input</span>
+          <span class="caption-detail">baseline is ByteTrack-style; OC-SORT is the reference</span>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">input</th>
+            <th scope="col" class="num">baseline</th>
+            <th scope="col" class="num">OC-SORT</th>
+            <th scope="col" class="num">Holdfast</th>
+          </tr>
+        </thead>
+        <tbody>
+          {runs.map(run => <tr>
+            <th scope="row">{run.input} <span class="detail">{run.detail}</span></th>
+            <td class="num">{run.baseline.toFixed(1)}</td>
+            <td class="num">{run.ocsort.toFixed(1)}</td>
+            <td class="num mine">{run.holdfast.toFixed(1)}</td>
+          </tr>)}
+        </tbody>
+      </table>
+
+      <p class="section-lead">
+        Every decision was tuned on {spell(dev)} sequences. The other {spell(heldOut)} were held out
+        and scored once. This is not a claim that Holdfast is a better general-purpose tracker —
+        OC-SORT runs here without the camera-motion compensation its paper does not use, and most of
+        the gap is that.
+      </p>
+    </div>
+  </Band>
+
+  <Band ground="paper" graph labelledby="ablation-title">
+    <div class="container">
+      <SectionHeading id="ablation-title" class="h3" title="What each piece is actually buying" />
+      <p class="section-lead">
+        HOTA lost when one piece is removed from the full tracker. Each helps where it should and
+        nowhere else — and the last row helps nowhere at all.
+      </p>
+
+      <table class="table">
+        <caption class="caption">
+          <span class="caption-title">HOTA lost when removed</span>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">removed</th>
+            {runs.map(run => <th scope="col" class="num">{run.input}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {ablation.map(row => <tr>
+            <th scope="row">{row.piece}</th>
+            <td class="num">{signed(row.clean)}</td>
+            <td class="num">{signed(row.blackout)}</td>
+            <td class="num">{signed(row.freeze)}</td>
+            <td class="num">{signed(row.heavy)}</td>
+          </tr>)}
+        </tbody>
+      </table>
+
+      <p class="section-lead">
+        The OC-SORT re-update is <strong>neutral on this data</strong>. It is kept because it is
+        cheap and has a unit test for the case it fixes, and it is reported as neutral rather than
+        quietly left in the list of things that help.
+      </p>
+      <p class="section-lead">
+        One decision went the other way. A Mahalanobis gate on the first matching stage is the
+        textbook move; measured, it cost about {spell(gateCost)} HOTA, so it came out. Same seed
+        gives byte-identical results, and macOS/Clang and Linux/GCC agree — the random distributions
+        are implemented by hand, because the ones in the standard library are not portable between
+        implementations.
+      </p>
+      <p class="section-lead">
+        The tracker itself is {trackerMs} ms a frame. End to end with a real detector it is{' '}
+        {fps.oneCore} fps on one core and {fps.twoCores} on two, which says the detector is the
+        thing to move to a GPU, not this.
+      </p>
+    </div>
+  </Band>
+
+  <ProjectWriting current="holdfast" />
+  <NextProject current="holdfast" />
+</Base>
+
+<style>
+  .artifact {
+    position: relative;
+  }
+  
+  .muted {
+    color: var(--fg-secondary);
+  }
+  
+  .demo-hint {
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+  }
+  
+  .section-lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-body);
+  }
+  
+  .table {
+    inline-size: 100%;
+    margin-block-start: var(--space-l);
+    border-collapse: collapse;
+    font-size: var(--size-small);
+  }
+  
+  .caption {
+    padding-block-end: var(--space-2xs);
+    text-align: start;
+  }
+  
+  .caption-title {
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+  }
+  
+  .caption-detail {
+    margin-inline-start: var(--space-2xs);
+    color: var(--fg-secondary);
+  }
+  
+  .table th,
+  .table td {
+    padding-block: var(--space-2xs);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+    text-align: start;
+    font-weight: 400;
+  }
+  
+  .table thead th {
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+  }
+  
+  .table .num {
+    font-family: var(--font-mono);
+    text-align: end;
+  }
+  
+  .table tbody th {
+    color: var(--fg-body);
+  }
+  
+  .detail {
+    color: var(--fg-secondary);
+  }
+  
+  .table .mine {
+    color: var(--fg);
+    font-weight: 700;
+  }
+</style>
