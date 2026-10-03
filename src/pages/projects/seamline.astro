@@ -1,0 +1,126 @@
+---
+import Band from '@src/components/Band.astro';
+import Tape from '@src/components/marks/Tape.astro';
+import { projectBySlug, spell } from '@src/components/projects/_helpers/projects.functions';
+import NextProject from '@src/components/projects/NextProject.astro';
+import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import Terminal from '@src/components/Terminal.astro';
+import { facts } from '@src/data/facts';
+import Base from '@src/layouts/Base.astro';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const project = projectBySlug('seamline');
+const { stages, wasmTargets, jointWeldsPerCrossing } = facts.seamline;
+---
+
+<Base page="project" seo={routeSeo('/projects/seamline')}>
+  <ProjectHero
+    project={project}
+    lead="A steel panel goes in, and a weld plan somebody can argue with comes out."
+    highlight="argue with"
+    intro={`Every seam found, put in a build order, reviewed in 3D, released, and then run by a simulated cell that faults and recovers. The part worth stealing is not the welding: the browser and the server share one compiled Rust core, so what the editor calls a valid plan and what the server will accept cannot drift apart.`}
+  >
+    <div slot="figure" class="artifact">
+      <Terminal class="code-panel" title="seamcore" meta={`rust → wasm ×${wasmTargets.length}`}>
+        <pre><code>{stages.join('\n  ↓ ')}</code></pre>
+      </Terminal>
+      <Tape class="tape-corner" />
+      <Tape class="tape-edge" />
+    </div>
+    <a slot="foot" class="demo-hint" href={project.demo}>
+      Open the live demo — free tier, so a cold start takes a moment
+    </a>
+  </ProjectHero>
+
+  <Band ground="body" labelledby="core-title">
+    <div class="container">
+      <SectionHeading id="core-title" class="h3" title="One core, compiled twice" />
+      <p class="section-lead">
+        <code>seamcore</code> is one Rust crate holding spec validation, seam extraction, the
+        sequencer and the plan checker. It is compiled to WebAssembly {spell(wasmTargets.length)}
+        {' '}times — once for the {wasmTargets[0]}, once for {wasmTargets[1]}. The editor runs it on
+        every keystroke for instant validation; the server runs the same build against every saved
+        plan. Anyone who has kept duplicate validation in sync across an API boundary knows what
+        that is worth.
+      </p>
+      <ul class="points">
+        <li>
+          <strong>State transitions are enforced in SQL, not in application code.</strong> Every
+          change is a conditional update on the current status, and partial unique indexes allow one
+          draft per panel and one open run per revision. A stale or duplicated request gets a 409
+          instead of racing.
+        </li>
+        <li>
+          <strong>A run is an event log.</strong> The cell writes each event to Postgres before
+          publishing it, and the operator screen rebuilds itself from that log over server-sent
+          events, resuming from the last event it saw. Two operators clicking start at once cannot
+          start the cell twice, and a server restart shows up as a fault they can retry — the same
+          as a controller losing power.
+        </li>
+        <li>
+          <strong>The sequencer is rules, not an optimiser.</strong> Tack everything, weld from the
+          centre out, alternate faces to balance heat. Stated that plainly the rule failed on the
+          seams that matter most — a full-length stiffener runs through the centre, so neither end
+          is further out. Those are welded as two halves that both start at the centre.
+        </li>
+      </ul>
+    </div>
+  </Band>
+
+  <Band ground="paper" graph labelledby="limits-title">
+    <div class="container">
+      <SectionHeading id="limits-title" class="h3" title="What it is not" />
+      <p class="section-lead">
+        Parametric flat-bar panels only: no CAD import, no tees, no bulb flats, no cutouts. Reading
+        STEP geometry properly needs a kernel and considerably more than the day this was built in,
+        and faking it on top of a mesh would have put the time in the wrong place. The sequencing
+        heuristic stands in for distortion modelling and is not a substitute for it. The weld cell
+        is simulated — no robot motion, no weld parameters, no controller. There is no login,
+        because it is a public link.
+      </p>
+      <p class="section-lead">
+        One thing the tests would not have caught. Crossings are modelled the way the parts are
+        actually built: longitudinals run continuously, transverses are cut into pieces between
+        them, and at each crossing the fillets split around the web so every piece end takes
+        {' '}{spell(jointWeldsPerCrossing.correct)} joint welds. The first draft had
+        {' '}{spell(jointWeldsPerCrossing.firstDraft)}. Drawing the parts out on paper found it,
+        before anything in the suite did.
+      </p>
+    </div>
+  </Band>
+
+  <NextProject current="seamline" />
+</Base>
+
+<style>
+  .artifact {
+    position: relative;
+  }
+  
+  .demo-hint {
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+  }
+  
+  .section-lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-body);
+  }
+  
+  .points {
+    display: grid;
+    gap: var(--space-m);
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-l);
+    padding-inline-start: 0;
+    list-style: none;
+    color: var(--fg-body);
+  }
+  
+  .points strong {
+    color: var(--fg);
+  }
+</style>

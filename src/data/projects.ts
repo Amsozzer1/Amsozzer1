@@ -1,6 +1,6 @@
 import { facts } from '@src/data/facts';
 
-export type ProjectSlug = 'plusweb' | 'ams-x' | 'mnist' | 'emberlink';
+export type ProjectSlug = 'plusweb' | 'ams-x' | 'mnist' | 'emberlink' | 'holdfast' | 'seamline';
 
 export interface Project {
   slug: ProjectSlug;
@@ -12,6 +12,8 @@ export interface Project {
   summary: string;
   specs: { label: string; value: string }[];
   cta: string;
+  // A hosted thing a reader can open without installing anything.
+  demo?: string;
   // Where it is published, if anywhere. The page and the JSON-LD both read this, so the
   // install line cannot drift from the one in the graph.
   registry?: { name: string; install: string; url: string };
@@ -25,7 +27,7 @@ export interface Project {
   runtimePlatform: string[];
 }
 
-const { mnist, emberlink } = facts;
+const { mnist, emberlink, holdfast, seamline } = facts;
 const count = (value: number) => value.toLocaleString('en-US');
 
 export const projects: Project[] = [
@@ -131,5 +133,60 @@ export const projects: Project[] = [
     programmingLanguage: ['C++20', 'Python', 'TypeScript'],
     license: 'MIT',
     runtimePlatform: ['Linux'],
+  },
+  {
+    slug: 'holdfast',
+    path: '/projects/holdfast',
+    number: '05',
+    name: 'Holdfast',
+    kind: 'a tracker for broken video',
+    tagline: 'Keeping an object\u2019s identity when the picture breaks up.',
+    summary:
+      'A multi-object tracker for drone video that holds each identity through frame blackouts, frozen feeds, detection dropout and a camera that is itself moving. Headless and CPU-only. Every design decision was tuned on three sequences and scored once on four that were held out, and one of them was reversed because the numbers said so.',
+    specs: [
+      {
+        label: 'scored with',
+        value: `TrackEval on VisDrone, ${holdfast.dev} dev / ${holdfast.heldOut} held out`,
+      },
+      { label: 'the tracker itself', value: `${holdfast.trackerMs} ms a frame` },
+      { label: 'end to end', value: `${holdfast.fps.oneCore} fps on one core, with the detector` },
+      {
+        label: 'ships as',
+        value: `a ${holdfast.container.mb} MB container, ${holdfast.container.arches.join(' or ')}`,
+      },
+    ],
+    cta: 'Break the video yourself',
+    repo: 'https://github.com/Amsozzer1/holdfast',
+    demo: 'https://amsozzer1.github.io/holdfast/',
+    stack: ['C++20', 'Eigen', 'ONNX Runtime', 'WebAssembly', 'CMake'],
+    programmingLanguage: ['C++20'],
+    license: 'MIT',
+    runtimePlatform: ['Linux', 'macOS', 'Web browser'],
+  },
+  {
+    slug: 'seamline',
+    path: '/projects/seamline',
+    number: '06',
+    name: 'Seamline',
+    kind: 'a weld plan you can review',
+    tagline: 'One Rust core, compiled twice, so the client and the server cannot disagree.',
+    summary:
+      'A stiffened steel panel goes in and a reviewable weld plan comes out: every seam found, put in a build order, checked in 3D, released, and then run by a simulated cell that faults and recovers. The interesting part is not welding \u2014 it is that the browser and the server share one compiled definition of what a valid plan is.',
+    specs: [
+      {
+        label: 'shared core',
+        value: `one Rust crate, WASM for ${seamline.wasmTargets.join(' and ')}`,
+      },
+      { label: 'state', value: 'draft to released, enforced in SQL' },
+      { label: 'a run is', value: 'an event log, replayed over SSE' },
+      { label: 'sequencing', value: 'rules you can explain, not an optimiser' },
+    ],
+    cta: 'Open the demo',
+    repo: 'https://github.com/Amsozzer1/seamline',
+    demo: 'https://seamline.onrender.com',
+    stack: ['Rust', 'WebAssembly', 'TypeScript', 'React Three Fiber', 'Postgres'],
+    programmingLanguage: ['Rust', 'TypeScript'],
+    license: 'MIT',
+    runtimePlatform: ['Web browser', 'Node.js'],
   },
 ];

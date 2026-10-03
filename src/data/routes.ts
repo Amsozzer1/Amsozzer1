@@ -76,6 +76,24 @@ export const routes = {
     card: { kicker: '04 \u2014 emberlink', headline: 'Freshness beats completeness.' },
     sources: ['src/pages/projects/emberlink.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
+  '/projects/holdfast': {
+    name: 'Holdfast',
+    title: 'Holdfast \u2014 tracking through blackouts and freezes \u00b7 Ahmed Sozzer',
+    description:
+      'A C++20 multi-object tracker for drone video that keeps each identity through frame blackouts, frozen feeds and camera motion. Scored with TrackEval.',
+    schema: 'WebPage',
+    card: { kicker: '05 \u2014 holdfast', headline: 'It keeps the ID when the picture does not.' },
+    sources: ['src/pages/projects/holdfast.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
+  },
+  '/projects/seamline': {
+    name: 'Seamline',
+    title: 'Seamline \u2014 one Rust core, two WebAssembly targets \u00b7 Ahmed Sozzer',
+    description:
+      'A weld plan you can review in 3D and run on a simulated cell, with the browser and the server sharing one compiled definition of a valid plan.',
+    schema: 'WebPage',
+    card: { kicker: '06 \u2014 seamline', headline: 'One core, compiled twice.' },
+    sources: ['src/pages/projects/seamline.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
+  },
   '/writing': {
     name: 'Writing',
     title: 'Writing — engineering posts and open threads · Ahmed Sozzer',

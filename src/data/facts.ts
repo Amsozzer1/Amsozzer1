@@ -158,6 +158,70 @@ export const facts = {
     recovery: { emberlink: '2.3 s and 0.6 s', tcp: 'never' },
   },
 
+  holdfast: {
+    // VisDrone2019-MOT val, 7 sequences from a moving drone camera. Detections are ground
+    // truth plus seeded noise, so the table measures the tracker and not the detector.
+    // Three sequences were used to tune; the other four were held out and scored once.
+    dev: 3,
+    heldOut: 4,
+    // HOTA, higher is better. Baseline is ByteTrack-style; OC-SORT is the published reference.
+    runs: [
+      { input: 'clean', detail: 'no degradation', baseline: 62.5, ocsort: 52.3, holdfast: 69.0 },
+      {
+        input: 'blackout',
+        detail: '15-30 frames lost every ~4 s',
+        baseline: 42.9,
+        ocsort: 37.2,
+        holdfast: 50.5,
+      },
+      {
+        input: 'freeze',
+        detail: 'a frame repeats for 10-20',
+        baseline: 49.4,
+        ocsort: 41.2,
+        holdfast: 59.5,
+      },
+      {
+        input: 'heavy',
+        detail: 'all of it, plus 30% dropout',
+        baseline: 32.0,
+        ocsort: 14.5,
+        holdfast: 38.9,
+      },
+    ],
+    // HOTA lost when each piece is removed from the full tracker. Each one helps where it
+    // should and nowhere else, and one of them does nothing at all.
+    ablation: [
+      {
+        piece: 'camera-motion compensation',
+        clean: -6.5,
+        blackout: -3.6,
+        freeze: -4.2,
+        heavy: -4.2,
+      },
+      { piece: 'timestamp-based dt', clean: 0, blackout: -2.7, freeze: 0, heavy: -1.5 },
+      { piece: 'recovery stage', clean: -0.3, blackout: -1.8, freeze: -2.0, heavy: -1.0 },
+      { piece: 'stale-frame guard', clean: 0, blackout: 0, freeze: -4.3, heavy: -0.4 },
+      { piece: 'OC-SORT re-update', clean: -0.4, blackout: -0.2, freeze: 0.1, heavy: 0.2 },
+    ],
+    // The tracker is not the cost; the detector is. p50 over 300 frames of 1344x756.
+    trackerMs: 0.09,
+    fps: { oneCore: 26, twoCores: 39 },
+    container: { mb: 242, arches: ['x86', 'ARM64'] },
+    // A Mahalanobis gate on the first matching stage is the textbook move. It was measured
+    // and removed.
+    gateCost: 3,
+  },
+
+  seamline: {
+    stages: ['spec', 'seams', 'sequence', 'review', 'release', 'run', 'fault', 'retry'],
+    // One Rust crate compiled to WebAssembly twice: the browser validates on every keystroke,
+    // the server re-checks every saved plan, and neither can drift from the other.
+    wasmTargets: ['browser', 'node'],
+    // Drawing the parts out caught this before the tests did.
+    jointWeldsPerCrossing: { firstDraft: 2, correct: 4 },
+  },
+
   experience: {
     since: 2024,
     roles: 3,
