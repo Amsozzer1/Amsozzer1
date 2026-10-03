@@ -90,6 +90,10 @@
 }
 
 = Publications & Presentations
-#list(..resume.publications.map(publication => [
-  #rich(publication.summary.trim(".", at: end)) (#link(publication.url, emph[Link]))
-]))
+// One body of work, published once and presented twice, so it takes one line rather than three.
+// resume.json keeps all three entries: they are three real citations, and /resume.json is served.
+#let pubs = resume.publications
+#list([
+  #rich(pubs.at(0).summary.trim(".", at: end)) (#link(pubs.at(0).url, emph(pubs.at(0).shortName))).
+  Also presented at #pubs.slice(1).map(p => link(p.url, emph(p.shortName))).join(" and ").
+])
