@@ -1,0 +1,55 @@
+---
+import { atWork } from '@src/components/home/_helpers/atWork.consts';
+---
+
+<div class="at-work">
+  <p class="label" id="at-work-label">at work</p>
+  <ol class="rows" aria-labelledby="at-work-label">
+    {atWork.map(({ title, line, href }) => <li class="row">
+      <a class="link" href={href}>{title}</a>
+      <p class="line">{line}</p>
+    </li>)}
+  </ol>
+</div>
+
+<style>
+  .label {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .rows {
+    margin: 0;
+    margin-block-start: var(--space-s);
+    padding: 0;
+    border-block-start: var(--rule-row) solid var(--rule-color);
+    list-style: none;
+  }
+  
+  .row {
+    padding-block: var(--space-s);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .link {
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: var(--size-small);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    text-decoration-color: var(--rule-color);
+    text-underline-offset: 0.2em;
+  }
+  
+  .link:hover {
+    text-decoration-color: var(--color-amber);
+  }
+  
+  .line {
+    margin-block-start: var(--space-3xs);
+    color: var(--fg-secondary);
+    font-size: var(--size-small);
+  }
+</style>

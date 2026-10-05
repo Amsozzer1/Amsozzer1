@@ -42,7 +42,7 @@ export const fonts = {
 
 // Font sizes scale linearly from the 390px phone board to the 1440px desktop board.
 export const fontSizes = {
-  display: { min: 48, max: 88 },
+  display: { min: 40, max: 72 },
   displayProject: { min: 62, max: 108 },
   h2: { min: 32, max: 52 },
   h3: { min: 24, max: 36 },
