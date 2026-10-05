@@ -9,23 +9,21 @@ const { services, layerWeeks, shipMonths } = facts.experience.deliveries;
   <div class="container">
     <hgroup class="head">
       <h3 id="same-job" class="title">Two more from the same job</h3>
-      <p class="client">
-        a different client — regulated deliveries, medical samples and hazardous materials
-      </p>
+      <p class="client">a different client: their backend, our mobile app</p>
     </hgroup>
 
     <div class="grid">
       <div class="story">
         <h4>Five backends, one door</h4>
         <p>
-          Their platform had grown into five separate services — some GraphQL, some REST, each with
-          its own login and its own idea of what a response looks like. The mobile app had to talk
-          to all of them. I was the engineer closest to the client, so the integration was mine.
+          Their platform had grown into five separate services, each with its own login and its own
+          idea of what a response looks like. The mobile app had to talk to all of them. I was the
+          engineer closest to the client, so the integration was mine.
         </p>
         <p>
           I put one typed layer over the whole thing, organised by subject rather than by service,
           so the other developer could call <code>api.auth.signIn()</code> and never learn which
-          backend was behind it. When one of them changed — and they changed constantly — the fix
+          backend was behind it. When one of them changed, and they changed constantly, the fix
           happened in one file instead of across every screen that touched it.
         </p>
         <p>
@@ -40,17 +38,11 @@ const { services, layerWeeks, shipMonths } = facts.experience.deliveries;
             <span class="label">services behind one interface</span>
           </li>
           <li>
-            <span class="value">
-              {layerWeeks}<span class="unit" aria-hidden="true">{' wks'}</span
-              ><span class="vh">{' weeks'}</span>
-            </span>
+            <span class="value">{layerWeeks}<span class="unit">{' weeks'}</span></span>
             <span class="label">to build the layer</span>
           </li>
           <li>
-            <span class="value">
-              {shipMonths}<span class="unit" aria-hidden="true">{' mo'}</span
-              ><span class="vh">{' months'}</span>
-            </span>
+            <span class="value">{shipMonths}<span class="unit">{' months'}</span></span>
             <span class="label">for two of us to ship the app</span>
           </li>
         </ul>
@@ -59,25 +51,26 @@ const { services, layerWeeks, shipMonths } = facts.experience.deliveries;
       <div class="story">
         <h4>The rewrite that did not happen</h4>
         <p>
-          Their technical co-founder wanted to add a sixth service, written in Rust, because the
-          driver-matching was slow. I had concerns, and they were mostly about us: nearly every bug
-          we were chasing traced back to a change in one of their existing services, and a new one
-          in a new language meant more of that, plus waiting on their team to build it.
+          Their technical lead wanted to add a sixth service, in a new language, because one of
+          their core features was slow. I had concerns, and they were mostly about us: nearly every
+          bug we were chasing traced back to a change in one of their existing services, and a new
+          one in a new language meant more of that, plus waiting on their team to build it.
         </p>
         <p>
           I had asked for read access to their backend earlier, so I could understand what we were
-          integrating against, and they had given it to me. Our contract was frontend only — I could
+          integrating against, and they had given it to me. Our contract was frontend only. I could
           not fix anything on their side, but I could see it. What I saw looked like an algorithm
           and a data-structure choice rather than anything a language would fix.
         </p>
         <p>
-          So I walked him through it: the specific problems we had been hitting, and the workarounds
-          we were carrying on our side to absorb them. Not a verdict — the list. He agreed to look
-          at what they already had first. Their team made a round of optimisations that cleared
-          several bugs we had been flagging for weeks, and we shipped on schedule.
+          So I walked their lead through it: the specific problems we had been hitting, and the
+          workarounds we were carrying on our side to absorb them. I brought the list and left the
+          verdict to them. They agreed to look at what they already had first. Their team made a
+          round of optimisations that cleared several bugs we had been flagging for weeks, and we
+          shipped on schedule.
         </p>
-        <p class="aside">
-          if he had insisted, I would have supported it. It is their system. I would have put the
+        <p>
+          If they had insisted, I would have supported it. It is their system. I would have put the
           new service behind our layer so it did not slow the app down.
         </p>
       </div>
