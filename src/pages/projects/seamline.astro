@@ -17,6 +17,7 @@ const { stages, wasmTargets, jointWeldsPerCrossing } = facts.seamline;
 <Base page="project" seo={routeSeo('/projects/seamline')}>
   <ProjectHero
     project={project}
+    kicker="A one-day prototype, built with Claude Code from my spec. The numbers below come from its own test runs."
     lead="A steel panel goes in, and a weld plan somebody can argue with comes out."
     highlight="argue with"
     intro={`Every seam found, put in a build order, reviewed in 3D, released, and then run by a simulated cell that faults and recovers. The part worth stealing is not the welding: the browser and the server share one compiled Rust core, so what the editor calls a valid plan and what the server will accept cannot drift apart.`}

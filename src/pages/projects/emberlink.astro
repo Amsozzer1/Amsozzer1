@@ -22,6 +22,7 @@ const deep = links[0];
 <Base page="project" seo={routeSeo('/projects/emberlink')}>
   <ProjectHero
     project={project}
+    kicker="A one-day prototype, built with Claude Code from my spec. The numbers below come from its own test runs."
     lead="A robot-to-operator link that keeps the useful picture alive when the radio gets bad."
     highlight="useful picture"
     intro={`A frozen frame that looks live is the worst thing you can put in front of an operator. So as the link degrades this one sends less rather than falling behind: on a ${deep.detail} link the oldest thing on screen is ${deep.rows[0].age.split(' / ')[0]} old, where TCP is ${deep.rows[1].age.split(' / ')[0]} behind and still climbing.`}

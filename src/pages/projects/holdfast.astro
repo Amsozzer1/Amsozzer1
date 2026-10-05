@@ -21,6 +21,7 @@ const signed = (value: number) => (value > 0 ? `+${value.toFixed(1)}` : value.to
 <Base page="project" seo={routeSeo('/projects/holdfast')}>
   <ProjectHero
     project={project}
+    kicker="A one-day prototype, built with Claude Code from my spec. The numbers below come from its own test runs."
     lead="A tracker that keeps each object's identity when the picture breaks up."
     highlight="identity"
     intro={`Frames go missing, the feed freezes on a stale image, detections drop out, and the camera is moving the whole time. A tracker that trusts the picture hands out new IDs every time that happens. This one does not: on the worst input tested it holds ${heavy.holdfast} HOTA where the baseline manages ${heavy.baseline}.`}

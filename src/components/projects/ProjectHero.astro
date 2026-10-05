@@ -1,6 +1,7 @@
 ---
 import AmberRule from '@src/components/AmberRule.astro';
 import Band from '@src/components/Band.astro';
+import Kicker from '@src/components/Kicker.astro';
 import CtaButton from '@src/components/CtaButton.astro';
 import StackList from '@src/components/StackList.astro';
 import type { Project } from '@src/data/projects';
@@ -11,6 +12,7 @@ interface Props {
   highlight: string;
   intro: string;
   back?: { href: string; label: string };
+  kicker?: string;
 }
 
 // A project the home list doesn't carry has nowhere to go back to, so it points home instead.
@@ -20,6 +22,7 @@ const {
   highlight,
   intro,
   back = { href: '/#projects', label: 'projects' },
+  kicker,
 } = Astro.props;
 
 // The lead arrives as text, not as a slot: the amber highlight has to be styled here, and scoped
@@ -33,6 +36,7 @@ const at = lead.indexOf(highlight);
       <a class="back-link" href={back.href}
         ><span aria-hidden="true">←</span> back to {back.label}</a
       >
+      {kicker && <Kicker class="hero-kicker">{kicker}</Kicker>}
       <h1 id="project-title" class="title" data-shared-title={project.slug}>{project.name}</h1>
       <p class="lead">
         {lead.slice(0, at)}<span class="highlight">{highlight}</span
@@ -99,9 +103,19 @@ const at = lead.indexOf(highlight);
     text-decoration-line: underline;
   }
   
+  .hero-kicker {
+    margin-block-start: var(--space-l);
+    max-inline-size: var(--layout-prose-max);
+  }
+  
   .title {
     margin-block-start: var(--space-l);
     font-size: var(--size-display-project);
+  }
+  
+  /* The kicker already carries the space above the title. */
+  .hero-kicker + .title {
+    margin-block-start: var(--space-xs);
   }
   
   .lead {
