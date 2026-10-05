@@ -63,10 +63,13 @@
   ).join(" | ")
 ]
 
-// LaTeX sets the first section closer to the header than the ones after it.
-#v(-2.4pt)
+// That -2.4pt was for when a ruled section heading came first and brought its own space above.
+// The summary is a plain paragraph, so it needs its own air or it collides with the contact line.
+#v(gap)
 
 #basics.summary
+
+#v(gap - 3pt)
 
 = Experience
 #for (i, job) in resume.work.enumerate() {
