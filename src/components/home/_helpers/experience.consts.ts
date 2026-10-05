@@ -1,5 +1,3 @@
-import { facts } from '@src/data/facts';
-
 interface JobSummary {
   role: string;
   lead: string;
@@ -16,14 +14,14 @@ export const jobSummaries: Record<string, JobSummary> = {
     detail:
       'Two things recur: integrations against GoHighLevel, Zoho and HubSpot that delete an operations team’s manual data entry, and CI/CD with test gates running across several concurrent client projects.',
     stack: ['Next.js', 'React', 'TypeScript', 'PostgreSQL + Prisma', 'GCP', 'React Native'],
-    outcome: `${facts.experience.fyclabs.growth} the users on the same backend — query and schema work, then scaled out`,
+    outcome: 'one login across seven portals, 50,000+ people a day',
   },
   'Holiday Channel': {
     role: 'Full Stack & iOS',
-    lead: 'An e-commerce platform end to end, built so the checkout path holds on the busiest week of the year.',
+    lead: 'The store, built solo in React Native during my last semester at Illinois.',
     detail:
-      'Checkout through order fulfillment, with the service architecture designed to absorb holiday traffic without degrading the one path that is not allowed to degrade. Google Ads on the acquisition side.',
-    stack: ['Next.js', 'Shadcn', 'Framer Motion', 'iOS'],
+      'Checkout through order fulfillment, and the iOS app taken from the Figma designs to an App Store release.',
+    stack: ['React Native', 'iOS', 'Figma'],
     outcome: 'shipped alongside my last semester at Illinois',
   },
   'Luminii LLC': {

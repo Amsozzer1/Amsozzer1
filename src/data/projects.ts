@@ -12,6 +12,9 @@ export interface Project {
   summary: string;
   specs: { label: string; value: string }[];
   cta: string;
+  // Off the projects list on the home page. The page stays live and in the sitemap, so a
+  // direct link and a search still reach it.
+  unlisted?: boolean;
   // A hosted thing a reader can open without installing anything.
   demo?: string;
   // Where it is published, if anywhere. The page and the JSON-LD both read this, so the
@@ -111,6 +114,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'emberlink',
+    unlisted: true,
     path: '/projects/emberlink',
     number: '04',
     name: 'Emberlink',
@@ -136,6 +140,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'holdfast',
+    unlisted: true,
     path: '/projects/holdfast',
     number: '05',
     name: 'Holdfast',
@@ -165,6 +170,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'seamline',
+    unlisted: true,
     path: '/projects/seamline',
     number: '06',
     name: 'Seamline',
@@ -190,3 +196,6 @@ export const projects: Project[] = [
     runtimePlatform: ['Web browser', 'Node.js'],
   },
 ];
+
+// What the home page lists. The rest keep their pages.
+export const listedProjects = projects.filter(project => !project.unlisted);

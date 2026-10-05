@@ -29,7 +29,7 @@ const year = (date: string) => date.slice(0, 4);
           <abbr title={degree.studyType}>B.S.</abbr>
           {degree.area}
           <span aria-hidden="true">·</span>
-          <time datetime={degree.endDate}>{year(degree.endDate)}</time>
+          <time datetime={degree.endDate}>{degree.endDate?.slice(0, 4)}</time>
         </p>
       </div>
       <p class="research prose">

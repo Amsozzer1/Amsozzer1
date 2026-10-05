@@ -14,7 +14,7 @@ const [degree] = resume.education;
 const [paper, neiu, wright] = resume.publications;
 
 const year = (date: string) => date.slice(0, 4);
-const graduated = monthYear(degree.endDate);
+const graduated = degree.endDate ? monthYear(degree.endDate) : '';
 
 const talks = [
   { place: 'NEIU', page: 'symposium listing', talk: neiu },
@@ -39,7 +39,7 @@ const talks = [
         <p class="degree">
           <abbr title={degree.studyType}>B.S.</abbr>
           {degree.area} <span aria-hidden="true">·</span>
-          {year(degree.endDate)}
+          {graduated.slice(-4)}
         </p>
       </div>
       <p class="paper">
