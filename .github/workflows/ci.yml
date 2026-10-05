@@ -40,6 +40,12 @@ jobs:
       - run: pnpm resume
       - run: pnpm build
       - run: pnpm validate:html
+      - run: sudo apt-get install -y poppler-utils
+      - name: Content check
+        run: node scripts/check-content.ts
+        env:
+          CONTENT_DENYLIST: ${{ secrets.CONTENT_DENYLIST }}
+          CHECK_EM_DASH: ${{ vars.CHECK_EM_DASH }}
       - name: Check internal links
         uses: lycheeverse/lychee-action@v2
         with:
