@@ -14,6 +14,10 @@ const { job, number } = Astro.props;
 const id = `job-${number}`;
 
 // Home links straight to a track, so each one needs a stable anchor.
+// The PDF header carries a short credit; the page has room for the longer one where there is one.
+const scope = (track: NonNullable<Props['job']['tracks']>[number]) =>
+  'creditWeb' in track ? track.creditWeb : track.credit;
+
 const anchors: Record<string, string> = {
   'Insurance platform': 'insurance',
   'Education network single sign-on': 'sign-on',
@@ -54,6 +58,7 @@ const stack = [
           {job.tracks?.map(track => <div class="row">
             <dt id={anchors[track.name]}>{track.name}</dt>
             <dd>
+              <p class="track-scope">{scope(track)}</p>
               <p class="track-stack">{track.stack}</p>
               <ul class="track-points">
                 {track.highlights.map(point => <li>{point}</li>)}
@@ -160,6 +165,11 @@ const stack = [
     .body {
       display: block;
       margin-block-start: var(--space-s);
+    }
+  
+    .track-scope {
+      color: var(--color-text-body);
+      font-size: var(--size-small);
     }
   
     .track-stack {

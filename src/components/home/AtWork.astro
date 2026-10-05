@@ -5,8 +5,11 @@ import { atWork } from '@src/components/home/_helpers/atWork.consts';
 <div class="at-work">
   <p class="label" id="at-work-label">at work</p>
   <ol class="rows" aria-labelledby="at-work-label">
-    {atWork.map(({ title, line, href }) => <li class="row">
-      <a class="link" href={href}>{title}</a>
+    {atWork.map(({ title, credit, line, href }) => <li class="row">
+      <p class="head">
+        <a class="link" href={href}>{title}</a>
+        <span class="credit"><span aria-hidden="true">·</span> {credit}</span>
+      </p>
       <p class="line">{line}</p>
     </li>)}
   </ol>
@@ -45,6 +48,13 @@ import { atWork } from '@src/components/home/_helpers/atWork.consts';
   
   .link:hover {
     text-decoration-color: var(--color-amber);
+  }
+  
+  .credit {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
   }
   
   .line {

@@ -38,17 +38,20 @@
           "stack": "Next.js, TypeScript, Node/Express, PostgreSQL, Prisma, BullMQ, GCP",
           "highlights": [
             "Proved the insurance carrier was silently dropping our policy photos, and ran the weekly call with the carrier",
-            "Built overnight BullMQ jobs that re-check every policy and resubmit whatever the carrier dropped. They caught about 10 broken policies nobody had noticed, and odd cases now email the team with their logs",
+            "Built overnight BullMQ jobs that re-check every policy and resubmit whatever the carrier dropped. They caught about 10 broken policies out of roughly 300 that nobody had noticed, and odd cases now email the team with their logs",
             "Traced slow PostgreSQL queries with `EXPLAIN ANALYZE` and fixed them with composite indexes and raw SQL"
-          ]
+          ],
+          "credit": "sole engineer"
         },
         {
           "name": "Education network single sign-on",
           "stack": "Next.js, PostgreSQL, Prisma, AWS Amplify",
           "highlights": [
-            "Built one login across 3 new portals and 4 legacy ones, used by 50,000+ students, teachers, principals, district leaders and admins a day. The SSO is its own Next.js app that checks each Firebase-signed token with Firebase, confirms the user can access that portal, and redirects them in",
+            "Built one login across 3 new portals and 4 legacy ones, used by 50,000+ people a day. The SSO is its own Next.js app that checks each Firebase-signed token with Firebase, confirms the user can access that portal, and redirects them in",
             "Talked the PM and senior engineers out of a repo per portal, since the portals share one theme, and built one monorepo on a single Amplify deployment where subdomains split each portal's routes"
-          ]
+          ],
+          "credit": "SSO mine, portals with a team",
+          "creditWeb": "the sign-on and the deployment were mine; the portals were built by a small team I was on"
         },
         {
           "name": "Women's health app",
@@ -57,7 +60,8 @@
             "Built the React Native app from zero to launch and still own it. The client came back for a second phase",
             "Built the onboarding that places each user in one of 10 phenotypes and the community where doctors, users and an AI bot steered by the lead doctor answer posts, frontend and backend",
             "On other client projects I wired GoHighLevel, Zoho and HubSpot into their backends over REST and webhooks, and set up CI/CD on GCP. I ship to production several times a week"
-          ]
+          ],
+          "credit": "with one other engineer"
         }
       ]
     },
