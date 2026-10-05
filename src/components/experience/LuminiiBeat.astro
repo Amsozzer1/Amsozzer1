@@ -2,8 +2,6 @@
 import Band from '@src/components/Band.astro';
 import BeatKicker from '@src/components/experience/BeatKicker.astro';
 import RoleLine from '@src/components/experience/RoleLine.astro';
-import Stat from '@src/components/experience/Stat.astro';
-import { facts } from '@src/data/facts';
 import type resume from '@src/data/resume.json';
 
 interface Props {
@@ -38,10 +36,6 @@ const id = `job-${number}`;
           query times usable.
         </p>
       </div>
-      <Stat class="record-count" value={facts.experience.luminii.records}>
-        records reindexed, with automated validation added on top — cutting query times across the
-        pricing pipeline.
-      </Stat>
       <RoleLine
         class="role"
         position={job.position}
@@ -75,19 +69,14 @@ const id = `job-${number}`;
   @media (width >= 64rem) {
     .grid {
       grid-template-areas:
-        'story stat'
-        'role stat';
-      grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+        'story'
+        'role';
       column-gap: var(--space-2xl);
       align-items: start;
     }
   
     .story {
       grid-area: story;
-    }
-  
-    .record-count {
-      grid-area: stat;
     }
   
     .role {
