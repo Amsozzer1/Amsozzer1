@@ -106,7 +106,10 @@
 // own block.
 #for (i, school) in resume.education.enumerate() {
   if i > 0 { v(0.2em) }
-  let study = school.at("abbreviation", default: school.studyType) + " in " + school.area
+  // Wright is an Associate in Science with no field recorded, so the area is optional.
+  let study = school.at("abbreviation", default: school.studyType)
+  let area = school.at("area", default: none)
+  if area != none { study += " in " + area }
   let honors = school.at("score", default: none)
   if honors != none { study += ", " + honors }
   let notes = school.at("courses", default: ())

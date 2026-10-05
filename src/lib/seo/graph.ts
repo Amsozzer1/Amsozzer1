@@ -32,12 +32,16 @@ const projectForPost = (path: string) =>
 
 const organization = (name: string): Organization => ({ '@type': 'Organization', name });
 
-const school: CollegeOrUniversity = {
-  '@type': 'CollegeOrUniversity',
-  name: site.school.name,
-  url: site.school.url,
-  sameAs: site.school.wikidata,
-};
+// Both schools, in the order he attended them. Wright is where the research started.
+const schools: CollegeOrUniversity[] = [
+  {
+    '@type': 'CollegeOrUniversity',
+    name: site.school.name,
+    url: site.school.url,
+    sameAs: site.school.wikidata,
+  },
+  { '@type': 'CollegeOrUniversity', name: 'Wilbur Wright College' },
+];
 
 type Job = (typeof resume.work)[number];
 
@@ -76,7 +80,7 @@ export const person = (): Person => ({
     addressCountry: site.location.country,
   },
   ...workHistory(),
-  alumniOf: school,
+  alumniOf: schools,
   knowsAbout: site.knowsAbout,
   sameAs: [site.links.github, site.links.linkedin, site.links.orcid],
   identifier: { '@type': 'PropertyValue', propertyID: 'ORCID', value: site.orcid },

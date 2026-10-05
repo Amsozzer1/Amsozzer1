@@ -21,7 +21,9 @@ const profiles = [site.links.github, site.links.linkedin, site.links.orcid].map(
         )}
       </h2>
       <p class="note">
-        {site.location.city}, {site.location.region}. {site.availability.relocation}.
+        {site.availability.label}
+        <span aria-hidden="true">·</span> {site.location.city}, {site.location.region}
+        <span aria-hidden="true">·</span> {site.availability.relocation}
       </p>
       <a class="email" href={`mailto:${site.email}`}>{site.email}</a>
     </div>

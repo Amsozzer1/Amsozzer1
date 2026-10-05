@@ -6,6 +6,8 @@ export interface Route {
   card: Card;
   sources: readonly string[];
   noindex?: boolean;
+  // Indexable, but kept out of llms.txt and llms-full.txt.
+  unlisted?: boolean;
 }
 
 export interface Card {
@@ -70,6 +72,7 @@ export const routes = {
     sources: ['src/pages/projects/mnist.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
   '/projects/emberlink': {
+    unlisted: true,
     name: 'Emberlink',
     title: 'Emberlink \u2014 a robot video link for bad radio \u00b7 Ahmed Sozzer',
     description:
@@ -79,6 +82,7 @@ export const routes = {
     sources: ['src/pages/projects/emberlink.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
   '/projects/holdfast': {
+    unlisted: true,
     name: 'Holdfast',
     title: 'Holdfast \u2014 tracking through blackouts and freezes \u00b7 Ahmed Sozzer',
     description:
@@ -88,6 +92,7 @@ export const routes = {
     sources: ['src/pages/projects/holdfast.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
   '/projects/seamline': {
+    unlisted: true,
     name: 'Seamline',
     title: 'Seamline \u2014 one Rust core, two WebAssembly targets \u00b7 Ahmed Sozzer',
     description:
