@@ -42,9 +42,9 @@ export const projects: Project[] = [
     kind: 'a web framework',
     tagline: 'An Express-style HTTP framework in C++17.',
     summary:
-      'Everything above the socket is mine: the accept loop, the parser, the router, the middleware machinery. A literal path segment always beats a parameter, whatever order you registered them in.',
+      "An Express-style HTTP framework in C++17, in Microsoft's vcpkg. I first wrote the whole path myself, a blocking accept loop and a parser that split strings, then moved the loop onto libuv and the parsing onto llhttp, the two pieces Node runs on. The trie router, the middleware chain and the request and response layer are mine. 4.8× Express at 5 routes, and flat out to 10,000.",
     specs: [
-      { label: 'dependencies', value: 'three — libuv, llhttp, nlohmann/json' },
+      { label: 'dependencies', value: 'libuv, llhttp, nlohmann/json' },
       { label: 'tested', value: 'GoogleTest, ASan + UBSan in CI' },
       { label: 'install', value: 'vcpkg install amsozzer1-plusweb' },
       { label: 'license', value: 'MIT' },
@@ -68,9 +68,9 @@ export const projects: Project[] = [
     number: '02',
     name: 'AMS-X',
     kind: 'a 3D printer protocol',
-    tagline: 'An open modular filament system for Bambu Lab printers.',
+    tagline: 'Filament swaps for my print shop, driven over MQTT.',
     summary:
-      'Stock hardware caps multi-material at four spools and asks a human to stand there for every change. None of the protocol is published, so the command set was pulled apart against a live machine.',
+      "I run a small 3D printing business, and any filament change past Bambu's own AMS needs a person at the printer. AMS-X moves that loop onto a FastAPI server and a Next.js dashboard that drive the printer over its local MQTT, with each swap planned from the sliced 3MF. A person still feeds the spool until the motor modules work.",
     specs: [
       { label: 'plan source', value: 'the sliced .3mf, parsed server-side' },
       { label: 'transport', value: 'MQTT over TLS, FTPS on LAN' },
@@ -86,6 +86,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'mnist',
+    unlisted: true,
     path: '/projects/mnist',
     number: '03',
     name: 'MNIST',

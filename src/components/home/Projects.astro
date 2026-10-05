@@ -2,15 +2,42 @@
 import Band from '@src/components/Band.astro';
 import SectionHeading from '@src/components/SectionHeading.astro';
 import Terminal from '@src/components/Terminal.astro';
-import MnistPanel from '@src/components/home/MnistPanel.astro';
 import ProjectRow from '@src/components/home/ProjectRow.astro';
 import TerminalLines from '@src/components/home/TerminalLines.astro';
 import { curlSession, printerReport } from '@src/components/home/_helpers/projects.consts';
+import type { Line } from '@src/components/home/_helpers/terminalLines.functions';
 import { facts } from '@src/data/facts';
-import { listedProjects } from '@src/data/projects';
+import { listedProjects, type ProjectSlug } from '@src/data/projects';
 
-const [plusweb, amsx, mnist] = listedProjects;
 const { mqtt } = facts.amsx;
+
+interface Panel {
+  note: string;
+  title: string;
+  meta: string;
+  lines: Line[];
+}
+
+const panels: Partial<Record<ProjectSlug, Panel>> = {
+  plusweb: {
+    note: 'the timing on that page is measured in your browser, on a port of the same trie, not typed in by me.',
+    title: `curl — localhost:${facts.plusweb.port}`,
+    meta: 'keep-alive',
+    lines: curlSession,
+  },
+  'ams-x': {
+    note: 'nothing moves until the printer’s own report agrees with the plan.',
+    title: mqtt.topic,
+    meta: `mqtt · tls ${mqtt.port}`,
+    lines: printerReport,
+  },
+};
+
+// A project without a panel simply doesn't appear here, so the list stays the single source.
+const rows = listedProjects.flatMap(project => {
+  const panel = panels[project.slug];
+  return panel ? [{ project, panel }] : [];
+});
 ---
 
 <Band ground="body" id="projects" labelledby="projects-title" class="projects">
@@ -20,41 +47,20 @@ const { mqtt } = facts.amsx;
         class="heading"
         kicker="projects"
         id="projects-title"
-        title="Three things I built. Two run in your browser, one runs a printer."
+        title="On my own time."
       />
-      <ul class="kinds">
-        {listedProjects.map(({ kind }) => <li>{kind}</li>)}
-      </ul>
     </div>
 
-    <ProjectRow
-      project={plusweb}
+    {rows.map(({ project, panel }, index) => <ProjectRow
+      project={project}
       mark="tape"
-      note="the timing on that page is measured in your browser, on a port of the same trie — not typed in by me."
+      flip={index % 2 === 1}
+      note={panel.note}
     >
-      <Terminal title={`curl — localhost:${facts.plusweb.port}`} meta="keep-alive">
-        <TerminalLines lines={curlSession} />
+      <Terminal title={panel.title} meta={panel.meta}>
+        <TerminalLines lines={panel.lines} />
       </Terminal>
-    </ProjectRow>
-
-    <ProjectRow
-      project={amsx}
-      mark="tape"
-      flip
-      note="nothing moves until the printer’s own report agrees with the plan."
-    >
-      <Terminal title={mqtt.topic} meta={`mqtt · tls ${mqtt.port}`}>
-        <TerminalLines lines={printerReport} />
-      </Terminal>
-    </ProjectRow>
-
-    <ProjectRow
-      project={mnist}
-      mark="tack"
-      note="and no, numpy doesn’t count — there isn’t any in a browser anyway."
-    >
-      <MnistPanel />
-    </ProjectRow>
+    </ProjectRow>)}
   </div>
 </Band>
 
@@ -73,24 +79,11 @@ const { mqtt } = facts.amsx;
     max-inline-size: var(--layout-prose-max);
   }
   
-  .kinds {
-    padding: 0;
-    color: var(--fg-caption);
-    font-family: var(--font-mono);
-    font-size: var(--size-mono);
-    line-height: var(--leading-mono);
-    list-style: none;
-  }
-  
   @media (width >= 64rem) {
     .head {
       grid-template-columns: minmax(0, 1fr) auto;
       column-gap: var(--space-xl);
       align-items: end;
-    }
-  
-    .kinds {
-      text-align: end;
     }
   }
 </style>
