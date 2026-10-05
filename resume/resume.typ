@@ -80,7 +80,10 @@
   if "tracks" in job {
     for track in job.tracks {
       v(0.15em)
-      [#emph(track.name) · #track.stack]
+      // Who did it sits with the name; the stack follows.
+      let credit = track.at("credit", default: none)
+      let head = if credit == none { emph(track.name) } else { [#emph(track.name) · #credit] }
+      [#head · #track.stack]
       list(..track.highlights.map(rich))
     }
   } else {
