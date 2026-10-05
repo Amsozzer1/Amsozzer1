@@ -52,9 +52,9 @@ export const routes = {
   },
   '/projects/ams-x': {
     name: 'AMS-X',
-    title: 'More than four spools on a Bambu Lab printer · Ahmed Sozzer',
+    title: 'AMS-X · filament swaps past Bambu\u2019s AMS, over MQTT · Ahmed Sozzer',
     description:
-      'Bambu Lab caps multi-material at four spools. AMS-X is an open alternative to the stock AMS, driving every filament swap over the printer\u2019s own local MQTT.',
+      'AMS-X drives every filament swap on a Bambu Lab printer over its local MQTT, past the 4 slots (16 with the hub) of Bambu\u2019s own AMS: a FastAPI server, a Next.js dashboard, and a person feeding spools until the motors work.',
     schema: 'WebPage',
     card: { kicker: '02 — ams-x', headline: 'An open modular filament system, driven over MQTT.' },
     sources: ['src/pages/projects/ams-x.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
