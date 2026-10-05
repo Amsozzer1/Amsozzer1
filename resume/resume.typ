@@ -59,41 +59,59 @@
     // --input slug=<company> to give a single application its own.
     link(basics.url + "/r/" + slug, bare(basics.url)),
     ..basics.profiles.map(profile => link(profile.url, bare(profile.url))),
-    basics.location.city + ", " + basics.location.region,
+    basics.location.city + ", " + basics.location.region + " · " + basics.relocation,
   ).join(" | ")
 ]
 
 // LaTeX sets the first section closer to the header than the ones after it.
 #v(-2.4pt)
 
-= Education
-#for school in resume.education {
-  entry(school.institution, none, school.studyType + " in " + school.area, month-year(school.endDate))
-}
+#basics.summary
 
 = Experience
 #for (i, job) in resume.work.enumerate() {
   if i > 0 { v(0.2em) }
   entry(job.name, job.location, job.position, dates(job))
-  list(..job.highlights.map(rich))
+  // One employer, several client systems, each with its own stack line. The system is named,
+  // the client never is.
+  if "tracks" in job {
+    for track in job.tracks {
+      v(0.15em)
+      [#emph(track.name) · #track.stack]
+      list(..track.highlights.map(rich))
+    }
+  } else {
+    list(..job.highlights.map(rich))
+  }
+}
+
+= Projects
+#for (i, project) in resume.projects.enumerate() {
+  if i > 0 { v(0.2em) }
+  // The visible text is the path, not the word "Repo". Most ATS parsers keep the text and drop
+  // the link, so a reader of the parsed version still gets somewhere.
+  [#strong(project.name + ": " + project.description) · #link(project.url, bare(project.url))]
+  // The LaTeX project lists use a wider 14pt left margin.
+  list(indent: 4pt, ..project.highlights.map(rich))
 }
 
 = Skills
 #resume.skills.map(skill => [#strong(skill.name + ":") #skill.keywords.join(", ")]).join(linebreak())
 
-= Projects
-#for (i, project) in resume.projects.enumerate() {
+= Education
+// entry() is inline, so two schools in a row would run together on one line. Each gets its
+// own block.
+#for (i, school) in resume.education.enumerate() {
   if i > 0 { v(0.2em) }
-  [#strong(project.name + " — " + project.description) | #link(project.url, emph[Repo])]
-  // The LaTeX project lists use a wider 14pt left margin.
-  list(indent: 4pt, ..project.highlights.map(rich))
+  let study = school.at("abbreviation", default: school.studyType) + " in " + school.area
+  let honors = school.at("score", default: none)
+  if honors != none { study += ", " + honors }
+  let notes = school.at("courses", default: ())
+  if notes.len() > 0 { study += " · " + notes.join(", ") }
+  let when = school.at("endDate", default: none)
+  block(entry(school.institution, none, study, if when == none { "" } else { month-year(when) }))
 }
 
 = Publications & Presentations
-// One body of work, published once and presented twice, so it takes one line rather than three.
-// resume.json keeps all three entries: they are three real citations, and /resume.json is served.
-#let pubs = resume.publications
-#list([
-  #rich(pubs.at(0).summary.trim(".", at: end)) (#link(pubs.at(0).url, emph(pubs.at(0).shortName))).
-  Also presented at #pubs.slice(1).map(p => link(p.url, emph(p.shortName))).join(" and ").
-])
+// One sentence. All three citations stay in resume.json and are served at /resume.json.
+#list([#rich(resume.publications.at(0).summary)])

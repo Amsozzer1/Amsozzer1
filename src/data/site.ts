@@ -18,6 +18,9 @@ export const site = {
     open: false,
     label: 'open to full-time',
     since: '2026-09',
+    // The footer says where he is and that he will move, rather than a start date that
+    // goes stale the moment it passes.
+    relocation: 'Open to relocating',
   },
   employer: {
     name: 'FYCLabs',

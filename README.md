@@ -107,7 +107,7 @@ Full-stack app with real-time messaging over WebSockets, video calling via Strea
 ## Education
 
 **University of Illinois Urbana-Champaign** — B.S. Computer Science, May 2025
-**Wilbur Wright College** — A.E.S. Computer Science, High Honors
+**Wilbur Wright College** — A.S. Computer Science, highest honors · CS and calculus tutor
 
 ## Contact
 

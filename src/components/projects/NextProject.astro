@@ -1,15 +1,17 @@
 ---
 import AmberRule from '@src/components/AmberRule.astro';
-import { projects, type ProjectSlug } from '@src/data/projects';
+import { listedProjects, type ProjectSlug } from '@src/data/projects';
 
 interface Props {
   current: ProjectSlug;
 }
 
 const { current } = Astro.props;
-const index = projects.findIndex(project => project.slug === current);
-const previous = projects[index - 1];
-const following = projects[index + 1];
+// An unlisted project is not in this walk, so findIndex returns -1 and both neighbours are
+// undefined — which falls through to "home" and "all projects", the right offer there.
+const index = listedProjects.findIndex(project => project.slug === current);
+const previous = index > 0 ? listedProjects[index - 1] : undefined;
+const following = index === -1 ? undefined : listedProjects[index + 1];
 
 const back = previous
   ? { label: previous.name, href: previous.path }

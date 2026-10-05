@@ -225,7 +225,6 @@ export const facts = {
   experience: {
     since: 2024,
     roles: 3,
-    fyclabs: { usersBefore: 700, usersAfter: 5_000, growth: '7×' },
     deliveries: { services: 5, layerWeeks: 2, shipMonths: '<2', engineers: 2 },
     holidayChannel: { months: 5 },
     luminii: { records: '15,000+' },

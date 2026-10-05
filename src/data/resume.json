@@ -5,12 +5,13 @@
     "label": "Full Stack Engineer",
     "email": "ahmed@amsozzer.com",
     "url": "https://amsozzer.com",
-    "summary": "Full stack engineer in Austin, TX. I sit with the client, find the step a person is doing by hand, and build whatever it takes to delete it, product or systems.",
+    "summary": "I'm a full-stack engineer at FYCLabs, a studio that builds products for startups. I work directly with founders and the people using what we ship, find the step someone is still doing by hand, and build whatever removes it.",
     "location": {
       "city": "Austin",
       "region": "TX",
       "countryCode": "US"
     },
+    "relocation": "open to relocating",
     "profiles": [
       {
         "network": "GitHub",
@@ -27,41 +28,58 @@
   "work": [
     {
       "name": "FYCLabs",
-      "location": "Remote",
       "position": "Full Stack Engineer (Engineer II)",
-      "summary": "Frontend, backend, CI/CD.",
+      "location": "Remote (Austin, TX)",
       "startDate": "2025-05",
-      "highlights": [
-        "Work directly with client founders, C-suite, and end users to scope requirements and surface pain points, then translate them into shipped features",
-        "Build and ship full-stack applications for early-stage startups end-to-end, taking product concepts to production with Next.js, React, TypeScript, PostgreSQL with Prisma, and GCP infrastructure",
-        "Build cross-platform mobile apps in React Native from Figma designs, owning the full API layer and database modeling",
-        "Engineer CRM integrations against client backends (GoHighLevel, Zoho, HubSpot) via REST APIs and webhooks, replacing manual data entry for client operations teams",
-        "Build automated CI/CD pipelines on GCP with test gates, taking releases from manual to push-button across multiple concurrent client projects",
-        "Optimize backend and database performance to scale from 700 to 5000 active users, improving query efficiency and horizontal scalability across distributed GCP infrastructure"
+      "summary": "A studio that builds products for startups.",
+      "tracks": [
+        {
+          "name": "Insurance platform",
+          "stack": "Next.js, TypeScript, Node/Express, PostgreSQL, Prisma, BullMQ, GCP",
+          "highlights": [
+            "Proved the insurance carrier was silently dropping our policy photos, and ran the weekly call with the carrier",
+            "Built overnight BullMQ jobs that re-check every policy and resubmit whatever the carrier dropped. They caught about 10 broken policies nobody had noticed, and odd cases now email the team with their logs",
+            "Traced slow PostgreSQL queries with `EXPLAIN ANALYZE` and fixed them with composite indexes and raw SQL"
+          ]
+        },
+        {
+          "name": "Education network single sign-on",
+          "stack": "Next.js, PostgreSQL, Prisma, AWS Amplify",
+          "highlights": [
+            "Built one login across 3 new portals and 4 legacy ones, used by 50,000+ students, teachers, principals, district leaders and admins a day. The SSO is its own Next.js app that checks each Firebase-signed token with Firebase, confirms the user can access that portal, and redirects them in",
+            "Talked the PM and senior engineers out of a repo per portal, since the portals share one theme, and built one monorepo on a single Amplify deployment where subdomains split each portal's routes"
+          ]
+        },
+        {
+          "name": "Women's health app",
+          "stack": "React Native, TypeScript, Node/Express, PostgreSQL, Prisma, GCP",
+          "highlights": [
+            "Built the React Native app from zero to launch and still own it. The client came back for a second phase",
+            "Built the onboarding that places each user in one of 10 phenotypes and the community where doctors, users and an AI bot steered by the lead doctor answer posts, frontend and backend",
+            "On other client projects I wired GoHighLevel, Zoho and HubSpot into their backends over REST and webhooks, and set up CI/CD on GCP. I ship to production several times a week"
+          ]
+        }
       ]
     },
     {
       "name": "Holiday Channel",
-      "location": "Colorado Springs, CO",
-      "position": "Full Stack & iOS Developer",
+      "position": "Full Stack and iOS Developer",
+      "location": "Remote",
       "startDate": "2025-01",
       "endDate": "2025-05",
       "highlights": [
-        "Built and shipped an e-commerce platform end to end, from checkout flow through order fulfillment",
-        "Shipped the customer-facing mobile app in React Native for iOS, from Figma designs through App Store release",
-        "Designed the service architecture to absorb holiday-season traffic peaks without degrading checkout",
-        "Integrated Google Ads and built responsive interfaces from Figma designs using Shadcn and Framer Motion"
+        "Built the store solo in React Native during my last UIUC semester, from checkout through order fulfillment",
+        "Took the iOS app from Figma designs to App Store release"
       ]
     },
     {
       "name": "Luminii LLC",
-      "location": "Niles, IL",
       "position": "Data Analyst and Software Intern",
+      "location": "Niles, IL",
       "startDate": "2024-05",
       "endDate": "2024-08",
       "highlights": [
-        "Built an ML-driven pricing system on real-time supplier data to adjust component costs, replacing a manual re-calibration process",
-        "Reindexed a 15,000+ record database and added automated data validation, cutting query times across the pricing pipeline"
+        "Replaced a manual pricing recalibration with an ML pricing model fed by live supplier data, then reindexed the 15,000-record database under it and added automated validation"
       ]
     }
   ],
@@ -71,76 +89,88 @@
       "url": "https://illinois.edu",
       "area": "Computer Science",
       "studyType": "Bachelor of Science",
-      "endDate": "2025-05"
+      "endDate": "2025-05",
+      "abbreviation": "B.S."
+    },
+    {
+      "institution": "Wilbur Wright College",
+      "area": "Computer Science",
+      "studyType": "Associate of Science",
+      "score": "highest honors",
+      "courses": ["CS and calculus tutor"],
+      "abbreviation": "A.S."
     }
   ],
   "skills": [
     {
       "name": "Languages",
-      "keywords": ["Python", "C/C++ (C++17)", "JavaScript/TypeScript", "Java"]
+      "keywords": ["TypeScript", "JavaScript", "SQL", "Python", "C++17"]
     },
     {
-      "name": "Frameworks",
+      "name": "Frontend",
+      "keywords": ["React", "Next.js", "React Native", "Expo"]
+    },
+    {
+      "name": "Backend",
       "keywords": [
-        "React",
-        "Next.js",
         "Node.js",
         "Express",
-        "React Native",
         "FastAPI",
-        "TailwindCSS"
+        "PostgreSQL",
+        "Prisma",
+        "Redis",
+        "BullMQ",
+        "REST",
+        "webhooks",
+        "MQTT"
       ]
     },
     {
-      "name": "Systems",
+      "name": "Cloud and tooling",
       "keywords": [
-        "POSIX sockets",
-        "libuv",
-        "MQTT",
-        "multithreading",
-        "CMake",
-        "embedded (ESP32)",
-        "Linux"
-      ]
-    },
-    {
-      "name": "Databases & Cloud",
-      "keywords": ["PostgreSQL", "Prisma", "MongoDB", "Redis", "GCP", "Firebase", "Docker"]
-    },
-    {
-      "name": "Practices",
-      "keywords": [
-        "REST APIs",
-        "Webhooks & Integrations",
+        "GCP",
+        "AWS Amplify",
+        "Firebase",
+        "Docker",
         "CI/CD",
-        "System Design",
-        "Testing (GoogleTest, Jest, Cypress)"
+        "Linux",
+        "Jest",
+        "Cypress",
+        "GoogleTest"
+      ]
+    },
+    {
+      "name": "AI-assisted development",
+      "keywords": [
+        "Claude Code daily, with a spec review before any code and hooks and CI gating each change"
       ]
     }
   ],
   "projects": [
     {
       "name": "AMS-X",
-      "description": "Open Modular Filament System for Bambu Lab Printers",
+      "description": "filament swaps for my print shop",
       "url": "https://github.com/Amsozzer1/AMS",
       "highlights": [
-        "Bambu Lab printers cap multi-material printing at 4 spools, forcing a manual swap on every material change; AMS-X removes the cap by running the printer in external-spool mode and automating the swap over MQTT (Python, FastAPI, ESP32) — protocol is undocumented, so the command set and report fields were reverse-engineered against a live printer",
-        "Server owns the job: parses the sliced 3MF into a material-swap plan, pushes it over LAN FTPS, starts the print over MQTT, and validates every live pause event against the plan before anything moves",
-        "Swap state machine (retract → select → feed → sense → resume) drives the printer's own change routine rather than authoring hotend gcode; the spool module is an interface with a human implementation today and a stepper (TMC2209 over ESP32) next"
-      ],
-      "keywords": ["Python", "FastAPI", "MQTT", "ESP32", "3MF"]
+        "I run a small 3D printing business, and any filament change past Bambu's own AMS needs a person at the printer. AMS-X moves that loop onto a server and the printer's external-spool mode",
+        "A FastAPI server and Next.js dashboard drive the printer over its undocumented local MQTT, confirmed on a live A1. Each swap is planned from the sliced 3MF, and a person still feeds the spool until the motor modules work"
+      ]
     },
     {
       "name": "PlusWeb",
-      "description": "Express-style HTTP Framework in C++",
+      "description": "an Express-style HTTP framework in C++17",
       "url": "https://github.com/Amsozzer1/PlusWeb",
       "highlights": [
-        "Built an Express-style C++17 HTTP framework (app.GET, app.use) on a libuv event loop and the llhttp parser; 4.8x Express on a small app and flat from 5 to 10,000 routes where Express degrades 50x. MIT-licensed and published to Microsoft's vcpkg registry as amsozzer1-plusweb",
-        "Designed a segment-trie router keyed by METHOD:/path with parameterized routes (/users/new beats /users/:id), plus mountable sub-routers",
-        "Implemented a composable middleware chain with next() continuations, path-scoped middleware, and relative-path rewriting for nested routers",
-        "Unit and integration tested (GoogleTest/CTest), the integration suite booting a live server and driving it over loopback; CI covers Linux and macOS, verifies the install target, and re-runs the suite under AddressSanitizer and UBSan with leak detection"
-      ],
-      "keywords": ["C++17", "libuv", "llhttp", "CMake", "GoogleTest"]
+        "Wrote it because I couldn't understand Express by reading it. libuv, llhttp, a trie router and middleware, now in Microsoft's vcpkg. 4.8x Express at 5 routes and flat to 10,000, where Express slows 50x"
+      ]
+    },
+    {
+      "name": "pdf-redactor",
+      "description": "a task written to Terminal-Bench 3's spec",
+      "url": "https://github.com/Amsozzer1/tb3-pdf-redactor",
+      "highlights": [
+        "Asks a coding agent to redact court filings so nothing under the box is recoverable and nothing else changes. Claude Code and Codex scored 0 on every run, and in all six real attempts a name drawn as vector outlines survived"
+      ]
     }
   ],
   "publications": [
@@ -149,7 +179,7 @@
       "publisher": "American Society for Engineering Education (ASEE)",
       "releaseDate": "2024-06",
       "url": "https://peer.asee.org/board-177-work-in-progress-the-development-of-a-research-based-application-for-effective-mentor-mentee-matching.pdf",
-      "summary": "Contributed to the mentor-mentee matching research; credited in the acknowledgements of the ASEE work-in-progress paper.",
+      "summary": "Co-authored the first version of a mentor-mentee matching paper and presented it at Wright College's 2022 colloquium and NEIU's 2023 symposium. Acknowledged by name in the published ASEE work-in-progress paper on the same research",
       "shortName": "Paper"
     },
     {

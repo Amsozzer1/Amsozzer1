@@ -3,8 +3,6 @@ import Band from '@src/components/Band.astro';
 import StackList from '@src/components/StackList.astro';
 import BeatKicker from '@src/components/experience/BeatKicker.astro';
 import SameJobStories from '@src/components/experience/SameJobStories.astro';
-import Stat from '@src/components/experience/Stat.astro';
-import { facts } from '@src/data/facts';
 import type resume from '@src/data/resume.json';
 
 interface Props {
@@ -26,7 +24,7 @@ const stack = [
   'REST & webhooks',
 ];
 
-// The web wording of the first five resume.json highlights; the sixth is the 7× figure above them.
+// The web wording of the work in resume.json.
 const highlights = [
   {
     label: 'Scoping, with the people paying for it',
@@ -74,10 +72,6 @@ const highlights = [
       </div>
 
       <div class="body" data-motion="slide" data-motion-from="right">
-        <Stat value={facts.experience.fyclabs.growth} highlight>
-          The users that one backend carries, after query and schema work — then scaled out
-          horizontally on GCP. Same product, same codebase: seven times the traffic through it.
-        </Stat>
         <dl class="highlights">
           {highlights.map(({ label, detail }) => <div class="row">
             <dt>{label}</dt>
