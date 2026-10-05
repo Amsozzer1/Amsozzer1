@@ -6,7 +6,7 @@ export const site = {
   alternateNames: ['Ahmed M. Sozzer', 'amsozzer'],
   jobTitle: 'Full Stack Engineer',
   description:
-    'Full stack engineer in Austin, TX. I sit with the client, find the step a person is doing by hand, and build whatever it takes to delete it, product or systems.',
+    'Full-stack engineer at FYCLabs, a studio that builds products for startups. I work directly with founders and the people using what we ship, find the step someone is still doing by hand, and build whatever removes it.',
   email: 'ahmed@amsozzer.com',
   location: {
     city: 'Austin',
@@ -15,12 +15,11 @@ export const site = {
     label: 'austin, tx',
   },
   availability: {
-    open: false,
-    label: 'open to full-time',
-    since: '2026-09',
+    open: true,
+    label: 'Looking for full-stack, product or forward-deployed roles at startups',
     // The footer says where he is and that he will move, rather than a start date that
     // goes stale the moment it passes.
-    relocation: 'Open to relocating',
+    relocation: 'open to relocating',
   },
   employer: {
     name: 'FYCLabs',
@@ -42,20 +41,20 @@ export const site = {
   resumePdf: '/resume.pdf',
   analyticsToken: '4604d8b7c03d4752b27d5baed3752359',
   knowsAbout: [
-    'C++17',
-    'HTTP servers',
-    'POSIX sockets',
-    'libuv',
-    'MQTT',
-    'Python',
-    'FastAPI',
     'TypeScript',
     'React',
     'React Native',
     'Next.js',
     'Node.js',
     'PostgreSQL',
+    'Prisma',
     'Google Cloud Platform',
+    'AWS Amplify',
     'CI/CD',
+    'Python',
+    'FastAPI',
+    'C++17',
+    'libuv',
+    'MQTT',
   ],
 } as const;

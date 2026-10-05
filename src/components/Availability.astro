@@ -1,14 +1,12 @@
 ---
 import { site } from '@src/data/site';
-import { monthYear } from '@src/lib/dates';
 
 interface Props {
   class?: string;
 }
 
 const { class: className, ...attrs } = Astro.props;
-const { open, label, since } = site.availability;
-const sinceLabel = monthYear(since);
+const { open, label } = site.availability;
 ---
 
 <div class:list={['availability', className]} {...attrs}>
@@ -16,11 +14,6 @@ const sinceLabel = monthYear(since);
   {open && <p class="open">
     <span class="dot" aria-hidden="true"></span>
     {label}
-    <span class="since">
-      <span aria-hidden="true">·</span>
-      <span class="vh">from</span>
-      <time datetime={since}>{sinceLabel}</time>
-    </span>
   </p>}
 </div>
 
@@ -53,10 +46,9 @@ const sinceLabel = monthYear(since);
     vertical-align: middle;
   }
   
-  /* The phone header only has room for the dot and the label; the footer repeats the city and the date. */
+  /* The phone header only has room for the dot and the label; the footer repeats the city. */
   @media (width < 64rem) {
-    .location,
-    .since {
+    .location {
       display: none;
     }
   }

@@ -94,7 +94,6 @@
     },
     {
       "institution": "Wilbur Wright College",
-      "area": "Computer Science",
       "studyType": "Associate of Science",
       "score": "highest honors",
       "courses": ["CS and calculus tutor"],
@@ -153,7 +152,7 @@
       "url": "https://github.com/Amsozzer1/AMS",
       "highlights": [
         "I run a small 3D printing business, and any filament change past Bambu's own AMS needs a person at the printer. AMS-X moves that loop onto a server and the printer's external-spool mode",
-        "A FastAPI server and Next.js dashboard drive the printer over its undocumented local MQTT, confirmed on a live A1. Each swap is planned from the sliced 3MF, and a person still feeds the spool until the motor modules work"
+        "A FastAPI server and Next.js dashboard drive the printer over its undocumented local MQTT, confirmed on an A1 mini and a P1S. Each swap is planned from the sliced 3MF, and a person still feeds the spool until the motor modules work"
       ]
     },
     {

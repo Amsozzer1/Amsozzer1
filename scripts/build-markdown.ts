@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative } from 'node:path';
 import TurndownService from 'turndown';
+import { routes, type Route } from '../src/data/routes.ts';
 
 const DIST = 'dist';
 
@@ -58,14 +59,23 @@ const markdown = (html: string) => {
   return `---\n${frontMatter.join('\n')}\n---\n\n${turndown.turndown(main).trim()}\n`;
 };
 
-// A page carrying noindex is kept out of the index, so it stays out of the agent feeds too.
-const indexable = (html: string) =>
-  !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/.test(html);
+// Two reasons a page stays out of the agent feeds: it is noindexed, or it is a prototype that
+// is indexable but isn't part of the body of work. Posts aren't routes, so anything unknown here
+// is included.
+const hidden = new Set(
+  Object.entries<Route>(routes)
+    .filter(([, route]) => route.noindex === true || route.unlisted === true)
+    .map(([path]) => path),
+);
+
+const routePath = (file: string) => {
+  const path = relative(DIST, file).slice(0, -'.html'.length);
+  return path === 'index' ? '/' : `/${path.replace(/\/index$/, '')}`;
+};
 
 const written = htmlFiles(DIST).flatMap(file => {
-  const html = readFileSync(file, 'utf8');
-  if (!indexable(html)) return [];
-  const body = markdown(html);
+  if (hidden.has(routePath(file))) return [];
+  const body = markdown(readFileSync(file, 'utf8'));
   const target = `${file.slice(0, -'.html'.length)}.md`;
   writeFileSync(target, body);
 
