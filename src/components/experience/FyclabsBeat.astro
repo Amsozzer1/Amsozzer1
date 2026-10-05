@@ -12,6 +12,13 @@ interface Props {
 
 const { job, number } = Astro.props;
 const id = `job-${number}`;
+
+// Home links straight to a track, so each one needs a stable anchor.
+const anchors: Record<string, string> = {
+  'Insurance platform': 'insurance',
+  'Education network single sign-on': 'sign-on',
+  "Women's health app": 'womens-health',
+};
 const focus = job.summary ? ` — ${job.summary.charAt(0).toLowerCase()}${job.summary.slice(1)}` : '';
 
 const stack = [
@@ -45,7 +52,7 @@ const stack = [
       <div class="body">
         <dl class="highlights">
           {job.tracks?.map(track => <div class="row">
-            <dt>{track.name}</dt>
+            <dt id={anchors[track.name]}>{track.name}</dt>
             <dd>
               <p class="track-stack">{track.stack}</p>
               <ul class="track-points">
