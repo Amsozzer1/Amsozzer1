@@ -23,35 +23,6 @@ const stack = [
   'React Native',
   'REST & webhooks',
 ];
-
-// The web wording of the work in resume.json.
-const highlights = [
-  {
-    label: 'Scoping, with the people paying for it',
-    detail:
-      'Client founders, C-suite and end users, directly — surfacing the pain point, then translating it into a shipped feature. Not a ticket queue.',
-  },
-  {
-    label: 'Product, concept to production',
-    detail:
-      'Full-stack applications for early-stage startups, end to end: Next.js, React, TypeScript, PostgreSQL with Prisma, on GCP.',
-  },
-  {
-    label: 'Mobile, straight off the design file',
-    detail:
-      'Cross-platform React Native from Figma, owning the full API layer and the database modelling underneath it.',
-  },
-  {
-    label: 'Integrations that delete typing',
-    detail:
-      'GoHighLevel, Zoho and HubSpot against client backends over REST and webhooks, replacing manual data entry for operations teams.',
-  },
-  {
-    label: 'Releases, manual to push-button',
-    detail:
-      'Automated CI/CD on GCP with test gates, running across several concurrent client projects at once.',
-  },
-];
 ---
 
 <section class="job" aria-labelledby={id}>
@@ -73,9 +44,14 @@ const highlights = [
 
       <div class="body">
         <dl class="highlights">
-          {highlights.map(({ label, detail }) => <div class="row">
-            <dt>{label}</dt>
-            <dd>{detail}</dd>
+          {job.tracks?.map(track => <div class="row">
+            <dt>{track.name}</dt>
+            <dd>
+              <p class="track-stack">{track.stack}</p>
+              <ul class="track-points">
+                {track.highlights.map(point => <li>{point}</li>)}
+              </ul>
+            </dd>
           </div>)}
         </dl>
       </div>
@@ -177,6 +153,22 @@ const highlights = [
     .body {
       display: block;
       margin-block-start: var(--space-s);
+    }
+  
+    .track-stack {
+      color: var(--color-text-caption);
+      font-family: var(--font-mono);
+      font-size: var(--size-mono-small);
+      line-height: var(--leading-mono);
+    }
+  
+    .track-points {
+      margin-block-start: var(--space-2xs);
+      padding-inline-start: var(--space-m);
+    }
+  
+    .track-points li + li {
+      margin-block-start: var(--space-2xs);
     }
   
     .highlights {

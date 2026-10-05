@@ -1,0 +1,37 @@
+# One case-insensitive regex per line. These are claims the site used to make and no longer can.
+7\s*[×x]\s*(the\s+)?(users|traffic)
+seven times the
+\b700\s*(to|→|->|–)\s*5,?000
+5,?000\+?\s+active users
+horizontal(ly)?\s+scal
+from september 2026
+austin, or remote
+colorado springs
+absorb (the )?(holiday|peak)
+holiday[- ]season traffic
+buckles in december
+\bfour spools\b
+\b4 spools\b
+caps multi-material at four
+everything above the socket is mine
+the accept loop, the parser
+learn the strokes
+three epochs
+epoch3\.json
+counted from the checkpoint
+dropout before the head
+run in your browser
+medical samples
+hazardous materials
+regulated deliveries
+driver-matching
+technical co-founder wanted
+written in rust, because
+\bhasura\b
+surfacing the pain point
+manual to push-button
+straight off the design file
+not allowed to degrade
+open to full-time
+job (search|hunt)
+take-home
