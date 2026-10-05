@@ -49,6 +49,7 @@ export const facts = {
   },
   amsx: {
     stockSpools: 4,
+    hubSlots: 16,
     spools: 'n',
     states: ['retract', 'select', 'feed', 'sense', 'resume'],
     // @TODO: numbers pass - swap durations are planned, not measured; replace them with a filmed, timed cycle

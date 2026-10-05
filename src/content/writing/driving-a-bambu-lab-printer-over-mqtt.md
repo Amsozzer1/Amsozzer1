@@ -8,7 +8,12 @@ tags: ['mqtt', '3d-printing', 'python', 'reverse-engineering']
 A Bambu Lab printer will print in as many colours as you like, provided a human is standing
 next to it. Set the change-filament gcode to a pause, slice a multi-colour model, and the
 machine will stop at every change and wait for someone to pull one spool out and push the next
-one in. That person is the only thing standing between four spools and any number of them.
+one in. That person is the only thing standing between Bambu’s own slots and any number of
+them.
+
+Bambu doesn’t publish this protocol. [OpenBambuAPI](https://github.com/Doridian/OpenBambuAPI)
+and [ha-bambulab](https://github.com/greghesp/ha-bambulab) document parts of it; everything
+below is what I confirmed on my own printers, an A1 mini and a P1S.
 
 [AMS-X](/projects/ams-x) is an attempt to replace that person. This post is about the part I
 had to establish first: what the printer will actually let a program do to it, and how much of
@@ -127,10 +132,11 @@ only thing tracking position.
 
 ## What is still a guess
 
-The A1 path above is confirmed. The X1 and P1 driver is not, and I want to be precise about
-that: it is **guesses end to end, thirty-one open markers, zero hardware time**. The unload
-trigger, the filament-select command, the resume verb, the start-print shape, all inferred
-from the A1 and from what other people have published. One thing I do know is that
+The A1 path above is confirmed, and so is the P1 path: both were worked out against my own
+machines, an A1 mini and a P1S. The X1 driver is the one I want to be precise about, because it
+is still **guesses end to end, with open markers and no hardware time**. The unload trigger, the
+filament-select command, the resume verb, the start-print shape, all inferred from the A1 and
+from what other people have published. One thing I do know is that
 `ams_filament_setting` returns an empty payload on that path, so it is not supported there.
 
 Smaller unknowns on the confirmed path:

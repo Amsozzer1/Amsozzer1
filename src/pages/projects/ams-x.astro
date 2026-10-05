@@ -1,8 +1,6 @@
 ---
-import AmsxSwap from '@src/components/demos/AmsxSwap/AmsxSwap.astro';
 import { swapSteps } from '@src/components/demos/AmsxSwap/_helpers/amsxSwap.consts';
 import Band from '@src/components/Band.astro';
-import Stamp from '@src/components/marks/Stamp.astro';
 import Tape from '@src/components/marks/Tape.astro';
 import {
   capitalize,
@@ -19,12 +17,13 @@ import Base from '@src/layouts/Base.astro';
 import { routeSeo } from '@src/lib/seo/meta';
 
 const project = projectBySlug('ams-x');
-const { benchMotors, stockSpools, spools, states, stepperDriver } = facts.amsx;
+const { benchMotors, stockSpools, hubSlots, spools, states, stepperDriver } = facts.amsx;
 
 const specs = [
   { label: 'server', value: 'Python, FastAPI' },
-  { label: 'control', value: 'MQTT over TLS, reverse-engineered' },
+  { label: 'control', value: 'MQTT over TLS, on the local network' },
   { label: 'file transfer', value: 'FTPS, on the local network' },
+  { label: 'dashboard', value: 'Next.js: live printer state, job intake, and the swap prompt' },
   { label: 'plan source', value: 'the sliced .3mf, parsed server-side' },
   { label: 'spool module', value: 'an interface — human today' },
   { label: 'next', value: `stepper, ${stepperDriver} over ESP32` },
@@ -38,7 +37,7 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
     project={project}
     lead="An open modular filament system, driven over MQTT."
     highlight="MQTT"
-    intro={`Stock hardware caps multi-material at ${spell(stockSpools)} spools and asks a human to stand there for every change. None of that protocol is published, so the command set was pulled apart against a live machine.`}
+    intro={`Bambu’s own AMS holds ${stockSpools} slots, ${hubSlots} with the hub, and every slot is Bambu hardware. Past that, a material change means a person at the printer. Bambu doesn’t document the local protocol. Community notes cover part of it, and I confirmed the rest on my own A1 mini and P1S.`}
   >
     <div slot="figure" class="artifact">
       <Terminal
@@ -61,7 +60,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
       </Terminal>
       <Tape class="tape-corner" />
       <Tape class="tape-edge" />
-      <Stamp class="stamp-placement">closed source? not any more</Stamp>
     </div>
   </ProjectHero>
 
@@ -71,7 +69,7 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
         <SectionHeading
           id="slots-title"
           class="h3"
-          title={`${capitalize(spell(stockSpools))} slots is a hardware answer to a software problem.`}
+          title="More slots is a hardware answer to a software problem."
         />
         <p class="section-lead">
           A model with six materials doesn’t need a bigger changer. It needs something to sit at the
@@ -90,7 +88,8 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
           <dt class="count-label">stock</dt>
           <dd class="count-value">
             <span class="count-figure">{stockSpools}</span>
-            spools. Past the fourth, somebody stands at the printer and swaps them by hand.
+            slots, {hubSlots} with the hub, all Bambu hardware. Past that, somebody swaps spools by
+            hand.
           </dd>
         </div>
         <div class="count">
@@ -124,19 +123,14 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
         The server sends one message at a time and watches the machine’s own reports until the guard
         for that state holds. Nothing runs on a timer.
       </p>
-      <AmsxSwap />
-
-      <figure class="footage">
-        <div class="footage-frame on-ink">
-          <Tape class="footage-tape-start" />
-          <Tape class="footage-tape-end" />
-          <ol class="footage-strip" aria-hidden="true">
-            {states.map(state => <li class="footage-state">{state}</li>)}
-          </ol>
-        </div>
-        {/* @TODO: replace this slot with the filmed swap (H.264 MP4, AVIF poster, step description) once Ahmed has shot it */}
-        <figcaption class="footage-caption">A full swap cycle, filmed — coming soon.</figcaption>
-      </figure>
+      {/* @TODO: film a swap cycle and put the player back */}
+      <div class="footage-frame on-ink">
+        <Tape class="footage-tape-start" />
+        <Tape class="footage-tape-end" />
+        <ol class="footage-strip">
+          {states.map(state => <li class="footage-state">{state}</li>)}
+        </ol>
+      </div>
     </div>
   </Band>
 
@@ -149,8 +143,8 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
           <p class="section-lead">
             The protocol half. The server parses the sliced job, talks to the printer over its own
             MQTT channel, drives pause and resume, and confirms every step against the machine’s
-            report before the next one. None of those commands are documented anywhere — they came
-            off a live machine.
+            report before the next one. Bambu doesn’t document these commands. I confirmed each one
+            against my A1 mini and P1S.
           </p>
         </div>
         <div class="where-block">
@@ -158,7 +152,8 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
           <p class="section-lead">
             The spool module. {capitalize(spell(benchMotors))} motors turning on a desk, with the
             drive and guide parts being printed now. The swap step is a human implementing the same
-            interface until they go on — nothing above that line changes when they do.
+            interface until they go on — nothing above that line changes when they do. Loading works
+            on the bench. Unloading doesn’t yet.
           </p>
         </div>
       </div>
@@ -228,10 +223,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
     inset-block-end: var(--space-3xl);
     inset-inline-end: calc(var(--space-l) * -1);
     rotate: -24deg;
-  }
-  
-  .stamp-placement {
-    margin-block-start: var(--space-l);
   }
   
   .section-lead {
@@ -316,13 +307,10 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
     font-size: var(--size-small);
   }
   
-  .footage {
-    margin-block-start: var(--space-2xl);
-  }
-  
   .footage-frame {
     position: relative;
     display: flex;
+    margin-block-start: var(--space-2xl);
     max-inline-size: calc(var(--layout-prose-max) * 1.5);
     aspect-ratio: 16 / 9;
     align-items: flex-end;
@@ -363,15 +351,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
     inset-block-start: calc(var(--space-s) * -1);
     inset-inline-end: calc(var(--space-l) * -1);
     rotate: 28deg;
-  }
-  
-  .footage-caption {
-    max-inline-size: calc(var(--layout-prose-max) * 1.5);
-    margin-block-start: var(--space-s);
-    color: var(--color-text-caption);
-    font-family: var(--font-mono);
-    font-size: var(--size-mono);
-    line-height: var(--leading-mono);
   }
   
   .where {
@@ -423,10 +402,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
   
     .tape-edge {
       display: block;
-    }
-  
-    .stamp-placement {
-      margin-inline-start: var(--space-3xl);
     }
   
     .count {
