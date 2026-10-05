@@ -1,4 +1,4 @@
-import { defaultCard, findRoute, routes, type RoutePath } from '@src/data/routes';
+import { defaultCard, findRoute, routes, type Route, type RoutePath } from '@src/data/routes';
 import { site } from '@src/data/site';
 import type { Breadcrumb, PageSeo } from '@src/lib/seo/types';
 
@@ -37,9 +37,15 @@ export const breadcrumbsFor = (path: string, name: string): Breadcrumb[] => {
   return [{ name: 'Home', path: '/' }, ...(parent ? [parent] : []), { name, path }];
 };
 
-export const routeSeo = (path: RoutePath): PageSeo => ({
-  title: routes[path].title,
-  description: routes[path].description,
-  path,
-  type: path === '/' ? 'profile' : 'website',
-});
+export const routeSeo = (path: RoutePath): PageSeo => {
+  // routes is `as const`, so only the entries that set noindex carry the key at all; reading it
+  // through Route gives every route the optional field.
+  const route: Route = routes[path];
+  return {
+    title: route.title,
+    description: route.description,
+    path,
+    type: path === '/' ? 'profile' : 'website',
+    noindex: route.noindex,
+  };
+};

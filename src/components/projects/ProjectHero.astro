@@ -10,9 +10,17 @@ interface Props {
   lead: string;
   highlight: string;
   intro: string;
+  back?: { href: string; label: string };
 }
 
-const { project, lead, highlight, intro } = Astro.props;
+// A project the home list doesn't carry has nowhere to go back to, so it points home instead.
+const {
+  project,
+  lead,
+  highlight,
+  intro,
+  back = { href: '/#projects', label: 'projects' },
+} = Astro.props;
 
 // The lead arrives as text, not as a slot: the amber highlight has to be styled here, and scoped
 // styles never reach markup a page passes in.
@@ -22,7 +30,9 @@ const at = lead.indexOf(highlight);
 <Band ground="paper" graph labelledby="project-title" class="project-hero" data-motion-hero>
   <div class="container hero-inner">
     <div class="hero-text">
-      <a class="back-link" href="/#projects"><span aria-hidden="true">←</span> back to projects</a>
+      <a class="back-link" href={back.href}
+        ><span aria-hidden="true">←</span> back to {back.label}</a
+      >
       <h1 id="project-title" class="title" data-shared-title={project.slug}>{project.name}</h1>
       <p class="lead">
         {lead.slice(0, at)}<span class="highlight">{highlight}</span

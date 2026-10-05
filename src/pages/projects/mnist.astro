@@ -1,13 +1,6 @@
 ---
-import MnistPad from '@src/components/demos/MnistPad/MnistPad.astro';
 import Band from '@src/components/Band.astro';
-import Tape from '@src/components/marks/Tape.astro';
-import {
-  capitalize,
-  count,
-  projectBySlug,
-  spell,
-} from '@src/components/projects/_helpers/projects.functions';
+import { count, projectBySlug } from '@src/components/projects/_helpers/projects.functions';
 import NextProject from '@src/components/projects/NextProject.astro';
 import ProjectHero from '@src/components/projects/ProjectHero.astro';
 import SectionHeading from '@src/components/SectionHeading.astro';
@@ -16,11 +9,7 @@ import Base from '@src/layouts/Base.astro';
 import { routeSeo } from '@src/lib/seo/meta';
 
 const project = projectBySlug('mnist');
-const { dataset, layers, filters, kernel, dense, classes, parameters, checkpoint } = facts.mnist;
-const [input] = layers;
-const [side] = input.shape;
-// input → conv → pool → conv → pool → flatten → dense → softmax: the head starts at the flatten
-const flattened = layers[layers.length - 3].shape[0];
+const { layers, classes, parameters } = facts.mnist;
 
 const shapeOf = (layer: (typeof layers)[number]) =>
   layer.name === 'softmax' ? `${count(classes)} classes` : layer.shape.map(count).join(' × ');
@@ -43,42 +32,16 @@ const boxes = layers.map((layer, index) => {
     centre: x + boxWidth / 2,
   };
 });
-
-const training = [
-  {
-    label: 'dataset',
-    value: `MNIST — ${count(dataset.train)} train / ${count(dataset.test)} test`,
-  },
-  { label: 'input', value: `${side} × ${side} grayscale, scaled to [0, 1]` },
-  {
-    label: 'conv stack',
-    value: `${filters[0]} then ${filters[1]} filters, ${kernel} × ${kernel}, no bias term`,
-  },
-  { label: 'head', value: `${count(flattened)} → ${dense} → ${classes}` },
-  { label: 'parameters', value: `${count(parameters)} — counted from the checkpoint` },
-  { label: 'checkpoint', value: `epoch ${checkpoint.epoch}` },
-  // @TODO: numbers pass - the weights become a float16 binary plus a manifest when the model is retrained
-  { label: 'weights', value: 'plain JSON, loaded by the page' },
-  { label: 'inference', value: 'hand-written, in the browser' },
-  { label: 'hosting', value: 'static — no server in the loop' },
-];
-
-const digits = Array.from({ length: classes }, (_, digit) => digit);
 ---
 
 <Base page="project" seo={routeSeo('/projects/mnist')}>
   <ProjectHero
     project={project}
-    lead="A convnet that runs with no runtime."
-    highlight="no runtime"
-    intro={`${capitalize(spell(filters.length))} convolution and pooling stages learn the strokes, then a dense head turns them into ${spell(classes)} probabilities. Written from scratch in Python and NumPy, then the forward pass written out again in the page. Nothing you draw leaves your machine.`}
-  >
-    <div slot="figure" class="artifact">
-      <MnistPad />
-      <Tape class="tape-corner" />
-      <Tape class="tape-edge" />
-    </div>
-  </ProjectHero>
+    back={{ href: '/', label: 'home' }}
+    lead="A convnet in plain Python, still in progress."
+    highlight="still in progress"
+    intro="A convolutional network for handwritten digits with no framework underneath: every convolution, ReLU, pool, softmax and gradient is written by hand over plain Python lists. The forward pass runs end to end. The dense head trains, and its backprop is gradient-checked against central differences to about 1e-9. The conv backward pass isn't written yet, so the convolution filters stay at their random starting values and only the head learns. The in-browser demo comes once they train."
+  />
 
   <Band ground="body" labelledby="shape-title">
     <div class="container">
@@ -150,46 +113,20 @@ const digits = Array.from({ length: classes }, (_, digit) => digit);
       </table>
 
       <p class="diagram-note">
-        ReLU after each convolution, dropout before the head, categorical cross-entropy.
+        {count(parameters)} parameters, counted from the architecture. ReLU after each convolution,
+        then 2 × 2 max pooling.
       </p>
     </div>
   </Band>
 
   <Band ground="paper" labelledby="training-title">
     <div class="container">
-      <div class="section-head">
-        <SectionHeading
-          id="training-title"
-          kicker="02 — the training run"
-          title={`${capitalize(spell(checkpoint.epoch))} epochs, straight to JSON.`}
-        />
-        <p class="head-label">read off {checkpoint.file}</p>
-      </div>
+      <SectionHeading id="training-title" kicker="02 · where it is" title="Where it is" />
 
-      <div class="training">
-        <div>
-          <p class="section-lead">
-            Everything on this page is read off that one file — the layer shapes above it, the
-            numbers below it, and the weights the browser loads to do the arithmetic itself.
-          </p>
-          {/* @TODO: numbers pass - add the test accuracy row once the network is retrained and measured */}
-          <dl class="facts">
-            {training.map(item => <div class="fact">
-              <dt class="fact-label">{item.label}</dt>
-              <dd class="fact-value">{item.value}</dd>
-            </div>)}
-          </dl>
-        </div>
-
-        <div class="classes">
-          <h3 class="classes-title">{capitalize(spell(classes))} classes</h3>
-          <p class="classes-row" aria-hidden="true">{digits.map(digit => <span>{digit}</span>)}</p>
-          <p class="classes-note">
-            A flat {spell(classes)}-way choice, which is why MNIST is the right first problem — a 4
-            read as a 9 tells you something specific about what the filters learned.
-          </p>
-        </div>
-      </div>
+      <p class="section-lead">
+        Training so far is the dense head only, per-sample SGD on top of fixed random conv features.
+        The commit log has the run as it happened, including the commit where the loss got worse.
+      </p>
     </div>
   </Band>
 

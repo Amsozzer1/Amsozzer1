@@ -58,8 +58,14 @@ const markdown = (html: string) => {
   return `---\n${frontMatter.join('\n')}\n---\n\n${turndown.turndown(main).trim()}\n`;
 };
 
+// A page carrying noindex is kept out of the index, so it stays out of the agent feeds too.
+const indexable = (html: string) =>
+  !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/.test(html);
+
 const written = htmlFiles(DIST).flatMap(file => {
-  const body = markdown(readFileSync(file, 'utf8'));
+  const html = readFileSync(file, 'utf8');
+  if (!indexable(html)) return [];
+  const body = markdown(html);
   const target = `${file.slice(0, -'.html'.length)}.md`;
   writeFileSync(target, body);
 

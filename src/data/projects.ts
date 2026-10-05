@@ -91,7 +91,7 @@ export const projects: Project[] = [
     number: '03',
     name: 'MNIST',
     kind: 'a convnet in a canvas',
-    tagline: 'Convolutional digit recognition, served as a static file.',
+    tagline: 'A convnet in plain Python, still in progress.',
     summary:
       'Two convolution and pooling stages learn the strokes, then a dense head turns them into ten probabilities. Written from scratch in Python and NumPy, with no deep learning framework on either side: every convolution, ReLU, softmax and gradient is implemented by hand, the weights ship as plain JSON, and the forward pass is written out again in the page. Nothing you draw leaves your machine.',
     specs: [
@@ -108,7 +108,7 @@ export const projects: Project[] = [
     ],
     cta: 'Draw a digit',
     repo: 'https://github.com/Amsozzer1/MNIST',
-    stack: ['Python', 'NumPy', 'CNN'],
+    stack: ['Python', 'CNN'],
     programmingLanguage: ['Python'],
     license: 'MIT',
     runtimePlatform: ['Python', 'Web browser'],
