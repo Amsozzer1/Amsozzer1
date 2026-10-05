@@ -16,7 +16,7 @@ interface Props {
 const { project, note, mark, flip = false } = Astro.props;
 ---
 
-<article class:list={['row', { 'row-flip': flip }]} data-motion="slide">
+<article class:list={['row', { 'row-flip': flip }]}>
   <div class="text">
     <hgroup>
       <p class="number">{project.number}</p>

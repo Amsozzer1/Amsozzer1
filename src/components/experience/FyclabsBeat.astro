@@ -57,7 +57,7 @@ const highlights = [
 <section class="job" aria-labelledby={id}>
   <Band ground="body" class="beat">
     <div class="container">
-      <div class="head" data-motion="slide">
+      <div class="head">
         <hgroup class="heading">
           <BeatKicker
             number={number}
@@ -71,7 +71,7 @@ const highlights = [
         <StackList items={stack} class="stack" />
       </div>
 
-      <div class="body" data-motion="slide" data-motion-from="right">
+      <div class="body">
         <dl class="highlights">
           {highlights.map(({ label, detail }) => <div class="row">
             <dt>{label}</dt>
