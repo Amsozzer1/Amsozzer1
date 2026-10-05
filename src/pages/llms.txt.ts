@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getPosts } from '@src/data/posts';
-import { projects } from '@src/data/projects';
+import { listedProjects } from '@src/data/projects';
 import { postPath, routes, type RoutePath } from '@src/data/routes';
 import { site } from '@src/data/site';
 import { absoluteUrl } from '@src/lib/seo/meta';
@@ -30,7 +30,7 @@ export const GET: APIRoute = async () => {
     '',
     '## Projects',
     '',
-    ...projects.map(project =>
+    ...listedProjects.map(project =>
       link(project.name, project.path, `${project.tagline} Source: ${project.repo}`),
     ),
     '',

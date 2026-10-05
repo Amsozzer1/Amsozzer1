@@ -5,6 +5,7 @@ export interface Route {
   schema: 'ProfilePage' | 'CollectionPage' | 'WebPage';
   card: Card;
   sources: readonly string[];
+  noindex?: boolean;
 }
 
 export interface Card {
@@ -60,9 +61,10 @@ export const routes = {
   },
   '/projects/mnist': {
     name: 'MNIST',
-    title: 'MNIST in the browser — a convnet with no runtime · Ahmed Sozzer',
+    title: 'MNIST · a convnet in plain Python · Ahmed Sozzer',
     description:
-      'A convolutional network for handwritten digits that runs in the page: weights shipped as a static file and a hand-written forward pass, with no ML runtime.',
+      'A convolutional network for handwritten digits in plain Python lists, no framework. The dense head trains and is gradient-checked; the conv layers are still frozen.',
+    noindex: true,
     schema: 'WebPage',
     card: { kicker: '03 — mnist', headline: 'A convnet that runs with no runtime.' },
     sources: ['src/pages/projects/mnist.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
