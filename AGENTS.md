@@ -12,6 +12,7 @@ This repo is two things: Ahmed's GitHub profile README (`README.md`, leave it al
 - Import through `@src/*`, never with relative paths that leave `src/`.
 - No tests. Quality comes from ESLint, Prettier, Stylelint, `astro check`, html-validate, lychee and Lighthouse CI.
 - Accessibility is WCAG 2.2 AA at minimum: real landmarks, one h1 per page, visible focus, text alternatives, no information by color alone.
+- No `Co-authored-by` or tool-attribution trailers in commits or PRs. Commit messages never name companies or people.
 
 ## Structure
 
