@@ -1,6 +1,7 @@
 import { facts } from '@src/data/facts';
 
-export type ProjectSlug = 'plusweb' | 'ams-x' | 'mnist' | 'emberlink' | 'holdfast' | 'seamline';
+export type ProjectSlug =
+  'plusweb' | 'ams-x' | 'pdf-redactor' | 'mnist' | 'emberlink' | 'holdfast' | 'seamline';
 
 export interface Project {
   slug: ProjectSlug;
@@ -30,7 +31,7 @@ export interface Project {
   runtimePlatform: string[];
 }
 
-const { mnist, emberlink, holdfast, seamline } = facts;
+const { mnist, pdfRedactor, emberlink, holdfast, seamline } = facts;
 const count = (value: number) => value.toLocaleString('en-US');
 
 export const projects: Project[] = [
@@ -83,6 +84,30 @@ export const projects: Project[] = [
     programmingLanguage: ['Python'],
     license: 'MIT',
     runtimePlatform: ['Python', 'ESP32'],
+  },
+  {
+    slug: 'pdf-redactor',
+    path: '/projects/pdf-redactor',
+    number: '03',
+    name: 'pdf-redactor',
+    kind: 'a benchmark task',
+    tagline: 'A benchmark task that frontier coding agents have not passed.',
+    summary:
+      "A task written to Terminal-Bench 3's spec: redact court filings so nothing under the box is recoverable and nothing else changes. Claude Code and Codex scored 0 on all six runs.",
+    specs: [
+      { label: 'graded on', value: `${pdfRedactor.documents} hidden documents, one miss fails` },
+      { label: 'given', value: `a written policy and ${pdfRedactor.samples} sample filings` },
+      { label: 'agents', value: 'Claude Code and Codex, three runs each' },
+      {
+        label: 'best run',
+        value: `${Math.max(...pdfRedactor.attempts[0].passed)} of ${pdfRedactor.documents}`,
+      },
+    ],
+    cta: 'Read the runs',
+    repo: 'https://github.com/Amsozzer1/tb3-pdf-redactor',
+    stack: ['Python', 'PDF', 'Docker', 'Harbor'],
+    programmingLanguage: ['Python'],
+    runtimePlatform: ['Docker'],
   },
   {
     slug: 'mnist',
