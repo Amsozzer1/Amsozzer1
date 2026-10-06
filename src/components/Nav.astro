@@ -94,9 +94,9 @@ const current = ({ href, section }: NavItem) => {
     background: var(--color-amber);
   }
   
+  /* No amber bar: that bar means "you are here", and the PDF is never where you are. */
   .resume {
     color: var(--color-text);
-    border-block-end: var(--rule-figure) solid var(--color-amber);
   }
   
   @media (width >= 64rem) {

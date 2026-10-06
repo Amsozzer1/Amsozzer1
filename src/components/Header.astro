@@ -1,5 +1,4 @@
 ---
-import Availability from '@src/components/Availability.astro';
 import Nav from '@src/components/Nav.astro';
 import Wordmark from '@src/components/Wordmark.astro';
 
@@ -14,7 +13,6 @@ const { path } = Astro.props;
   <div class="container bar">
     <Wordmark class="mark" />
     <Nav class="nav" path={path} />
-    <Availability class="status" />
   </div>
 </header>
 

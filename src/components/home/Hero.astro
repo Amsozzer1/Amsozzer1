@@ -17,7 +17,7 @@ const actions = [
     <div class="copy">
       <h1 id="hero-title" class="vh">{site.name} · {site.jobTitle}</h1>
       <p class="display tagline" data-motion-stagger>
-        {headline.map(line => <span class="line" data-motion>{line}</span>)}
+        {headline.map(line => <span class="line" data-motion>{`${line} `}</span>)}
       </p>
       <p class="lead">{site.description}</p>
       <p class="availability">
@@ -56,10 +56,6 @@ const actions = [
   /* On a phone the lines wrap as ordinary text; the four forced lines are a desktop shape. */
   .tagline .line {
     display: inline;
-  }
-  
-  .tagline .line + .line::before {
-    content: ' ';
   }
   
   .lead {
@@ -123,10 +119,6 @@ const actions = [
   
     .tagline .line {
       display: block;
-    }
-  
-    .tagline .line + .line::before {
-      content: none;
     }
   }
 </style>
