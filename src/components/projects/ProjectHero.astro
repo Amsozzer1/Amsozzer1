@@ -9,7 +9,7 @@ import type { Project } from '@src/data/projects';
 interface Props {
   project: Project;
   lead: string;
-  highlight: string;
+  highlight?: string;
   intro: string;
   back?: { href: string; label: string };
   kicker?: string;
@@ -19,7 +19,7 @@ interface Props {
 const {
   project,
   lead,
-  highlight,
+  highlight = '',
   intro,
   back = { href: '/#projects', label: 'projects' },
   kicker,
@@ -27,7 +27,7 @@ const {
 
 // The lead arrives as text, not as a slot: the amber highlight has to be styled here, and scoped
 // styles never reach markup a page passes in.
-const at = lead.indexOf(highlight);
+const at = highlight ? lead.indexOf(highlight) : -1;
 ---
 
 <Band ground="paper" graph labelledby="project-title" class="project-hero" data-motion-hero>
@@ -39,8 +39,13 @@ const at = lead.indexOf(highlight);
       {kicker && <Kicker class="hero-kicker">{kicker}</Kicker>}
       <h1 id="project-title" class="title" data-shared-title={project.slug}>{project.name}</h1>
       <p class="lead">
-        {lead.slice(0, at)}<span class="highlight">{highlight}</span
-        >{lead.slice(at + highlight.length)}
+        {at === -1
+          ? lead
+          : [
+              lead.slice(0, at),
+              <span class="highlight">{highlight}</span>,
+              lead.slice(at + highlight.length),
+            ]}
       </p>
       <p class="intro">{intro}</p>
       <StackList class="stack" items={project.stack} />

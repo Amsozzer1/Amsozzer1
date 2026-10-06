@@ -36,7 +36,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
   <ProjectHero
     project={project}
     lead="An open modular filament system, driven over MQTT."
-    highlight="MQTT"
     intro={`Bambu’s own AMS holds ${stockSpools} slots, ${hubSlots} with the hub, and every slot is Bambu hardware. Past that, a material change means a person at the printer. Bambu doesn’t document the local protocol. Community notes cover part of it, and I confirmed the rest on my own A1 mini and P1S.`}
   >
     <div slot="figure" class="artifact">
@@ -59,7 +58,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
         </p>
       </Terminal>
       <Tape class="tape-corner" />
-      <Tape class="tape-edge" />
     </div>
   </ProjectHero>
 
@@ -125,8 +123,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
       </p>
       {/* @TODO: film a swap cycle and put the player back */}
       <div class="footage-frame on-ink">
-        <Tape class="footage-tape-start" />
-        <Tape class="footage-tape-end" />
         <ol class="footage-strip">
           {states.map(state => <li class="footage-state">{state}</li>)}
         </ol>
@@ -167,10 +163,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
 <style>
   .artifact {
     position: relative;
-  }
-  
-  .swap-panel {
-    rotate: 1.3deg;
   }
   
   .swap-list {
@@ -215,14 +207,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
   .tape-corner {
     inset-block-start: var(--space-xs);
     inset-inline-start: calc(var(--space-xl) * -1);
-    rotate: -31deg;
-  }
-  
-  .tape-edge {
-    display: none;
-    inset-block-end: var(--space-3xl);
-    inset-inline-end: calc(var(--space-l) * -1);
-    rotate: -24deg;
   }
   
   .section-lead {
@@ -342,17 +326,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
     border-inline-start: 0;
   }
   
-  .footage-tape-start {
-    inset-block-start: calc(var(--space-s) * -1);
-    inset-inline-start: calc(var(--space-l) * -1);
-  }
-  
-  .footage-tape-end {
-    inset-block-start: calc(var(--space-s) * -1);
-    inset-inline-end: calc(var(--space-l) * -1);
-    rotate: 28deg;
-  }
-  
   .where {
     display: grid;
     gap: var(--space-l);
@@ -398,10 +371,6 @@ const stepNumber = (position: number) => String(position + 1).padStart(2, '0');
     .two-up {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       column-gap: var(--space-2xl);
-    }
-  
-    .tape-edge {
-      display: block;
     }
   
     .count {
