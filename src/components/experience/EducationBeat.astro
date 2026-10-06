@@ -10,54 +10,67 @@ interface Props {
 }
 
 const { number } = Astro.props;
-const [degree] = resume.education;
-const [paper, neiu, wright] = resume.publications;
+const [uiuc, wright] = resume.education;
+const [paper, neiu, wrightTalk] = resume.publications;
 
 const year = (date: string) => date.slice(0, 4);
-const graduated = degree.endDate ? monthYear(degree.endDate) : '';
+const graduated = uiuc.endDate ? monthYear(uiuc.endDate) : '';
 
 const talks = [
   { place: 'NEIU', page: 'symposium listing', talk: neiu },
-  { place: 'Wright College', page: 'colloquium programme (PDF)', talk: wright },
+  { place: 'Wright College', page: 'colloquium programme (PDF)', talk: wrightTalk },
 ];
+
+// Wright comes first: it is where the research started, and UIUC followed from it.
+const wrightDegree = [wright.abbreviation, wright.score].filter(Boolean).join(', ');
 ---
 
 <Band ground="paper" labelledby="education" class="beat">
   <div class="container grid">
     <hgroup class="heading">
-      <Kicker>
-        {number} — urbana-champaign <span aria-hidden="true">·</span>
-        <time datetime={degree.endDate}>{graduated}</time>
-      </Kicker>
+      <Kicker>{number} <span aria-hidden="true">·</span> education</Kicker>
       <h2 id="education" class="title">Education</h2>
-      <p class="intro">A CS degree, and the research that came out of it.</p>
+      <p class="intro">A CS degree, and the research that came before it.</p>
     </hgroup>
 
-    <div class="school">
-      <div class="school-head">
-        <h3 class="name">{degree.institution}</h3>
-        <p class="degree">
-          <abbr title={degree.studyType}>B.S.</abbr>
-          {degree.area} <span aria-hidden="true">·</span>
-          {graduated.slice(-4)}
+    <div class="schools">
+      <div class="school">
+        <div class="school-head">
+          <h3 class="name">{wright.institution}</h3>
+          <p class="degree">{wrightDegree}</p>
+        </div>
+        <p class="paper">
+          I started at a two-year school and became the college’s first computer science tutor,
+          teaching calculus, physics, chemistry and two semesters of C. That is how Dr. Espiritu
+          found me and put me on her research into matching mentors with mentees. I co-authored the
+          first version of the paper and presented it at Wright College in
+          {year(wrightTalk.releaseDate)} and at NEIU in {year(neiu.releaseDate)}, and the published
+          <a href={paper.url}>ASEE work-in-progress paper<span class="vh">{' (PDF)'}</span></a>
+          acknowledges me by name.
         </p>
+        <ul class="talks">
+          {talks.map(({ place, page, talk }) => <li>
+            <ArrowLink
+              href={talk.url}
+              label={`${place}, ${year(talk.releaseDate)}`}
+              direction="up-right"
+              aria-label={`${place}, ${year(talk.releaseDate)}: ${page}`}
+            />
+          </li>)}
+        </ul>
       </div>
-      <p class="paper">
-        Before any of the jobs: a matching algorithm for pairing mentors with mentees at scale. The
-        work is credited in a
-        <a href={paper.url}>work-in-progress paper<span class="vh">{' (PDF)'}</span></a> for the
-        American Society for Engineering Education, and I presented it twice.
-      </p>
-      <ul class="talks">
-        {talks.map(({ place, page, talk }) => <li>
-          <ArrowLink
-            href={talk.url}
-            label={`${place}, ${year(talk.releaseDate)}`}
-            direction="up-right"
-            aria-label={`${place}, ${year(talk.releaseDate)}: ${page}`}
-          />
-        </li>)}
-      </ul>
+
+      <div class="school">
+        <div class="school-head">
+          <h3 class="name">{uiuc.institution}</h3>
+          <p class="degree">
+            <abbr title={uiuc.studyType}>{uiuc.abbreviation}</abbr>
+            {uiuc.area} <span aria-hidden="true">·</span>
+            {graduated}
+          </p>
+        </div>
+        <p class="paper">Transferred from Wright with a cohort of friends.</p>
+      </div>
     </div>
   </div>
 </Band>
@@ -75,6 +88,11 @@ const talks = [
   
   .title {
     font-size: var(--size-h3);
+  }
+  
+  .schools {
+    display: grid;
+    gap: var(--space-xl);
   }
   
   .school {

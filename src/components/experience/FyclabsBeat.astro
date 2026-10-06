@@ -3,6 +3,7 @@ import Band from '@src/components/Band.astro';
 import StackList from '@src/components/StackList.astro';
 import BeatKicker from '@src/components/experience/BeatKicker.astro';
 import SameJobStories from '@src/components/experience/SameJobStories.astro';
+import { alsoAtFyclabs, tracks } from '@src/components/experience/_helpers/fyclabsBeat.consts';
 import type resume from '@src/data/resume.json';
 
 interface Props {
@@ -12,18 +13,10 @@ interface Props {
 
 const { job, number } = Astro.props;
 const id = `job-${number}`;
+const focus = job.summary ? `. ${job.summary}` : '';
 
-// Home links straight to a track, so each one needs a stable anchor.
-// The PDF header carries a short credit; the page has room for the longer one where there is one.
-const scope = (track: NonNullable<Props['job']['tracks']>[number]) =>
-  'creditWeb' in track ? track.creditWeb : track.credit;
-
-const anchors: Record<string, string> = {
-  'Insurance platform': 'insurance',
-  'Education network single sign-on': 'sign-on',
-  "Women's health app": 'womens-health',
-};
-const focus = job.summary ? ` — ${job.summary.charAt(0).toLowerCase()}${job.summary.slice(1)}` : '';
+// The stack line for each track is the one on the résumé, so the two cannot drift.
+const stackOf = (name: string) => job.tracks?.find(track => track.name === name)?.stack ?? '';
 
 const stack = [
   'Next.js',
@@ -54,21 +47,17 @@ const stack = [
       </div>
 
       <div class="body">
-        <dl class="highlights">
-          {job.tracks?.map(track => <div class="row">
-            <dt id={anchors[track.name]}>{track.name}</dt>
-            <dd>
-              <p class="track-scope">{scope(track)}</p>
-              <p class="track-stack">{track.stack}</p>
-              <ul class="track-points">
-                {track.highlights.map(point => <li>
-                  {/* Backticks mark code in resume.json, the same as they do on the PDF. */}
-                  {point.split('`').map((part, i) => (i % 2 === 1 ? <code>{part}</code> : part))}
-                </li>)}
-              </ul>
-            </dd>
-          </div>)}
-        </dl>
+        {tracks.map(track => <section class="track" aria-labelledby={track.id}>
+          <h3 id={track.id} class="track-name">{track.name}</h3>
+          <p class="track-stack">{stackOf(track.name)}</p>
+          {track.heading && <h4 class="track-heading">{track.heading}</h4>}
+          {track.paragraphs.map(paragraph => <p class="track-text">{paragraph}</p>)}
+        </section>)}
+
+        <section class="track" aria-labelledby="also">
+          <h3 id="also" class="track-name">Also at FYCLabs</h3>
+          <p class="track-text">{alsoAtFyclabs}</p>
+        </section>
       </div>
     </div>
   </Band>
@@ -83,7 +72,11 @@ const stack = [
   
   .heading {
     display: grid;
-    gap: var(--space-xs);
+    gap: var(--space-2xs);
+  }
+  
+  .company {
+    font-size: var(--size-h2);
   }
   
   .position {
@@ -98,38 +91,35 @@ const stack = [
     margin-block-start: var(--space-xl);
   }
   
-  .row {
-    padding-block: var(--space-s);
+  .track {
+    padding-block-start: var(--space-m);
     border-block-start: var(--rule-row) solid var(--rule-color);
   }
   
-  .row:last-child {
-    padding-block-end: 0;
+  .track-name {
+    font-size: var(--size-h4);
   }
   
-  dt {
+  .track-stack {
+    margin-block-start: var(--space-3xs);
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .track-heading {
+    margin-block-start: var(--space-m);
     color: var(--fg);
-    font-weight: 600;
-    line-height: var(--leading-tight);
-  }
-  
-  dd {
-    margin-block-start: var(--space-2xs);
-    color: var(--fg-body);
+    font-family: var(--font-body);
     font-size: var(--size-small);
+    font-weight: 600;
   }
   
-  @media (width >= 48rem) {
-    .row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-      gap: var(--space-m);
-      align-items: baseline;
-    }
-  
-    dd {
-      margin-block-start: 0;
-    }
+  .track-text {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-s);
+    color: var(--fg-body);
   }
   
   @media (width >= 64rem) {
@@ -145,66 +135,35 @@ const stack = [
       text-align: end;
     }
   
-    .row {
+    .track {
+      display: grid;
       grid-template-columns: minmax(0, 4fr) minmax(0, 9fr);
       column-gap: var(--space-2xl);
+    }
+  
+    .track-stack {
+      grid-column: 1;
+    }
+  
+    .track-name {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  
+    .track-heading,
+    .track-text {
+      grid-column: 2;
+    }
+  
+    .track-heading:first-of-type,
+    .track-text:first-of-type {
+      margin-block-start: 0;
     }
   }
   
   @media print {
-    .beat {
-      padding-block: var(--space-s);
-    }
-  
-    .company {
-      font-size: var(--size-h3);
-    }
-  
-    .position {
-      font-size: var(--size-small);
-    }
-  
-    .body {
-      display: block;
-      margin-block-start: var(--space-s);
-    }
-  
-    .track-scope {
-      color: var(--color-text-body);
-      font-size: var(--size-small);
-    }
-  
-    .track-stack {
-      color: var(--color-text-caption);
-      font-family: var(--font-mono);
-      font-size: var(--size-mono-small);
-      line-height: var(--leading-mono);
-    }
-  
-    .track-points {
-      margin-block-start: var(--space-2xs);
-      padding-inline-start: var(--space-m);
-    }
-  
-    .track-points li + li {
-      margin-block-start: var(--space-2xs);
-    }
-  
-    .highlights {
-      margin-block-start: var(--space-s);
-    }
-  
-    .row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-      gap: var(--space-m);
-      padding-block: var(--space-2xs);
-      align-items: baseline;
+    .track {
       break-inside: avoid;
-    }
-  
-    dd {
-      margin-block-start: 0;
     }
   }
 </style>
