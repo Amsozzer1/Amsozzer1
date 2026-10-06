@@ -1,7 +1,6 @@
 ---
 import Band from '@src/components/Band.astro';
 import PlusWebPlayground from '@src/components/demos/PlusWebPlayground/PlusWebPlayground.astro';
-import Scribble from '@src/components/marks/Scribble.astro';
 import Tape from '@src/components/marks/Tape.astro';
 import { count, projectBySlug, spell } from '@src/components/projects/_helpers/projects.functions';
 import ExpressComparison from '@src/components/projects/ExpressComparison.astro';
@@ -40,8 +39,6 @@ const stat = [
 ];
 
 // The curve, then the arrowhead: it lands on the source button below it.
-const scribble =
-  'M262,30 C196,20 118,34 76,68 C54,86 46,106 52,126 M40,112 C46,122 50,130 52,136 C56,128 62,120 70,114';
 ---
 
 <Base page="project" seo={routeSeo('/projects/plusweb')}>
@@ -64,13 +61,11 @@ app.use(<span class="string">"/users"</span>, users);
 app.serve();</code></pre>
       </Terminal>
       <Tape class="tape-corner" />
-      <Tape class="tape-edge" />
       <p class="hand-note">
         mounting rewrites the path, so the sub-router never knows where it was attached.
       </p>
     </div>
     <Fragment slot="annotation">
-      <Scribble class="cta-scribble" d={scribble} />
       <p class="mit-note">MIT — take it</p>
     </Fragment>
     <a slot="foot" class="playground-hint" href="#playground">the playground is below</a>
@@ -158,10 +153,6 @@ app.serve();</code></pre>
     position: relative;
   }
   
-  .code-panel {
-    rotate: -1.2deg;
-  }
-  
   .string {
     color: var(--color-amber);
   }
@@ -171,13 +162,6 @@ app.serve();</code></pre>
     inset-inline-start: calc(var(--space-xl) * -1);
   }
   
-  .tape-edge {
-    display: none;
-    inset-block-start: calc(var(--space-m) * -1);
-    inset-inline-end: calc(var(--space-xl) * -1);
-    rotate: 27deg;
-  }
-  
   .hand-note {
     max-inline-size: calc(var(--layout-footnote-max) + var(--space-3xl));
     margin-block-start: var(--space-m);
@@ -185,7 +169,6 @@ app.serve();</code></pre>
     font-family: var(--font-mono);
     font-size: var(--size-note);
     font-style: italic;
-    rotate: 0.7deg;
   }
   
   .cta-scribble,
@@ -304,16 +287,7 @@ app.serve();</code></pre>
       margin-inline-start: var(--space-2xl);
     }
   
-    .tape-edge {
-      display: block;
-    }
-  
     /* The curve starts beside the note and lands just above the source button. */
-    .cta-scribble {
-      display: block;
-      inset-block-end: calc(100% - var(--space-2xs));
-      inset-inline-start: calc(100% - var(--space-2xl) - var(--space-3xs));
-    }
   
     .mit-note {
       position: absolute;
@@ -326,7 +300,6 @@ app.serve();</code></pre>
       font-size: var(--size-note);
       font-style: italic;
       white-space: nowrap;
-      rotate: -3deg;
       pointer-events: none;
     }
   

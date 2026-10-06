@@ -1,5 +1,4 @@
 ---
-import AmberRule from '@src/components/AmberRule.astro';
 import EducationBeat from '@src/components/experience/EducationBeat.astro';
 import ExperienceHero from '@src/components/experience/ExperienceHero.astro';
 import FyclabsBeat from '@src/components/experience/FyclabsBeat.astro';
@@ -16,7 +15,6 @@ const [fyclabs, holidayChannel, luminii] = resume.work;
 <Base seo={routeSeo('/experience')}>
   <div class="experience">
     <ExperienceHero />
-    <AmberRule />
     <FyclabsBeat job={fyclabs} number="01" />
     <HolidayChannelBeat job={holidayChannel} number="02" />
     <LuminiiBeat job={luminii} number="03" />

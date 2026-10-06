@@ -2,7 +2,6 @@
 import Band from '@src/components/Band.astro';
 import CtaButton from '@src/components/CtaButton.astro';
 import ThroughLine from '@src/components/experience/ThroughLine.astro';
-import Scribble from '@src/components/marks/Scribble.astro';
 import { site } from '@src/data/site';
 
 const contacts = [
@@ -10,9 +9,6 @@ const contacts = [
   { label: 'github', href: site.links.github },
   { label: 'linkedin', href: site.links.linkedin },
 ];
-
-// A curve from the note up to the panel's bottom edge, with its arrowhead.
-const arrow = 'M152,60 C116,66 66,56 30,18 M48,22 C40,18 30,13 24,10 C25,18 27,28 29,36';
 ---
 
 <Band ground="paper" graph class="hero" data-motion-hero>
@@ -23,7 +19,7 @@ const arrow = 'M152,60 C116,66 66,56 30,18 M48,22 C40,18 30,13 24,10 C25,18 27,2
         <span class="line">I get paid</span>
         <span class="line">to delete</span>
         <span class="line">the manual</span>
-        <span class="line step">step.</span>
+        <span class="line">step.</span>
       </p>
       <p class="lead">
         Full stack engineer at {site.employer.name} — in the room with the client first, then
@@ -40,10 +36,7 @@ const arrow = 'M152,60 C116,66 66,56 30,18 M48,22 C40,18 30,13 24,10 C25,18 27,2
 
     <div class="exhibit">
       <ThroughLine />
-      <p class="note">
-        <span class="note-text">I noticed it late: the same problem, five times over.</span>
-        <Scribble class="note-arrow" d={arrow} width={160} height={72} />
-      </p>
+      <p class="note">I noticed it late: the same problem, five times over.</p>
     </div>
 
     <CtaButton
@@ -70,13 +63,6 @@ const arrow = 'M152,60 C116,66 66,56 30,18 M48,22 C40,18 30,13 24,10 C25,18 27,2
   
   .line {
     display: block;
-  }
-  
-  .step {
-    inline-size: fit-content;
-    margin-inline-start: calc(var(--space-2xs) * -1);
-    padding-inline: var(--space-2xs);
-    background-color: var(--color-amber);
   }
   
   .lead {
@@ -130,15 +116,6 @@ const arrow = 'M152,60 C116,66 66,56 30,18 M48,22 C40,18 30,13 24,10 C25,18 27,2
     line-height: var(--leading-mono);
   }
   
-  .note-text {
-    display: inline-block;
-    rotate: -0.6deg;
-  }
-  
-  .note-arrow {
-    display: none;
-  }
-  
   /* Phone: the button runs edge to edge and sits flush on the amber band. */
   .cta {
     margin-inline: calc(var(--layout-gutter) * -1);
@@ -171,21 +148,9 @@ const arrow = 'M152,60 C116,66 66,56 30,18 M48,22 C40,18 30,13 24,10 C25,18 27,2
       padding-block-start: var(--space-l);
     }
   
-    /* Indented so the scribble can reach back up to the panel, and pulled in at the end because the panel bleeds. */
     .note {
       margin-block-start: var(--space-xl);
-      margin-inline: calc(var(--space-4xl) + var(--space-xl)) var(--layout-gutter);
-    }
-  
-    .note-text {
-      rotate: -2deg;
-    }
-  
-    .note-arrow {
-      display: block;
-      inset-block-start: calc(var(--space-xl) * -1);
-      inset-inline-end: calc(100% + var(--space-2xs));
-      inline-size: calc(var(--space-4xl) + var(--space-l));
+      margin-inline-end: var(--layout-gutter);
     }
   
     .cta {

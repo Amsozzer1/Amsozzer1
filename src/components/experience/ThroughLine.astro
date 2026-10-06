@@ -1,7 +1,4 @@
 ---
-import Tape from '@src/components/marks/Tape.astro';
-import Terminal from '@src/components/Terminal.astro';
-
 interface Props {
   class?: string;
 }
@@ -33,23 +30,31 @@ const shifts = [
 ---
 
 <div class:list={['through-line', className]} {...rest}>
-  <Terminal title="the through-line" meta="three jobs, and one on my own time">
-    <ul class="shifts">
-      {shifts.map(({ before, after }) => <li class="shift">
-        <span class="before">{before}</span>
-        <span class="arrow">→</span>
-        <span class="after">{after}</span>
-      </li>)}
-    </ul>
-  </Terminal>
-  <Tape class="tape-corner" />
-  <Tape class="tape-far" />
+  <p class="label">the through-line <span class="meta">three jobs, and one on my own time</span></p>
+  <ul class="shifts">
+    {shifts.map(({ before, after }) => <li class="shift">
+      <span class="before">{before}</span>
+      <span class="arrow">→</span>
+      <span class="after">{after}</span>
+    </li>)}
+  </ul>
 </div>
 
 <style>
   .through-line {
-    position: relative;
-    rotate: -1.2deg;
+    padding-block-start: var(--space-s);
+    border-block-start: var(--rule-major) solid var(--color-text);
+  }
+  
+  .label {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    justify-content: space-between;
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    line-height: var(--leading-mono);
   }
   
   .shifts {
@@ -100,25 +105,6 @@ const shifts = [
       grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       gap: var(--space-xs);
       align-items: baseline;
-    }
-  }
-  
-  .tape-corner {
-    inset-block-start: calc(var(--space-xs) * -1);
-    inset-inline-start: calc(var(--space-s) * -1);
-  }
-  
-  /* The extra class outranks the tape's own default angle. */
-  .through-line .tape-far {
-    display: none;
-    inset-block-start: calc(var(--space-m) * -1);
-    inset-inline-end: calc(var(--space-2xl) * -1);
-    rotate: 25deg;
-  }
-  
-  @media (width >= 64rem) {
-    .through-line .tape-far {
-      display: block;
     }
   }
 </style>
