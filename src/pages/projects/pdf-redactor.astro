@@ -1,0 +1,162 @@
+---
+import Band from '@src/components/Band.astro';
+import { projectBySlug } from '@src/components/projects/_helpers/projects.functions';
+import NextProject from '@src/components/projects/NextProject.astro';
+import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import SectionHeading from '@src/components/SectionHeading.astro';
+import Terminal from '@src/components/Terminal.astro';
+import { facts } from '@src/data/facts';
+import Base from '@src/layouts/Base.astro';
+import { routeSeo } from '@src/lib/seo/meta';
+
+const project = projectBySlug('pdf-redactor');
+const { documents, samples, attempts, cheatRunsEach, reference } = facts.pdfRedactor;
+
+const list = (values: number[]) =>
+  `${values.slice(0, -1).join(', ')} and ${values[values.length - 1]} of ${documents}`;
+
+const rows = [
+  ...attempts.map(attempt => ({
+    agent: attempt.agent,
+    runs: String(attempt.runs),
+    passed: list([...attempt.passed]),
+    score: String(attempt.score),
+  })),
+  { agent: 'either agent, told to cheat', runs: `${cheatRunsEach} each`, passed: '', score: '0' },
+  {
+    agent: 'the reference solution',
+    runs: String(reference.runs),
+    passed: `${reference.passed} of ${documents}`,
+    score: String(reference.score),
+  },
+];
+
+const best = Math.max(...attempts[0].passed);
+---
+
+<Base page="project" seo={routeSeo('/projects/pdf-redactor')}>
+  <ProjectHero
+    project={project}
+    lead="A benchmark task that frontier coding agents haven’t passed."
+    highlight="haven’t passed"
+    intro={`The agent gets a written redaction policy, ${samples} sample filings and one job: build redact.py so every listed name ends up under an opaque black box, nothing under the box can be recovered, and nothing else on the page changes. It is graded on ${documents} hidden documents made the ways real filings get made: word-processor exports, scans with OCR layers, filled-in forms, tagged reports and old print-driver PDFs. One miss anywhere fails the run.`}
+  >
+    <div slot="figure" class="artifact">
+      <Terminal class="code-panel" title="redactor — one run" meta="Python">
+        <pre><code>$ python3 /app/redactor/redact.py IN.pdf TERMS.json OUT.pdf
+
+reward 0.0 <span class="muted">·</span> {best}/{documents} documents</code></pre>
+      </Terminal>
+    </div>
+  </ProjectHero>
+
+  <Band ground="body" labelledby="runs-title">
+    <div class="container">
+      <SectionHeading id="runs-title" class="h3" kicker="01 · the runs" title="The runs" />
+
+      <table class="table">
+        <caption class="vh">
+          Every run, by agent
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">agent</th>
+            <th scope="col" class="num">runs</th>
+            <th scope="col">documents passed</th>
+            <th scope="col" class="num">score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(row => <tr>
+            <th scope="row">{row.agent}</th>
+            <td class="num">{row.runs}</td>
+            <td>{row.passed}</td>
+            <td class="num">{row.score}</td>
+          </tr>)}
+        </tbody>
+      </table>
+    </div>
+  </Band>
+
+  <Band ground="paper" labelledby="why-title">
+    <div class="container">
+      <SectionHeading id="why-title" class="h3" kicker="02 · why" title="Why they fail" />
+      <p class="section-lead">
+        Every agent built a serious tool and tested it hard, and every one reported green. Their
+        leak checks were text extraction, string search and render comparison. A name that a print
+        driver turned into vector outlines passes all three: it isn’t text, and the box hides it on
+        screen. It is still in the file, and deleting the box shows it. That one document beat all
+        six runs. It is also the classic real-world redaction leak.
+      </p>
+    </div>
+  </Band>
+
+  <Band ground="body" labelledby="difficulty-title">
+    <div class="container">
+      <SectionHeading
+        id="difficulty-title"
+        class="h3"
+        kicker="03 · the policy"
+        title="Where the difficulty came from"
+      />
+      <p class="section-lead">
+        The first version of the policy listed every hiding place, and fresh agents solved it.
+        Taking the list out and keeping only the rules is what made it hard. Every hidden case is
+        decided by a rule the policy states, and the reference solution uses only general methods,
+        never the generator’s settings.
+      </p>
+      <p class="section-lead">
+        The evidence for every run, including each agent’s final redactor, is in the repo.
+      </p>
+    </div>
+  </Band>
+
+  <NextProject current="pdf-redactor" />
+</Base>
+
+<style>
+  .section-lead {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-m);
+    color: var(--fg-body);
+  }
+  
+  .table {
+    inline-size: 100%;
+    margin-block-start: var(--space-xl);
+    border-block-start: var(--rule-major) solid var(--color-text);
+    border-collapse: collapse;
+    font-size: var(--size-small);
+  }
+  
+  .table th,
+  .table td {
+    padding-block: var(--space-s);
+    padding-inline-end: var(--space-m);
+    text-align: start;
+    vertical-align: baseline;
+  }
+  
+  .table tr {
+    border-block-end: var(--rule-row) solid var(--color-rule-light);
+  }
+  
+  .table thead th {
+    color: var(--color-text-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    font-weight: 400;
+    line-height: var(--leading-mono);
+  }
+  
+  .table tbody th {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+  }
+</style>

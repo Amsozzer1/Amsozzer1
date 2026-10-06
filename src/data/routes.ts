@@ -61,6 +61,15 @@ export const routes = {
     card: { kicker: '02 — ams-x', headline: 'An open modular filament system, driven over MQTT.' },
     sources: ['src/pages/projects/ams-x.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
+  '/projects/pdf-redactor': {
+    name: 'pdf-redactor',
+    title: 'pdf-redactor · a Terminal-Bench 3 task · Ahmed Sozzer',
+    description:
+      "A task written to Terminal-Bench 3's spec: build a redactor for court filings that leaves nothing recoverable under the box. Claude Code and Codex scored 0 on every run.",
+    schema: 'WebPage',
+    card: { kicker: '03 · pdf-redactor', headline: 'A task frontier agents have not passed.' },
+    sources: ['src/pages/projects/pdf-redactor.astro', 'src/data/facts.ts'],
+  },
   '/projects/mnist': {
     name: 'MNIST',
     title: 'MNIST · a convnet in plain Python · Ahmed Sozzer',

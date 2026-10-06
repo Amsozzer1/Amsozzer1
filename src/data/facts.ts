@@ -68,6 +68,17 @@ export const facts = {
     sampleReport: { gcodeState: 'PAUSE', layer: 48, sequenceId: '2041' },
     stepperDriver: 'TMC2209',
   },
+  pdfRedactor: {
+    documents: 22,
+    samples: 3,
+    // Every run in results/evidence/ in the task repo. A run scores 1 only if all 22 pass.
+    attempts: [
+      { agent: 'Claude Code, Opus 5.5, max effort', runs: 3, passed: [15, 18, 17], score: 0 },
+      { agent: 'Codex, GPT-6 Sol, xhigh effort', runs: 3, passed: [11, 14, 14], score: 0 },
+    ],
+    cheatRunsEach: 1,
+    reference: { runs: 1, passed: 22, score: 1 },
+  },
   mnist: {
     dataset: { train: 60_000, test: 10_000 },
     layers: [
