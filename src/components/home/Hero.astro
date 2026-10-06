@@ -40,8 +40,12 @@ const actions = [
 </Band>
 
 <style>
+  /* The fold is the viewport: the band fills what is under the header, content centred. */
   .hero {
-    padding-block: var(--space-l) var(--space-2xl);
+    display: grid;
+    align-content: center;
+    min-block-size: calc(100svh - var(--layout-header-height) - var(--layout-amber-band));
+    padding-block: var(--space-xl);
   }
   
   .layout {
