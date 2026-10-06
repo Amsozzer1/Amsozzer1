@@ -138,10 +138,15 @@ jobs:
           git commit -m "Record Lighthouse scores from CI"
           git push --force origin "$branch"
 
-          gh pr list --head "$branch" --state open --json number --jq '.[].number' | grep -q . ||
-            gh pr create --base main --head "$branch" \
-              --title "Record Lighthouse scores from CI" \
-              --body "A Lighthouse category score moved. Opened by the \`lighthouse\` job."
+          gh pr list --head "$branch" --state open --json number --jq '.[].number' | grep -q . && exit 0
+
+          # Actions is not always permitted to open a pull request here. The branch is pushed
+          # either way, so a blocked PR is a warning rather than a failure: these scores are
+          # bookkeeping for the colophon, and must never decide whether the site deploys.
+          gh pr create --base main --head "$branch" \
+            --title "Record Lighthouse scores from CI" \
+            --body "A Lighthouse category score moved. Opened by the \`lighthouse\` job." ||
+            echo "::warning::Scores PR was not opened; branch $branch is pushed, open it by hand."
 
   deploy:
     if: github.ref == 'refs/heads/main'
