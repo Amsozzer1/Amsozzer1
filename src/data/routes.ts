@@ -36,9 +36,9 @@ export const routes = {
   },
   '/experience': {
     name: 'Experience',
-    title: 'Experience — FYCLabs, Holiday Channel, Luminii · Ahmed Sozzer',
+    title: 'Experience · FYCLabs, Holiday Channel, Luminii · Ahmed Sozzer',
     description:
-      'Three client-facing roles since 2024: full stack engineer at FYCLabs, e-commerce at Holiday Channel, ML pricing at Luminii, and a CS degree from Illinois.',
+      'Full-stack engineer at FYCLabs since May 2025: an insurance platform, a sign-on used by 50,000+ people a day, and a women\u2019s health app. Before that, Holiday Channel and Luminii.',
     schema: 'ProfilePage',
     card: { kicker: 'experience', headline: 'I get paid to delete the manual step.' },
     sources: ['src/pages/experience.astro', 'src/data/resume.json', 'src/data/facts.ts'],
