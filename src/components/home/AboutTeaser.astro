@@ -1,0 +1,56 @@
+---
+import Band from '@src/components/Band.astro';
+---
+
+<Band ground="paper" labelledby="about-label" class="about">
+  <div class="container inner">
+    <p class="label" id="about-label">about</p>
+    <div>
+      <p class="prose">
+        Born in the US, grew up in Pakistan, back at eighteen. Community college to Illinois, paid
+        for with gas-station and busboy shifts. Now I build products at a studio and run a small
+        print shop, whose most repetitive chore became AMS-X.
+      </p>
+      <p class="more">
+        <a href="/about">the longer version <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </div>
+</Band>
+
+<style>
+  .label {
+    color: var(--fg-caption);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+  }
+  
+  .inner {
+    display: grid;
+    gap: var(--space-s);
+  }
+  
+  .prose {
+    max-inline-size: var(--layout-prose-max);
+    color: var(--fg-body);
+  }
+  
+  .more {
+    margin-block-start: var(--space-m);
+    font-family: var(--font-mono);
+    font-size: var(--size-link);
+    line-height: var(--leading-mono);
+  }
+  
+  .more a:hover {
+    text-decoration-color: var(--color-amber);
+  }
+  
+  @media (width >= 64rem) {
+    .inner {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 9fr);
+      column-gap: var(--space-2xl);
+    }
+  }
+</style>

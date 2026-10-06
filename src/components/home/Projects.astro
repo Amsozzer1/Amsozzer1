@@ -1,89 +1,82 @@
 ---
 import Band from '@src/components/Band.astro';
 import SectionHeading from '@src/components/SectionHeading.astro';
-import Terminal from '@src/components/Terminal.astro';
-import ProjectRow from '@src/components/home/ProjectRow.astro';
-import TerminalLines from '@src/components/home/TerminalLines.astro';
-import { curlSession, printerReport } from '@src/components/home/_helpers/projects.consts';
-import type { Line } from '@src/components/home/_helpers/terminalLines.functions';
-import { facts } from '@src/data/facts';
-import { listedProjects, type ProjectSlug } from '@src/data/projects';
+import { blurbs } from '@src/components/home/_helpers/projects.consts';
+import { listedProjects } from '@src/data/projects';
 
-const { mqtt } = facts.amsx;
-
-interface Panel {
-  note: string;
-  title: string;
-  meta: string;
-  lines: Line[];
-}
-
-const panels: Partial<Record<ProjectSlug, Panel>> = {
-  plusweb: {
-    note: 'the timing on that page is measured in your browser, on a port of the same trie, not typed in by me.',
-    title: `curl — localhost:${facts.plusweb.port}`,
-    meta: 'keep-alive',
-    lines: curlSession,
-  },
-  'ams-x': {
-    note: 'nothing moves until the printer’s own report agrees with the plan.',
-    title: mqtt.topic,
-    meta: `mqtt · tls ${mqtt.port}`,
-    lines: printerReport,
-  },
-};
-
-// A project without a panel simply doesn't appear here, so the list stays the single source.
-const rows = listedProjects.flatMap(project => {
-  const panel = panels[project.slug];
-  return panel ? [{ project, panel }] : [];
-});
+const bare = (url: string) => url.replace(/^https:\/\/(www\.)?/, '');
 ---
 
 <Band ground="body" id="projects" labelledby="projects-title" class="projects">
   <div class="container">
-    <div class="head">
-      <SectionHeading
-        class="heading"
-        kicker="projects"
-        id="projects-title"
-        title="On my own time."
-      />
-    </div>
+    <SectionHeading class="heading" kicker="projects" id="projects-title" title="On my own time." />
 
-    {rows.map(({ project, panel }, index) => <ProjectRow
-      project={project}
-      mark="tape"
-      flip={index % 2 === 1}
-      note={panel.note}
-    >
-      <Terminal title={panel.title} meta={panel.meta}>
-        <TerminalLines lines={panel.lines} />
-      </Terminal>
-    </ProjectRow>)}
+    <ol class="rows">
+      {listedProjects.map(project => <li class="row">
+        <h3 class="name">{project.name}</h3>
+        <p class="blurb">{blurbs[project.slug] ?? project.tagline}</p>
+        <p class="links">
+          <a href={project.path}>details <span aria-hidden="true">→</span></a>
+          <a href={project.repo}>{bare(project.repo)} <span aria-hidden="true">↗</span></a>
+        </p>
+      </li>)}
+    </ol>
   </div>
 </Band>
 
 <style>
-  .projects {
-    padding-block-end: 0;
-  }
-  
-  .head {
-    display: grid;
-    gap: var(--space-m);
-    margin-block-end: var(--space-xl);
-  }
-  
   .heading {
     max-inline-size: var(--layout-prose-max);
   }
   
+  .rows {
+    margin: 0;
+    margin-block-start: var(--space-xl);
+    padding: 0;
+    border-block-start: var(--rule-row) solid var(--rule-color);
+    list-style: none;
+  }
+  
+  .row {
+    padding-block: var(--space-l);
+    border-block-end: var(--rule-row) solid var(--rule-color);
+  }
+  
+  .name {
+    font-family: var(--font-display);
+    font-size: var(--size-h3);
+    line-height: var(--leading-tight);
+  }
+  
+  .blurb {
+    max-inline-size: var(--layout-prose-max);
+    margin-block-start: var(--space-xs);
+    color: var(--fg-body);
+  }
+  
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    margin-block-start: var(--space-s);
+    font-family: var(--font-mono);
+    font-size: var(--size-link);
+    line-height: var(--leading-mono);
+  }
+  
+  .links a:hover {
+    text-decoration-color: var(--color-amber);
+  }
+  
   @media (width >= 64rem) {
-    .head {
-      grid-template-columns: minmax(0, 1fr) auto;
-      column-gap: var(--space-xl);
-      align-items: end;
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 4fr) minmax(0, 9fr);
+      column-gap: var(--space-2xl);
+    }
+  
+    .links {
+      grid-column: 2;
     }
   }
 </style>

@@ -1,7 +1,5 @@
 ---
-import AmberRule from '@src/components/AmberRule.astro';
-import Education from '@src/components/home/Education.astro';
-import Experience from '@src/components/home/Experience.astro';
+import AboutTeaser from '@src/components/home/AboutTeaser.astro';
 import Hero from '@src/components/home/Hero.astro';
 import Projects from '@src/components/home/Projects.astro';
 import Base from '@src/layouts/Base.astro';
@@ -10,9 +8,6 @@ import { routeSeo } from '@src/lib/seo/meta';
 
 <Base page="index" seo={routeSeo('/')}>
   <Hero />
-  <AmberRule />
   <Projects />
-  <AmberRule />
-  <Experience />
-  <Education />
+  <AboutTeaser />
 </Base>
