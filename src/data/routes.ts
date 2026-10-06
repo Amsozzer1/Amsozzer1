@@ -18,9 +18,9 @@ export interface Card {
 export const routes = {
   '/': {
     name: 'Home',
-    title: 'Ahmed Sozzer — Full Stack Engineer · Austin, TX',
+    title: 'Ahmed Sozzer · Full Stack Engineer · Austin, TX',
     description:
-      'Ahmed Sozzer, full stack engineer in Austin, TX: client-facing product work in Next.js, React Native and Postgres, plus systems work in C++17 and Python.',
+      'Ahmed Sozzer, full-stack engineer at FYCLabs in Austin, TX. Product work in Next.js, React Native, Node and PostgreSQL, and systems work in C++17 and Python on my own time.',
     schema: 'ProfilePage',
     card: {
       kicker: 'austin, tx',
@@ -28,10 +28,10 @@ export const routes = {
     },
     sources: [
       'src/pages/index.astro',
+      'src/components/home/Hero.astro',
+      'src/components/home/Projects.astro',
+      'src/components/home/AboutTeaser.astro',
       'src/data/site.ts',
-      'src/data/projects.ts',
-      'src/data/facts.ts',
-      'src/data/resume.json',
     ],
   },
   '/experience': {
@@ -49,7 +49,7 @@ export const routes = {
     description:
       'An Express-style HTTP framework in C++17 on libuv and llhttp, benchmarked against Express on one machine. In Microsoft\u2019s vcpkg registry.',
     schema: 'WebPage',
-    card: { kicker: '01 — plusweb', headline: 'An Express-style HTTP framework in C++17.' },
+    card: { kicker: '02 · plusweb', headline: 'An Express-style HTTP framework in C++17.' },
     sources: ['src/pages/projects/plusweb.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
   '/projects/ams-x': {
@@ -58,7 +58,7 @@ export const routes = {
     description:
       'AMS-X drives every filament swap on a Bambu Lab printer over its local MQTT, past the 4 slots (16 with the hub) of Bambu\u2019s own AMS: a FastAPI server, a Next.js dashboard, and a person feeding spools until the motors work.',
     schema: 'WebPage',
-    card: { kicker: '02 — ams-x', headline: 'An open modular filament system, driven over MQTT.' },
+    card: { kicker: '01 · ams-x', headline: 'An open modular filament system, driven over MQTT.' },
     sources: ['src/pages/projects/ams-x.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
   '/projects/pdf-redactor': {
@@ -77,7 +77,7 @@ export const routes = {
       'A convolutional network for handwritten digits in plain Python lists, no framework. The dense head trains and is gradient-checked; the conv layers are still frozen.',
     noindex: true,
     schema: 'WebPage',
-    card: { kicker: '03 — mnist', headline: 'A convnet that runs with no runtime.' },
+    card: { kicker: '04 · mnist', headline: 'A convnet that runs with no runtime.' },
     sources: ['src/pages/projects/mnist.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
   '/projects/emberlink': {
@@ -87,7 +87,7 @@ export const routes = {
     description:
       'A robot-to-operator thermal link that sends less instead of falling behind when the radio degrades: strips, not frames, and alerts ahead of pixels.',
     schema: 'WebPage',
-    card: { kicker: '04 \u2014 emberlink', headline: 'Freshness beats completeness.' },
+    card: { kicker: '05 · emberlink', headline: 'Freshness beats completeness.' },
     sources: ['src/pages/projects/emberlink.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
   '/projects/holdfast': {
@@ -97,7 +97,7 @@ export const routes = {
     description:
       'A C++20 multi-object tracker for drone video that keeps each identity through frame blackouts, frozen feeds and camera motion. Scored with TrackEval.',
     schema: 'WebPage',
-    card: { kicker: '05 \u2014 holdfast', headline: 'It keeps the ID when the picture does not.' },
+    card: { kicker: '06 · holdfast', headline: 'It keeps the ID when the picture does not.' },
     sources: ['src/pages/projects/holdfast.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
   '/projects/seamline': {
@@ -107,7 +107,7 @@ export const routes = {
     description:
       'A weld plan you can review in 3D and run on a simulated cell, with the browser and the server sharing one compiled definition of a valid plan.',
     schema: 'WebPage',
-    card: { kicker: '06 \u2014 seamline', headline: 'One core, compiled twice.' },
+    card: { kicker: '07 · seamline', headline: 'One core, compiled twice.' },
     sources: ['src/pages/projects/seamline.astro', 'src/data/projects.ts', 'src/data/facts.ts'],
   },
   '/writing': {
