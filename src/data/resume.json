@@ -111,7 +111,7 @@
     },
     {
       "name": "Frontend",
-      "keywords": ["React", "Next.js", "React Native", "Expo"]
+      "keywords": ["React", "Next.js", "React Native", "Expo", "WebRTC"]
     },
     {
       "name": "Backend",
@@ -125,6 +125,7 @@
         "BullMQ",
         "REST",
         "webhooks",
+        "WebSockets",
         "MQTT"
       ]
     },
