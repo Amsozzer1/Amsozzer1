@@ -81,8 +81,8 @@ In Microsoft's [vcpkg registry](https://github.com/microsoft/vcpkg/tree/master/p
 ## Technical Stack
 
 **Languages** TypeScript, JavaScript, SQL, Python, C++17
-**Frontend** React, Next.js, React Native, Expo
-**Backend** Node.js, Express, FastAPI, PostgreSQL, Prisma, Redis, BullMQ, REST, webhooks, MQTT
+**Frontend** React, Next.js, React Native, Expo, WebRTC
+**Backend** Node.js, Express, FastAPI, PostgreSQL, Prisma, Redis, BullMQ, REST, webhooks, WebSockets, MQTT
 **Cloud and tooling** GCP, AWS Amplify, Firebase, Docker, CI/CD, Linux, Jest, Cypress, GoogleTest
 **AI-assisted development** Claude Code daily, with a spec review before any code and hooks and CI gating each change
 
