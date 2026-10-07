@@ -104,6 +104,7 @@ export const projects: Project[] = [
       },
     ],
     cta: 'Read the runs',
+    writing: ['writing-a-terminal-bench-task-frontier-agents-could-not-pass'],
     repo: 'https://github.com/Amsozzer1/tb3-pdf-redactor',
     stack: ['Python', 'PDF', 'Docker', 'Harbor'],
     programmingLanguage: ['Python'],
