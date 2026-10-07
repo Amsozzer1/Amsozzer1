@@ -3,6 +3,7 @@ import Band from '@src/components/Band.astro';
 import { projectBySlug } from '@src/components/projects/_helpers/projects.functions';
 import NextProject from '@src/components/projects/NextProject.astro';
 import ProjectHero from '@src/components/projects/ProjectHero.astro';
+import ProjectWriting from '@src/components/projects/ProjectWriting.astro';
 import SectionHeading from '@src/components/SectionHeading.astro';
 import Terminal from '@src/components/Terminal.astro';
 import { facts } from '@src/data/facts';
@@ -111,6 +112,7 @@ reward 0.0 <span class="muted">·</span> {best}/{documents} documents</code></pr
     </div>
   </Band>
 
+  <ProjectWriting current="pdf-redactor" />
   <NextProject current="pdf-redactor" />
 </Base>
 
