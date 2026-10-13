@@ -32,6 +32,24 @@
 /demos/plusweb/*/plusweb.wasm
   Content-Type: application/wasm
 
+# The Lintel playground, vendored by scripts/vendor-lintel.ts. Postgres runs in the browser:
+# wasm, a worker and blob: extension bundles from this origin, and nothing else. The page itself
+# is /lintel, which /lintel/* doesn't match.
+/lintel
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self' blob:; style-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+
+/lintel/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self' blob:; style-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+
+# Hashed file names, and PGlite's files sit under its version, so neither can go stale.
+/lintel/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/lintel/pglite/*
+  Cache-Control: public, max-age=31536000, immutable
+
 # The markdown twin of each page: same content, so it stays out of the index.
 /*.md
   Content-Type: text/markdown; charset=utf-8

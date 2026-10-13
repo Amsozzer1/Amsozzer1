@@ -19,6 +19,7 @@
     "fonts": "sh fonts/subset.sh && node scripts/build-font-fallbacks.ts",
     "resume": "typst compile --root . --ignore-system-fonts resume/resume.typ public/resume.pdf --pdf-standard ua-1",
     "demo:plusweb": "node scripts/fetch-plusweb.ts",
+    "vendor:lintel": "node scripts/vendor-lintel.ts",
     "links:report": "node scripts/links-report.ts",
     "indexnow": "node scripts/indexnow.ts",
     "deploy": "wrangler deploy",

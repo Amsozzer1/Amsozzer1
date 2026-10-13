@@ -8,5 +8,8 @@ README.md
 public/resume.pdf
 # Vendored from the PlusWeb release; reformatting a build artefact changes what shipped.
 public/demos/
+# Vendored from a pinned Lintel commit, for the same reason.
+public/lintel/
+src/data/lintel.json
 fonts/masters/
 src/assets/fonts/

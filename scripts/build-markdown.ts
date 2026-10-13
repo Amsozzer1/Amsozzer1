@@ -15,9 +15,14 @@ const turndown = new TurndownService({
 // Decoration carries nothing an agent can read.
 turndown.remove(['script', 'style', 'noscript', 'canvas']);
 
+// A vendored app is not a page of the site: no prose for agents, so no markdown twin and no
+// place in llms-full.txt.
+const VENDORED = new Set([join(DIST, 'lintel')]);
+
 const htmlFiles = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
     const path = join(dir, entry.name);
+    if (VENDORED.has(path)) return [];
     if (entry.isDirectory()) return htmlFiles(path);
     return entry.name.endsWith('.html') ? [path] : [];
   });
