@@ -196,6 +196,60 @@ const trail = seo.breadcrumbs?.slice(0, -1) ?? [];
     line-height: var(--leading-mono);
   }
   
+  .post-body .bar-chart {
+    margin-block: var(--space-l);
+  }
+  
+  /* No viewBox: widths are percentages and heights are ems, so the type never scales with the column. Overflow stays visible so enlarged text runs into the gutter, not off the edge. */
+  .post-body .bar-chart-plot {
+    display: block;
+    inline-size: 100%;
+    overflow: visible;
+    font-family: var(--font-mono);
+    font-size: var(--size-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  
+  .post-body .bar-chart-plot text {
+    fill: var(--fg);
+  }
+  
+  .post-body .bar-count {
+    dominant-baseline: central;
+  }
+  
+  .post-body .bar-chart-plot .bar-series {
+    fill: var(--fg-caption);
+  }
+  
+  /* Ended is solid and still open is a hairline outline, so the two never depend on color. */
+  .post-body .bar-ended {
+    fill: var(--fg);
+    stroke: var(--fg);
+    stroke-width: var(--rule-row);
+  }
+  
+  .post-body .bar-open {
+    fill: none;
+    stroke: var(--fg);
+    stroke-width: var(--rule-row);
+  }
+  
+  @media (forced-colors: active) {
+    .post-body .bar-chart-plot :is(text, .bar-series) {
+      fill: canvastext;
+    }
+  
+    .post-body .bar-ended {
+      fill: canvastext;
+      stroke: canvastext;
+    }
+  
+    .post-body .bar-open {
+      stroke: canvastext;
+    }
+  }
+  
   .post-body .footnotes {
     margin-block-start: var(--space-2xl);
     padding-block-start: var(--space-m);
