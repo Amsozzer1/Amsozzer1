@@ -33,6 +33,8 @@ export const site = {
     github: 'https://github.com/Amsozzer1',
     linkedin: 'https://www.linkedin.com/in/amsozzer1',
     orcid: 'https://orcid.org/0009-0005-3599-6156',
+    medium: 'https://medium.com/@ahmed_87029',
+    devto: 'https://dev.to/amsozzer',
     call: 'https://cal.com/amsozzer',
   },
   orcid: '0009-0005-3599-6156',

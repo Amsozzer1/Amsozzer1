@@ -82,7 +82,13 @@ export const person = (): Person => ({
   ...workHistory(),
   alumniOf: schools,
   knowsAbout: site.knowsAbout,
-  sameAs: [site.links.github, site.links.linkedin, site.links.orcid],
+  sameAs: [
+    site.links.github,
+    site.links.linkedin,
+    site.links.orcid,
+    site.links.medium,
+    site.links.devto,
+  ],
   identifier: { '@type': 'PropertyValue', propertyID: 'ORCID', value: site.orcid },
 });
 
