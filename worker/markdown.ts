@@ -1,7 +1,8 @@
 const MARKDOWN = 'text/markdown';
 
-// Every page is built to a .md sibling by scripts/build-markdown.ts.
-const markdownPath = (pathname: string) =>
+// Every page is built to a .md sibling by scripts/build-markdown.ts, and scripts/check-markdown.ts
+// fails the build when one the worker would announce is missing.
+export const markdownPath = (pathname: string) =>
   pathname === '/' ? '/index.md' : `${pathname.replace(/\/$/, '')}.md`;
 
 export const wantsMarkdown = (request: Request) =>
