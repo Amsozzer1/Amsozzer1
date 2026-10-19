@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/build-markdown.ts",
+    "build": "astro build && node scripts/build-markdown.ts && node scripts/check-markdown.ts",
     "preview": "astro preview",
     "check": "astro check && tsc -p worker --noEmit",
     "lint": "eslint . --max-warnings 0 && stylelint \"src/**/*.{css,astro}\"",

@@ -64,22 +64,17 @@ const markdown = (html: string) => {
   return `---\n${frontMatter.join('\n')}\n---\n\n${turndown.turndown(main).trim()}\n`;
 };
 
-// Two reasons a page stays out of the agent feeds: it is noindexed, or it is a prototype that
-// is indexable but isn't part of the body of work. Posts aren't routes, so anything unknown here
-// is included.
+// Two reasons a page stays out of llms-full.txt: it is noindexed, or it is a prototype that is
+// indexable but isn't part of the body of work. Posts aren't routes, so anything unknown here is
+// included. A hidden page still gets its markdown twin: the worker announces one on every page,
+// and _headers noindexes every .md.
 const hidden = new Set(
   Object.entries<Route>(routes)
     .filter(([, route]) => route.noindex === true || route.unlisted === true)
     .map(([path]) => path),
 );
 
-const routePath = (file: string) => {
-  const path = relative(DIST, file).slice(0, -'.html'.length);
-  return path === 'index' ? '/' : `/${path.replace(/\/index$/, '')}`;
-};
-
 const written = htmlFiles(DIST).flatMap(file => {
-  if (hidden.has(routePath(file))) return [];
   const body = markdown(readFileSync(file, 'utf8'));
   const target = `${file.slice(0, -'.html'.length)}.md`;
   writeFileSync(target, body);
@@ -104,6 +99,7 @@ const rank = (path: string) => {
 
 const pages = written
   .filter(path => path !== '404.md' && !path.endsWith('/index.md'))
+  .filter(path => !hidden.has(path === 'index.md' ? '/' : `/${path.slice(0, -'.md'.length)}`))
   .sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
 
 writeFileSync(
