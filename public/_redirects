@@ -9,3 +9,6 @@
 # /now was deleted when the about page absorbed it. Both still get crawled.
 /writing/i-wrote-an-http-framework-because-i-could-not-understand-express  /writing/i-could-not-understand-express-so-i-wrote-my-own  301
 /now  /about  301
+
+# Feed readers and crawlers guess the conventional name; the feed is /feed.xml.
+/rss.xml  /feed.xml  301
