@@ -31,9 +31,12 @@ export const markdownResponse = async (request: Request, assets: Fetcher) => {
 
 // Announce the markdown twin on the page itself, so an agent finds it without guessing the
 // .md path or reading llms.txt first. Vary is here too: the same URL now answers with either
-// representation, so caches have to key on Accept.
+// representation, so caches have to key on Accept. The 404 page is HTML too, but a missing page
+// has no twin, and announcing one sends a crawler to a second 404.
 export const documentHeaders = (request: Request, response: Response) => {
-  if (!response.headers.get('Content-Type')?.includes('text/html')) return response;
+  if (response.status === 404 || !response.headers.get('Content-Type')?.includes('text/html')) {
+    return response;
+  }
 
   const { pathname } = new URL(request.url);
   const announced = new Response(response.body, response);
