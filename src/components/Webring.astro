@@ -46,7 +46,7 @@ const { name, hub, nav } = site.webring;
   
   .webring a {
     display: inline-block;
-    padding-block: var(--space-3xs);
+    padding-block: var(--space-xs);
     color: var(--color-text-on-ink-muted);
     text-decoration: none;
   }
@@ -61,6 +61,10 @@ const { name, hub, nav } = site.webring;
       flex-direction: row;
       align-items: baseline;
       justify-content: space-between;
+    }
+  
+    .webring a {
+      padding-block: var(--space-3xs);
     }
   }
 </style>
