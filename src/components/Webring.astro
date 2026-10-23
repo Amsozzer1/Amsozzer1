@@ -1,0 +1,70 @@
+---
+import { site } from '@src/data/site';
+
+const { name, hub, nav } = site.webring;
+---
+
+<nav class="webring" aria-label="Webring">
+  <a href={hub} rel="nofollow">{name}</a>
+  <ul class="steps">
+    <li>
+      <a href={`${nav}prev`} rel="nofollow"><span aria-hidden="true">←</span> previous</a>
+    </li>
+    <li>
+      <a href={`${nav}random`} rel="nofollow">random</a>
+    </li>
+    <li>
+      <a href={`${nav}list`} rel="nofollow">list</a>
+    </li>
+    <li>
+      <a href={`${nav}next`} rel="nofollow">next <span aria-hidden="true">→</span></a>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  .webring {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding-block: var(--space-s) var(--space-l);
+    border-block-start: var(--rule-row) solid var(--color-rule-ink);
+    font-family: var(--font-mono);
+    font-size: var(--size-mono-small);
+    line-height: var(--leading-mono);
+    color: var(--color-text-on-ink-subtle);
+  }
+  
+  .steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .webring a {
+    display: inline-block;
+    padding-block: var(--space-xs);
+    color: var(--color-text-on-ink-muted);
+    text-decoration: none;
+  }
+  
+  .webring a:hover {
+    color: var(--color-text-on-ink);
+    text-decoration-line: underline;
+  }
+  
+  @media (width >= 48rem) {
+    .webring {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+  
+    .webring a {
+      padding-block: var(--space-3xs);
+    }
+  }
+</style>
