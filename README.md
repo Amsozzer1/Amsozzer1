@@ -1,6 +1,6 @@
 # Ahmed M. Sozzer
 
-**Full-stack engineer at FYCLabs**, a studio that builds products for startups · Austin, TX · [amsozzer.com](https://amsozzer.com)
+**Full-stack engineer at FYCLabs**, a studio that builds products for startups · Austin, TX · [amsozzer.com](https://amsozzer.com/r/gh)
 
 My C++17 HTTP framework **PlusWeb** is published in [Microsoft's vcpkg registry](https://github.com/microsoft/vcpkg/tree/master/ports/amsozzer1-plusweb): `vcpkg install amsozzer1-plusweb`.
 
