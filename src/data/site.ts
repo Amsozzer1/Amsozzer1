@@ -38,6 +38,11 @@ export const site = {
     call: 'https://cal.com/amsozzer',
   },
   orcid: '0009-0005-3599-6156',
+  webring: {
+    name: 'Indie Web Bloggers',
+    hub: 'https://flamenet.io/webrings/indie-web-bloggers/',
+    nav: 'https://flamenet.io/?fnwr_nav=1&ring=indie-web-bloggers&from=0&go=',
+  },
   language: 'en',
   locale: 'en_US',
   resumePdf: '/resume.pdf',

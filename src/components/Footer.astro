@@ -1,5 +1,6 @@
 ---
 import AmberRule from '@src/components/AmberRule.astro';
+import Webring from '@src/components/Webring.astro';
 import { site } from '@src/data/site';
 
 const { open } = site.availability;
@@ -55,6 +56,9 @@ const profiles = [site.links.github, site.links.linkedin, site.links.orcid].map(
         </li>
       </ul>
     </div>
+  </div>
+  <div class="container">
+    <Webring />
   </div>
   <AmberRule />
 </footer>
